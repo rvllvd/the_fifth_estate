@@ -408,6 +408,10 @@ body {
   gap: 15px;
 }
 
+.newspaper-columns:last-child {
+  margin-bottom: 30px;
+}
+
 .empty-slot {
   flex: 1;
   display: flex;
