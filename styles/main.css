@@ -315,38 +315,31 @@ body {
 /* Газета - основной контент */
 #newspaper {
   flex: 1;
-  background-color: #f5f5dc;
+  background-color: #fff8dc;
   padding: 30px;
   overflow-y: auto;
   display: flex;
   justify-content: center;
-}
-
-.newspaper-page {
-  background-color: #fff8dc;
-  width: 100%;
-  max-width: 1200px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  border: 1px solid #d4c4a8;
-  position: relative;
-}
-
-.newspaper-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
+  border-left: 3px solid #d4c4a8;
+  background-image: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 28px,
     rgba(0,0,0,0.03) 28px,
     rgba(0,0,0,0.03) 29px
   );
-  pointer-events: none;
+}
+
+.newspaper-page {
+  /* background-color: #fff; */
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px;
+  /* box-shadow: 0 10px 30px rgba(0,0,0,0.2); */
+  /* border: 1px solid #d4c4a8; */
+  position: relative;
+  height: auto;
+  min-height: 600px;
 }
 
 .newspaper-header {
