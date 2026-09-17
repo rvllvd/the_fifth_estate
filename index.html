@@ -10,22 +10,43 @@
   <body>
     <div id="app">
       <div id="top-panel">
+        <div class="newspaper-logo">📰 The Fifth Estate</div>
         <div class="metrics">
           <div class="metric">
             <span class="metric-label">Влияние</span>
-            <span class="metric-value" id="influence">50</span>
+            <div class="metric-value-container">
+              <span class="metric-value" id="influence">50</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="influence-bar" style="width: 50%"></div>
+              </div>
+            </div>
           </div>
           <div class="metric">
             <span class="metric-label">Доверие</span>
-            <span class="metric-value" id="credibility">50</span>
+            <div class="metric-value-container">
+              <span class="metric-value" id="credibility">50</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="credibility-bar" style="width: 50%"></div>
+              </div>
+            </div>
           </div>
           <div class="metric">
             <span class="metric-label">Бюджет</span>
-            <span class="metric-value" id="budget">50</span>
+            <div class="metric-value-container">
+              <span class="metric-value" id="budget">50</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="budget-bar" style="width: 50%"></div>
+              </div>
+            </div>
           </div>
           <div class="metric">
             <span class="metric-label">Читатели</span>
-            <span class="metric-value" id="readership">50</span>
+            <div class="metric-value-container">
+              <span class="metric-value" id="readership">50</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="readership-bar" style="width: 50%"></div>
+              </div>
+            </div>
           </div>
           <div class="metric">
             <span class="metric-label">Ход</span>
@@ -36,57 +57,158 @@
       </div>
       <div id="main-content">
         <div id="left-panel">
-          <div class="panel-section">
-            <div class="panel-title">Управление</div>
-            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 10px;">
-              Выберите новости для публикации в этом ходу.
-            </p>
-            <button class="action-btn" id="publish-btn" disabled>
-              Опубликовать выбранные
-            </button>
+          <div class="panel-section" id="staff-section">
+            <div class="panel-title">👥 Сотрудники</div>
+            <div class="staff-list">
+              <div class="staff-item">
+                <div class="staff-info">
+                  <span class="staff-name">Иван Петров</span>
+                  <span class="staff-role">Политический обозреватель</span>
+                </div>
+                <div class="staff-stats">
+                  <span class="staff-stat">✍️ +8</span>
+                  <span class="staff-stat">💰 -$5</span>
+                </div>
+              </div>
+              <div class="staff-item">
+                <div class="staff-info">
+                  <span class="staff-name">Мария Сидорова</span>
+                  <span class="staff-role">Спортивный журналист</span>
+                </div>
+                <div class="staff-stats">
+                  <span class="staff-stat">✍️ +6</span>
+                  <span class="staff-stat">💰 -$4</span>
+                </div>
+              </div>
+              <div class="staff-item">
+                <div class="staff-info">
+                  <span class="staff-name">Алексей Козлов</span>
+                  <span class="staff-role">Технологический обозреватель</span>
+                </div>
+                <div class="staff-stats">
+                  <span class="staff-stat">✍️ +7</span>
+                  <span class="staff-stat">💰 -$6</span>
+                </div>
+              </div>
+            </div>
+            <button class="action-btn" id="hire-btn">Нанять сотрудника</button>
           </div>
           
-          <div class="panel-section">
-            <div class="panel-title">Статус</div>
-            <p style="font-size: 13px; color: #7f8c8d;">
-              Игра продолжается...
-            </p>
+          <div class="panel-section" id="news-section">
+            <div class="panel-title">📰 Новости для публикации</div>
+            <div class="news-categories">
+              <button class="category-btn active" data-category="all">Все</button>
+              <button class="category-btn" data-category="politics">Политика</button>
+              <button class="category-btn" data-category="sports">Спорт</button>
+              <button class="category-btn" data-category="tech">Технологии</button>
+              <button class="category-btn" data-category="life">Жизнь</button>
+            </div>
+            <div class="news-list">
+              <div class="news-item" data-category="politics">
+                <div class="news-header">
+                  <span class="news-title">Выборы в мэрии</span>
+                  <span class="news-tag">Политика</span>
+                </div>
+                <div class="news-content">Кандидаты подготовили дебаты о городском бюджете</div>
+                <div class="news-effects">
+                  <span class="effect">📈 Влияние +5</span>
+                  <span class="effect">🎯 Доверие -2</span>
+                </div>
+              </div>
+              <div class="news-item" data-category="sports">
+                <div class="news-header">
+                  <span class="news-title">Финал чемпионата</span>
+                  <span class="news-tag">Спорт</span>
+                </div>
+                <div class="news-content">Местная команда вышла в финал национальной лиги</div>
+                <div class="news-effects">
+                  <span class="effect">👥 Читатели +8</span>
+                  <span class="effect">💰 Бюджет +3</span>
+                </div>
+              </div>
+              <div class="news-item" data-category="tech">
+                <div class="news-header">
+                  <span class="news-title">Новый стартап</span>
+                  <span class="news-tag">Технологии</span>
+                </div>
+                <div class="news-content">Локальная компания получила инвестиции</div>
+                <div class="news-effects">
+                  <span class="effect">📈 Влияние +3</span>
+                  <span class="effect">🎯 Доверие +4</span>
+                </div>
+              </div>
+              <div class="news-item" data-category="life">
+                <div class="news-header">
+                  <span class="news-title">Фестиваль еды</span>
+                  <span class="news-tag">Жизнь</span>
+                </div>
+                <div class="news-content">Гастрономический фестиваль в центре города</div>
+                <div class="news-effects">
+                  <span class="effect">👥 Читатели +6</span>
+                  <span class="effect">💰 Бюджет +2</span>
+                </div>
+              </div>
+            </div>
+            <button class="action-btn" id="publish-btn" disabled>Опубликовать (0/3)</button>
           </div>
         </div>
         <div id="newspaper">
-          <div class="newspaper-header">
-            <div class="newspaper-title">The Fifth Estate</div>
-            <div class="newspaper-date">Ход 1 из 20</div>
-          </div>
-          
-          <div class="news-cards">
-            <div class="news-card">
-              <h3>Демо-новость 1</h3>
-              <p>Это демо-новость. В полной версии здесь будут реальные новости с эффектами.</p>
-              <div class="news-effects">
-                Влияние: +5 | Доверие: -3
+          <div class="newspaper-page">
+            <div class="newspaper-header">
+              <div class="newspaper-title">The Fifth Estate</div>
+              <div class="newspaper-meta">
+                <span class="newspaper-date">Ход 1 из 20</span>
+                <span class="newspaper-price">$2.50</span>
               </div>
             </div>
             
-            <div class="news-card">
-              <h3>Демо-новость 2</h3>
-              <p>Это демо-новость. В полной версии здесь будут реальные новости с эффектами.</p>
-              <div class="news-effects">
-                Бюджет: +10 | Читатели: +5
+            <div class="newspaper-content">
+              <div class="newspaper-column main-column">
+                <div class="column-header">Главная полоса</div>
+                <div class="empty-slot">
+                  <div class="slot-placeholder">Перетащите новость сюда</div>
+                </div>
               </div>
-            </div>
-            
-            <div class="news-card">
-              <h3>Демо-новость 3</h3>
-              <p>Это демо-новость. В полной версии здесь будут реальные новости с эффектами.</p>
-              <div class="news-effects">
-                Доверие: +8 | Влияние: -2
+              
+              <div class="newspaper-columns">
+                <div class="newspaper-column">
+                  <div class="column-header">Политика</div>
+                  <div class="empty-slot">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                </div>
+                <div class="newspaper-column">
+                  <div class="column-header">Спорт</div>
+                  <div class="empty-slot">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                </div>
+                <div class="newspaper-column">
+                  <div class="column-header">Технологии</div>
+                  <div class="empty-slot">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="newspaper-columns">
+                <div class="newspaper-column">
+                  <div class="column-header">Жизнь</div>
+                  <div class="empty-slot">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                </div>
+                <div class="newspaper-column">
+                  <div class="column-header">Бизнес</div>
+                  <div class="empty-slot">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div id="log"></div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
