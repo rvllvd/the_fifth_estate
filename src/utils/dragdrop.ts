@@ -115,6 +115,13 @@ function placeNewsInColumn(column: HTMLElement): void {
     game.setState({
       placedNews: [...currentState.placedNews, newPlacedNews]
     });
+    
+    // Обновляем кнопку публикации
+    const publishBtn = document.getElementById('publish-btn') as HTMLButtonElement | null;
+    if (publishBtn) {
+      publishBtn.textContent = `Опубликовать (${currentState.placedNews.length + 1})`;
+      publishBtn.disabled = false;
+    }
   });
 
   const originalNewsItem = document.querySelector(`.news-item[data-news-id="${draggedNews.id}"]`) as HTMLElement | null;

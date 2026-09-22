@@ -203,6 +203,8 @@ class Game {
     this.setState({
       placedNews: this.state.placedNews.filter((pn: PlacedNews) => pn.newsId !== newsId)
     });
+    
+    this.updatePublishButton();
   }
   
   private publishNewspaper(): void {
