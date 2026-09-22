@@ -2,20 +2,44 @@
 
 const STORAGE_KEY = 'the_fifth_estate_save';
 
+export type NewsEffect = {
+  influence: number;
+  credibility: number;
+  budget: number;
+  readership: number;
+};
+
+export type NewsItem = {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  effects: NewsEffect;
+};
+
+export type PlacedNews = {
+  newsId: string;
+  tier: number;
+  slot: number;
+};
+
 export type GameState = {
   // Показатели
-  influence: number;      // Влияние (0-100)
-  credibility: number;     // Доверие (0-100)
-  budget: number;          // Бюджет (0-100)
-  readership: number;      // Читатели (0-100)
+  influence: number;
+  credibility: number;
+  budget: number;
+  readership: number;
   
   // Игровой процесс
-  turn: number;            // Текущий ход
-  maxTurns: number;        // Максимальное количество ходов
+  turn: number;
+  maxTurns: number;
+  
+  // Размещённые новости
+  placedNews: PlacedNews[];
   
   // Статус игры
-  gameOver: boolean;
-  victory: boolean;
+  gameOver?: boolean;
+  victory?: boolean;
 }
 
 const INITIAL_STATE: GameState = {
@@ -25,8 +49,7 @@ const INITIAL_STATE: GameState = {
   readership: 50,
   turn: 1,
   maxTurns: 20,
-  gameOver: false,
-  victory: false
+  placedNews: []
 };
 
 /**

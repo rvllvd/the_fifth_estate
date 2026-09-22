@@ -1,5 +1,9 @@
-import { GameState, saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
+import type { GameState, NewsItem } from './utils/storage';
+import { saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
 import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/render';
+import { setupDragAndDrop } from './utils/dragdrop';
+import { getNewsByCategory, getNewsById } from './data/news';
+import type { PlacedNews } from './utils/storage';
 
 class Game {
   private state: GameState;
@@ -15,6 +19,10 @@ class Game {
   private init(): void {
     this.render();
     this.setupEventListeners();
+    this.renderNewsList();
+    setupDragAndDrop();
+    this.updatePublishButton();
+    this.restorePlacedNews();
   }
   
   private setupEventListeners(): void {
@@ -22,6 +30,32 @@ class Game {
     if (newGameBtn) {
       newGameBtn.addEventListener('click', () => this.startNewGame());
     }
+    
+    const publishBtn = document.getElementById('publish-btn');
+    if (publishBtn) {
+      publishBtn.addEventListener('click', () => this.publishNewspaper());
+    }
+    
+    document.addEventListener('click', (e) => {
+      const removeBtn = (e.target as HTMLElement).closest('.remove-news-btn') as HTMLElement | null;
+      if (removeBtn) {
+        const newsId = removeBtn.dataset.newsId;
+        if (newsId) {
+          this.removeNewsFromColumn(newsId);
+        }
+      }
+    });
+    
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const category = (btn as HTMLElement).dataset.category || 'all';
+        this.renderNewsList(category);
+      });
+    });
   }
   
   private startNewGame(): void {
@@ -58,10 +92,188 @@ class Game {
       log.scrollTop = log.scrollHeight;
     }
   }
+  
+  private renderNewsList(category: string = 'all'): void {
+    const newsList = document.getElementById('news-list');
+    if (!newsList) return;
+    
+    const news = getNewsByCategory(category);
+    
+    newsList.innerHTML = news.map((item: NewsItem) => `
+      <div class="news-item" data-news-id="${item.id}" data-category="${item.category}">
+        <div class="news-header">
+          <span class="news-title">${item.title}</span>
+          <span class="news-tag">${this.getCategoryName(item.category)}</span>
+        </div>
+        <div class="news-content">${item.content}</div>
+        <div class="news-effects">
+          <span class="effect">📈 Влияние ${item.effects.influence > 0 ? '+' : ''}${item.effects.influence}</span>
+          <span class="effect">🎯 Доверие ${item.effects.credibility > 0 ? '+' : ''}${item.effects.credibility}</span>
+          <span class="effect">💰 Бюджет ${item.effects.budget > 0 ? '+' : ''}${item.effects.budget}</span>
+          <span class="effect">👥 Читатели ${item.effects.readership > 0 ? '+' : ''}${item.effects.readership}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  private getCategoryName(category: string): string {
+    const names: Record<string, string> = {
+      'politics': 'Политика',
+      'sports': 'Спорт',
+      'tech': 'Технологии',
+      'life': 'Жизнь'
+    };
+    return names[category] || category;
+  }
+  
+  private updatePublishButton(): void {
+    const publishBtn = document.getElementById('publish-btn') as HTMLButtonElement | null;
+    if (!publishBtn) return;
+    
+    const placedCount = this.state.placedNews.length;
+    publishBtn.textContent = `Опубликовать (${placedCount})`;
+    publishBtn.disabled = placedCount === 0;
+  }
+  
+  private restorePlacedNews(): void {
+    this.state.placedNews.forEach((placed: PlacedNews) => {
+      const news = getNewsById(placed.newsId);
+      if (!news) return;
+      
+      const column = document.querySelector(`.newspaper-column[data-tier="${placed.tier}"]`);
+      if (!column) return;
+      
+      const slot = column.querySelector(`.empty-slot[data-slot="${placed.slot}"]`);
+      if (!slot) return;
+      
+      const placedNewsElement = this.createPlacedNewsElement(news, placed.tier);
+      slot.innerHTML = '';
+      slot.appendChild(placedNewsElement);
+      
+      const newsItem = document.querySelector(`.news-item[data-news-id="${news.id}"]`) as HTMLElement | null;
+      if (newsItem) {
+        newsItem.classList.add('placed');
+        newsItem.style.opacity = '0.5';
+        newsItem.style.pointerEvents = 'none';
+      }
+    });
+  }
+  
+  private createPlacedNewsElement(news: any, tier: number): HTMLElement {
+    const element = document.createElement('div');
+    element.className = 'placed-news';
+    element.dataset.newsId = news.id;
+    element.dataset.tier = tier.toString();
+    
+    const multiplier = tier === 1 ? 2 : tier === 2 ? 1 : 0.5;
+    
+    element.innerHTML = `
+      <div class="placed-news-header">
+        <span class="placed-news-title">${news.title}</span>
+        <button class="remove-news-btn" data-news-id="${news.id}">×</button>
+      </div>
+      <div class="placed-news-content">${news.content}</div>
+      <div class="placed-news-effects">
+        <span class="effect">📈 Влияние: ${Math.round(news.effects.influence * multiplier)}</span>
+        <span class="effect">🎯 Доверие: ${Math.round(news.effects.credibility * multiplier)}</span>
+        <span class="effect">💰 Бюджет: ${Math.round(news.effects.budget * multiplier)}</span>
+        <span class="effect">👥 Читатели: ${Math.round(news.effects.readership * multiplier)}</span>
+      </div>
+    `;
+
+    return element;
+  }
+  
+  private removeNewsFromColumn(newsId: string): void {
+    const originalNewsItem = document.querySelector(`.news-item[data-news-id="${newsId}"]`) as HTMLElement | null;
+    if (originalNewsItem) {
+      originalNewsItem.classList.remove('placed');
+      originalNewsItem.style.opacity = '1';
+      originalNewsItem.style.pointerEvents = 'auto';
+    }
+
+    const placedNews = document.querySelector(`.placed-news[data-news-id="${newsId}"]`);
+    if (placedNews) {
+      const slot = placedNews.parentElement;
+      if (slot) {
+        slot.innerHTML = '<div class="slot-placeholder">Перетащите новость сюда</div>';
+      }
+    }
+
+    this.setState({
+      placedNews: this.state.placedNews.filter((pn: PlacedNews) => pn.newsId !== newsId)
+    });
+  }
+  
+  private publishNewspaper(): void {
+    if (this.state.placedNews.length === 0) {
+      this.addLog('Сначала разместите новости в газете!', 'bad');
+      return;
+    }
+    
+    let totalInfluence = 0;
+    let totalCredibility = 0;
+    let totalBudget = 0;
+    let totalReadership = 0;
+    
+    this.state.placedNews.forEach((placed: PlacedNews) => {
+      const news = getNewsById(placed.newsId);
+      if (!news) return;
+      
+      const multiplier = placed.tier === 1 ? 2 : placed.tier === 2 ? 1 : 0.5;
+      
+      totalInfluence += Math.round(news.effects.influence * multiplier);
+      totalCredibility += Math.round(news.effects.credibility * multiplier);
+      totalBudget += Math.round(news.effects.budget * multiplier);
+      totalReadership += Math.round(news.effects.readership * multiplier);
+    });
+    
+    const newState: Partial<GameState> = {
+      influence: Math.max(0, Math.min(100, this.state.influence + totalInfluence)),
+      credibility: Math.max(0, Math.min(100, this.state.credibility + totalCredibility)),
+      budget: Math.max(0, Math.min(100, this.state.budget + totalBudget)),
+      readership: Math.max(0, Math.min(100, this.state.readership + totalReadership)),
+      turn: this.state.turn + 1,
+      placedNews: []
+    };
+    
+    const isGameOver = newState.turn! > this.state.maxTurns;
+    const isVictory = newState.influence! >= 70 && newState.credibility! >= 70;
+    
+    this.setState(newState);
+    
+    this.addLog(`Газета опубликована!`, 'good');
+    this.addLog(`Влияние: ${totalInfluence > 0 ? '+' : ''}${totalInfluence}`, totalInfluence > 0 ? 'good' : 'bad');
+    this.addLog(`Доверие: ${totalCredibility > 0 ? '+' : ''}${totalCredibility}`, totalCredibility > 0 ? 'good' : 'bad');
+    this.addLog(`Бюджет: ${totalBudget > 0 ? '+' : ''}${totalBudget}`, totalBudget > 0 ? 'good' : 'bad');
+    this.addLog(`Читатели: ${totalReadership > 0 ? '+' : ''}${totalReadership}`, totalReadership > 0 ? 'good' : 'bad');
+    
+    if (isGameOver) {
+      if (isVictory) {
+        this.addLog('🎉 ПОБЕДА! Вы стали влиятельным изданием!', 'good');
+      } else {
+        this.addLog('💀 ПОРАЖЕНИЕ! Ваше издание закрылось.', 'bad');
+      }
+    } else {
+      this.addLog(`Ход ${newState.turn} из ${this.state.maxTurns}`, 'turn');
+    }
+    
+    document.querySelectorAll('.empty-slot').forEach(slot => {
+      slot.innerHTML = '<div class="slot-placeholder">Перетащите новость сюда</div>';
+    });
+    
+    document.querySelectorAll('.news-item').forEach(item => {
+      item.classList.remove('placed');
+      (item as HTMLElement).style.opacity = '1';
+      (item as HTMLElement).style.pointerEvents = 'auto';
+    });
+    
+    this.renderNewsList();
+  }
 }
 
 // Глобальный экземпляр игры
-let game: Game;
+let game: Game | null = null;
 
 // Инициализация игры при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
@@ -73,6 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
     game.addLog('Добро пожаловать в The Fifth Estate!', 'turn');
   }
 });
+
+export function getGame(): Game {
+  if (!game) {
+    game = new Game();
+  }
+  return game;
+}
+
+export default getGame;
 
 // Экспорт для использования в других модулях
 export { game };
