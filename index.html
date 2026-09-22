@@ -166,44 +166,37 @@
             </div>
             
             <div class="newspaper-content">
-              <div class="newspaper-column main-column">
-                <div class="column-header">Главная полоса</div>
-                <div class="empty-slot">
-                  <div class="slot-placeholder">Перетащите новость сюда</div>
-                </div>
-              </div>
-              
-              <div class="newspaper-columns">
-                <div class="newspaper-column">
-                  <div class="column-header">Политика</div>
-                  <div class="empty-slot">
-                    <div class="slot-placeholder">Перетащите новость сюда</div>
-                  </div>
-                </div>
-                <div class="newspaper-column">
-                  <div class="column-header">Спорт</div>
-                  <div class="empty-slot">
-                    <div class="slot-placeholder">Перетащите новость сюда</div>
-                  </div>
-                </div>
-                <div class="newspaper-column">
-                  <div class="column-header">Технологии</div>
-                  <div class="empty-slot">
+              <div class="newspaper-column main-column" data-tier="1" data-max-slots="1" data-multiplier="2">
+                <div class="column-header">Главная полоса (x2)</div>
+                <div class="column-slots">
+                  <div class="empty-slot" data-slot="0">
                     <div class="slot-placeholder">Перетащите новость сюда</div>
                   </div>
                 </div>
               </div>
               
-              <div class="newspaper-columns">
-                <div class="newspaper-column">
-                  <div class="column-header">Жизнь</div>
-                  <div class="empty-slot">
+              <div class="newspaper-column second-tier" data-tier="2" data-max-slots="2" data-multiplier="1">
+                <div class="column-header">Вторая полоса</div>
+                <div class="column-slots">
+                  <div class="empty-slot" data-slot="0">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                  <div class="empty-slot" data-slot="1">
                     <div class="slot-placeholder">Перетащите новость сюда</div>
                   </div>
                 </div>
-                <div class="newspaper-column">
-                  <div class="column-header">Бизнес</div>
-                  <div class="empty-slot">
+              </div>
+              
+              <div class="newspaper-column third-tier" data-tier="3" data-max-slots="3" data-multiplier="0.5">
+                <div class="column-header">Третья полоса (x0.5)</div>
+                <div class="column-slots">
+                  <div class="empty-slot" data-slot="0">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                  <div class="empty-slot" data-slot="1">
+                    <div class="slot-placeholder">Перетащите новость сюда</div>
+                  </div>
+                  <div class="empty-slot" data-slot="2">
                     <div class="slot-placeholder">Перетащите новость сюда</div>
                   </div>
                 </div>
