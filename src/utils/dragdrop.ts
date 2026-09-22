@@ -9,16 +9,23 @@ export function setupDragAndDrop(): void {
 
 function setupNewsDragStart(): void {
   document.addEventListener('click', (e) => {
+    if (draggedNews) {
+      // Если перетаскиваем, проверяем клик на колонку
+      const column = (e.target as HTMLElement).closest('.newspaper-column') as HTMLElement | null;
+      if (column) {
+        placeNewsInColumn(column);
+      } else {
+        cancelDragging();
+      }
+      return;
+    }
+
+    // Если не перетаскиваем, начинаем
     const newsItem = (e.target as HTMLElement).closest('.news-item') as HTMLElement | null;
     if (!newsItem) return;
 
     const newsId = newsItem.dataset.newsId;
     if (!newsId) return;
-
-    if (draggedNews) {
-      placeNewsInColumn();
-      return;
-    }
 
     startDragging(newsItem, newsId);
   });
@@ -44,6 +51,8 @@ function startDragging(element: HTMLElement, newsId: string): void {
     
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('click', onDocumentClick);
+  }).catch(err => {
+    console.error('Failed to import news:', err);
   });
 }
 
@@ -54,13 +63,16 @@ function onMouseMove(e: MouseEvent): void {
 }
 
 function onDocumentClick(e: MouseEvent): void {
-  const column = (e.target as HTMLElement).closest('.newspaper-column');
-  if (!column) {
-    cancelDragging();
-  }
-  
+  // Убираем listeners сначала
   document.removeEventListener('mousemove', onMouseMove);
   document.removeEventListener('click', onDocumentClick);
+  
+  const column = (e.target as HTMLElement).closest('.newspaper-column') as HTMLElement | null;
+  if (column) {
+    placeNewsInColumn(column);
+  } else {
+    cancelDragging();
+  }
 }
 
 function highlightColumns(highlight: boolean): void {
@@ -74,14 +86,8 @@ function highlightColumns(highlight: boolean): void {
   });
 }
 
-function placeNewsInColumn(): void {
+function placeNewsInColumn(column: HTMLElement): void {
   if (!draggedNews) return;
-
-  const column = document.querySelector('.newspaper-column.drag-over') as HTMLElement;
-  if (!column) {
-    cancelDragging();
-    return;
-  }
 
   const tier = parseInt(column.dataset.tier || '1');
   const slots = column.querySelectorAll('.empty-slot:not(:has(.placed-news))');
