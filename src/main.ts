@@ -2,7 +2,7 @@ import type { GameState, NewsItem } from './utils/storage';
 import { saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
 import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
-import { getNewsByCategory, getNewsById } from './data/news';
+import { getNewsByCategory, getNewsById, getAllCategory } from './data/news';
 import type { PlacedNews } from './utils/storage';
 import { Parameters } from './utils/storage';
 
@@ -24,13 +24,22 @@ class Game {
   
   private init(): void {
     this.render();
-    this.setupEventListeners();
     this.renderNewsList();
-    setupDragAndDrop();
+    this.renderCategories();
+    this.setupEventListeners();
     this.updatePublishButton();
     this.restorePlacedNews();
+
+    setupDragAndDrop();
   }
-  
+
+  private renderCategories() {
+    const newsCategories = document.getElementById("news-categories") 
+    if (newsCategories) {
+      getAllCategory().forEach(category => newsCategories.innerHTML += `<button class="category-btn" data-category="${category}">${category}</button>`)
+    } 
+  }
+
   private setupEventListeners(): void {
     const newGameBtn = document.getElementById('new-game-btn');
     if (newGameBtn) {
@@ -93,7 +102,7 @@ class Game {
     if (log) {
       const entry = document.createElement('div');
       entry.className = `log-entry ${type}`;
-      entry.textContent = `[Ход ${this.state.turn}] ${message}`;
+      entry.textContent = `[Ход ${this.state.turn}]`;
       log.appendChild(entry);
       log.scrollTop = log.scrollHeight;
     }
@@ -263,7 +272,7 @@ class Game {
         this.addLog('💀 ПОРАЖЕНИЕ! Ваше издание закрылось.', 'bad');
       }
     } else {
-      this.addLog(`Ход ${newState.turn} из ${this.state.maxTurns}`, 'turn');
+      this.addLog(`Ход ${newState.turn}`, 'turn');
     }
     
     document.querySelectorAll('.empty-slot').forEach(slot => {

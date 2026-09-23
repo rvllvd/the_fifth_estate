@@ -54,7 +54,7 @@ export function renderMetrics(state: GameState): void {
       </div>
       <div class="metric">
         <span class="metric-label">Ход</span>
-        <span class="metric-value">${state.turn}/${state.maxTurns}</span>
+        <span class="metric-value">${state.turn}</span>
       </div>
     </div>
     <button id="new-game-btn">Новая игра</button>
