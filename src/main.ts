@@ -3,9 +3,12 @@ import { saveState, loadState, clearState, getInitialState, hasSave } from './ut
 import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
 import { getNewsByCategory, getNewsById } from './data/news';
-import type { PlacedNews } from './utils/storage';
-import "@fontsource/unifrakturmaguntia";
+import type { PlacedNews, } from './utils/storage';
+
+// Fonts
 import "@fontsource/roboto";
+import "@fontsource/unifrakturmaguntia";
+import "@fontsource/cormorant-garamond";
 
 class Game {
   private state: GameState;
@@ -82,7 +85,7 @@ class Game {
     this.state = { ...this.state, ...newState };
     saveState(this.state);
     this.render();
-  }
+  }  
   
   public addLog(message: string, type: 'turn' | 'good' | 'bad' | 'normal' = 'normal'): void {
     const log = document.getElementById('log');

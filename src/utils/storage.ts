@@ -42,7 +42,7 @@ export type GameState = {
   victory?: boolean;
 }
 
-const INITIAL_STATE: GameState = {
+export const INITIAL_STATE: GameState = {
   influence: 50,
   credibility: 50,
   budget: 50,

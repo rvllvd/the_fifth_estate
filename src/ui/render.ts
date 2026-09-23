@@ -17,20 +17,40 @@ export function renderMetrics(state: GameState): void {
   topPanel.innerHTML = `
     <div class="metrics">
       <div class="metric">
-        <span class="metric-label">Влияние</span>
-        <span class="metric-value ${getMetricClass(state.influence)}">${state.influence}</span>
+        <span class="metric-label">📈 Влияние</span>
+        <div class="metric-value-container">
+          <span class="metric-value ${getMetricClass(state.influence)}">${state.influence}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="influence-bar" style="width: ${state.influence}%"></div>
+          </div>
+        </div>
       </div>
       <div class="metric">
-        <span class="metric-label">Доверие</span>
-        <span class="metric-value ${getMetricClass(state.credibility)}">${state.credibility}</span>
+        <span class="metric-label">🎯 Доверие</span>
+        <div class="metric-value-container">
+          <span class="metric-value ${getMetricClass(state.credibility)}">${state.credibility}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="influence-bar" style="width: ${state.credibility}%"></div>
+          </div>
+        </div>
       </div>
       <div class="metric">
-        <span class="metric-label">Бюджет</span>
-        <span class="metric-value ${getMetricClass(state.budget)}">${state.budget}</span>
+        <span class="metric-label">💰 Бюджет</span>
+        <div class="metric-value-container">
+          <span class="metric-value ${getMetricClass(state.budget)}">${state.budget}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="influence-bar" style="width: ${state.budget}%"></div>
+          </div>
+        </div>
       </div>
       <div class="metric">
-        <span class="metric-label">Читатели</span>
-        <span class="metric-value ${getMetricClass(state.readership)}">${state.readership}</span>
+        <span class="metric-label">👥 Читатели</span>
+        <div class="metric-value-container">
+          <span class="metric-value ${getMetricClass(state.readership)}">${state.readership}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="influence-bar" style="width: ${state.readership}%"></div>
+          </div>
+        </div>
       </div>
       <div class="metric">
         <span class="metric-label">Ход</span>

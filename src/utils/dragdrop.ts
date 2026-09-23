@@ -87,6 +87,7 @@ function highlightColumns(highlight: boolean): void {
 }
 
 function placeNewsInColumn(column: HTMLElement): void {
+  
   if (!draggedNews) return;
 
   const tier = parseInt(column.dataset.tier || '1');
@@ -99,15 +100,17 @@ function placeNewsInColumn(column: HTMLElement): void {
   const slot = slots[0] as HTMLElement;
   const slotIndex = parseInt(slot.dataset.slot || '0');
 
+  
   const placedNewsElement = createPlacedNewsElement(draggedNews, tier);
   slot.innerHTML = '';
   slot.appendChild(placedNewsElement);
 
+  const draggedNewsId = draggedNews!.id;
   import('../main').then(({ getGame }) => {
     const game = getGame();
     const currentState = game.getState();
     const newPlacedNews: PlacedNews = {
-      newsId: draggedNews!.id,
+      newsId: draggedNewsId,
       tier: tier,
       slot: slotIndex
     };
