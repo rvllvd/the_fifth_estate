@@ -2,6 +2,10 @@
 
 const STORAGE_KEY = 'the_fifth_estate_save';
 
+export const Parameters = {
+  countNews: 6,
+};
+
 export type NewsEffect = {
   influence: number;
   credibility: number;
@@ -42,7 +46,7 @@ export type GameState = {
   victory?: boolean;
 }
 
-export const INITIAL_STATE: GameState = {
+const INITIAL_STATE: GameState = {
   influence: 50,
   credibility: 50,
   budget: 50,

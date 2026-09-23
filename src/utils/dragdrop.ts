@@ -122,8 +122,8 @@ function placeNewsInColumn(column: HTMLElement): void {
     // Обновляем кнопку публикации
     const publishBtn = document.getElementById('publish-btn') as HTMLButtonElement | null;
     if (publishBtn) {
-      publishBtn.textContent = `Опубликовать (${currentState.placedNews.length + 1})`;
-      publishBtn.disabled = false;
+      game.updatePublishButton()
+      
     }
   });
 

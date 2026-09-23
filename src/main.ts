@@ -3,7 +3,8 @@ import { saveState, loadState, clearState, getInitialState, hasSave } from './ut
 import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
 import { getNewsByCategory, getNewsById } from './data/news';
-import type { PlacedNews, } from './utils/storage';
+import type { PlacedNews } from './utils/storage';
+import { Parameters } from './utils/storage';
 
 // Fonts
 import "@fontsource/roboto";
@@ -131,13 +132,13 @@ class Game {
     return names[category] || category;
   }
   
-  private updatePublishButton(): void {
+  public updatePublishButton(): void {
     const publishBtn = document.getElementById('publish-btn') as HTMLButtonElement | null;
     if (!publishBtn) return;
     
     const placedCount = this.state.placedNews.length;
     publishBtn.textContent = `Опубликовать (${placedCount})`;
-    publishBtn.disabled = placedCount === 0;
+    publishBtn.disabled = placedCount < Parameters.countNews;
   }
   
   private restorePlacedNews(): void {
