@@ -4,6 +4,8 @@ import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/re
 import { setupDragAndDrop } from './utils/dragdrop';
 import { getNewsByCategory, getNewsById } from './data/news';
 import type { PlacedNews } from './utils/storage';
+import "@fontsource/unifrakturmaguntia";
+import "@fontsource/roboto";
 
 class Game {
   private state: GameState;
