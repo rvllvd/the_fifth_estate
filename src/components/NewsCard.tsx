@@ -36,7 +36,7 @@ export default function NewsCard({ news, placed }: Props) {
       data-category={news.category}
       draggable={!placed}
       onDragStart={handleDragStart}
-      style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
+    //   style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
     >
       <div className="news-header">
         <span className="news-title">{news.title}</span>

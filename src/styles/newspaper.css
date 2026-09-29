@@ -1,0 +1,210 @@
+/* Газета - основной контент */
+#newspaper {
+  flex: 1;
+  background-color: #fff8dc;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  border-left: 3px solid #d4c4a8;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 28px,
+    rgba(0,0,0,0.03) 28px,
+    rgba(0,0,0,0.03) 29px
+  );
+}
+
+.newspaper-page {
+  width: 100%;
+  max-width: 1200px;
+  padding: 5px;
+  position: relative;
+  height: auto;
+  min-height: 600px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.newspaper-header {
+  text-align: center;
+  padding-bottom: 15px;
+  position: relative;
+}
+
+.newspaper-title {
+  font-size: 52px;
+  font-weight: 400;
+  color: #1a1a2e;
+  font-family: 'UnifrakturMaguntia', cursive;
+  text-transform: none;
+  letter-spacing: 2px;
+}
+
+.newspaper-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+  font-style: italic;
+}
+
+.newspaper-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.newspaper-column {
+  background-color: rgba(255,255,255,0.5);
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  min-height: 200px;
+}
+
+.main-column {
+  background-color: rgba(255,255,255,0.7);
+}
+
+.second-tier {
+  background-color: rgba(255,255,255,0.6);
+}
+
+.third-tier {
+  background-color: rgba(255,255,255,0.5);
+}
+
+.column-slots {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}
+
+.column-header {
+  display: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #1a1a2e;
+  padding-bottom: 8px;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1px;
+}
+
+.main-column .column-header {
+  font-size: 21px;
+}
+
+.newspaper-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.newspaper-columns:last-child {
+  margin-bottom: 30px;
+}
+
+.empty-slot {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.02);
+}
+
+.slot-placeholder {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+}
+
+.slot-placeholder p {
+  margin: 4px 0;
+}
+
+.slot-placeholder p:first-child {
+  font-weight: 600;
+  color: #666;
+}
+
+/* Drag and Drop стили */
+.newspaper-column.drag-over {
+  background-color: rgba(52, 152, 219, 0.2);
+  border-color: #3498db;
+  box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+}
+
+.placed-news {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  height: 150px;
+  font-family: 'Cormorant Garamond', serif;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  overflow: scroll;
+}
+
+.placed-news:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.placed-news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.placed-news-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.main-column .placed-news-title {
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.remove-news-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: color 0.3s;
+}
+
+.remove-news-btn:hover {
+  color: #c0392b;
+}
+
+.placed-news-content {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.main-column .placed-news-content {
+  font-size: 16px;
+}
+
+.placed-news-effects {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+}

@@ -1,0 +1,124 @@
+/* Верхняя панель - показатели */
+#top-panel {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: white;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  min-height: 50px;
+}
+
+.newspaper-logo {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  margin-right: 20px;
+}
+
+.metrics {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  min-width: 70px;
+}
+
+.metric-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #bdc3c7;
+  margin-bottom: 3px;
+  font-weight: bold;
+}
+
+.metric-value-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  width: 50px;
+  height: 6px;
+  background-color: #34495e;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e74c3c 0%, #f39c12 50%, #27ae60 100%);
+  transition: width 0.3s ease;
+}
+
+#new-game-btn {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 6px 15px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin-left: 15px;
+}
+
+#new-game-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+/* Индикатор показателей */
+#metrics-preview {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-left: 15px;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.metrics-preview-title {
+  font-size: 8px;
+  color: #bdc3c7;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.metrics-preview-values {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.preview-metric {
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.preview-metric.positive {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.2);
+}
+
+.preview-metric.negative {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.2);
+}

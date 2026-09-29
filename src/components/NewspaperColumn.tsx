@@ -64,7 +64,11 @@ export default function NewspaperColumn({
               {news ? (
                 <PlacedNewsCard news={news} tier={tier} onRemove={() => onRemove(news.id)} />
               ) : (
-                <div className="slot-placeholder">Перетащите новость сюда</div>
+                <div className="slot-placeholder">
+                  <p>Перетащите новость сюда</p>
+                  <p>Колонка {["первая", "вторая", "третья"][tier-1]}</p>
+                  <p>Множетель { [2,1,0.5][tier-1] }X</p>
+                </div>
               )}
             </div>
           );

@@ -57,9 +57,9 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-actions">
-                    <button className="fire-btn" onClick={() => onFire(j.id)}>
+                    {staff.length > 1 && <button className="fire-btn" onClick={() => onFire(j.id)}>
                       Уволить
-                    </button>
+                    </button>}
                   </div>
                 </div>
               ))}

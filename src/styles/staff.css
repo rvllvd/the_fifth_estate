@@ -1,0 +1,83 @@
+/* Список сотрудников */
+.toggle-staff-btn {
+  background: none;
+  border: none;
+  color: #bdc3c7;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.toggle-staff-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.staff-list.hidden {
+  display: none;
+}
+
+.staff-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0px;
+  gap: 4px;
+}
+
+.staff-card {
+  flex: 1;
+  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 0 1px 6px 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.staff-card:hover {
+  background-color: rgba(255,255,255,0.15);
+  transform: translateY(4px);
+}
+
+.staff-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.staff-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.staff-role {
+  font-size: 12px;
+  color: #bdc3c7;
+}
+
+.staff-stats {
+  display: flex;
+  gap: 15px;
+}
+
+.staff-stat {
+  font-size: 11px;
+  color: #3498db;
+}
+
+.empty-staff {
+  text-align: center;
+  color: #bdc3c7;
+  font-style: italic;
+  padding: 20px;
+}
