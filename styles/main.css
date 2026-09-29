@@ -184,6 +184,35 @@ body {
   color: #ffd700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-staff-btn {
+  background: none;
+  border: none;
+  color: #bdc3c7;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.toggle-staff-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.staff-list.hidden {
+  display: none;
 }
 
 /* Список сотрудников */

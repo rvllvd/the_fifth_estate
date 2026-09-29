@@ -86,6 +86,11 @@ class Game {
       console.log('Hire button not found');
     }
     
+    const toggleStaffBtn = document.getElementById('toggle-staff-btn');
+    if (toggleStaffBtn) {
+      toggleStaffBtn.addEventListener('click', () => this.toggleStaffVisibility());
+    }
+    
     document.addEventListener('click', (e) => {
       const removeBtn = (e.target as HTMLElement).closest('.remove-news-btn') as HTMLElement | null;
       if (removeBtn) {
@@ -160,6 +165,16 @@ class Game {
     this.addLog(`${journalist.name} уволен`, 'bad');
     this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
     renderStaff(this.state.journalists);
+  }
+  
+  private toggleStaffVisibility(): void {
+    const staffList = document.getElementById('staff-list');
+    const toggleBtn = document.getElementById('toggle-staff-btn');
+    
+    if (staffList && toggleBtn) {
+      staffList.classList.toggle('hidden');
+      toggleBtn.textContent = staffList.classList.contains('hidden') ? '...' : '×';
+    }
   }
   
   private render(): void {
