@@ -102,7 +102,7 @@ class Game {
     if (log) {
       const entry = document.createElement('div');
       entry.className = `log-entry ${type}`;
-      entry.textContent = `[Ход ${this.state.turn}]`;
+      entry.textContent = `[Ход ${this.state.turn}] ${message}`;
       log.appendChild(entry);
       log.scrollTop = log.scrollHeight;
     }
@@ -122,10 +122,10 @@ class Game {
         </div>
         <div class="news-content">${item.content}</div>
         <div class="news-effects">
-          <span class="effect">📈 Влияние ${item.effects.influence > 0 ? '+' : ''}${item.effects.influence}</span>
-          <span class="effect">🎯 Доверие ${item.effects.credibility > 0 ? '+' : ''}${item.effects.credibility}</span>
-          <span class="effect">💰 Бюджет ${item.effects.budget > 0 ? '+' : ''}${item.effects.budget}</span>
-          <span class="effect">👥 Читатели ${item.effects.readership > 0 ? '+' : ''}${item.effects.readership}</span>
+          <span class="effect">📈 ${item.effects.influence > 0 ? '+' : ''}${item.effects.influence}</span>
+          <span class="effect">🎯 ${item.effects.credibility > 0 ? '+' : ''}${item.effects.credibility}</span>
+          <span class="effect">💰 ${item.effects.budget > 0 ? '+' : ''}${item.effects.budget}</span>
+          <span class="effect">👥 ${item.effects.readership > 0 ? '+' : ''}${item.effects.readership}</span>
         </div>
       </div>
     `).join('');

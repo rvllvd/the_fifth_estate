@@ -126,14 +126,10 @@ body {
   box-shadow: 4px 0 10px rgba(0,0,0,0.2);
 }
 
-.panel-section {
+.panel-section:not(:last-child) {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid #4a6578;
-}
-
-.panel-section:last-child {
-  border-bottom: none;
 }
 
 .panel-title {
@@ -260,7 +256,8 @@ body {
 }
 
 .news-title {
-  font-size: 14px;
+  font-size: 12px;
+  text-transfo: uppercase;
   font-weight: bold;
   color: #fff;
 }
@@ -275,6 +272,7 @@ body {
 }
 
 .news-content {
+  display: none;
   font-size: 12px;
   color: #bdc3c7;
   margin-bottom: 8px;
@@ -297,14 +295,17 @@ body {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: white;
   border: none;
-  padding: 10px 10px;
-  font-size: 14px;
+  padding: 7px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   border-radius: 6px;
   transition: all 0.3s;
   width: 100%;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+.action-btn:not(:last-child) {
+  margin-bottom: 7px;
 }
 
 .action-btn:hover:not(:disabled) {
@@ -316,6 +317,10 @@ body {
   background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.action-btn:nth-child(2) {
+    margin-top: 7px;
 }
 
 /* Газета - основной контент */
@@ -426,6 +431,10 @@ body {
   letter-spacing: 1px;
 }
 
+.main-column .column-header {
+  font-size: 21px;
+}
+
 .newspaper-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -466,11 +475,14 @@ body {
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 12px;
-  min-height: 150px;
+  height: 150px;
   font-family: 'Cormorant Garamond', serif;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: all 0.3s;
+  overflow: scroll;
 }
+
+.main-column
 
 .placed-news:hover {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -489,6 +501,11 @@ body {
   font-size: 16px;
   font-weight: 600;
   color: #1a1a2e;
+}
+
+.main-column .placed-news-title {
+  font-size: 21px;
+  font-weight: 800;
 }
 
 .remove-news-btn {
@@ -510,6 +527,10 @@ body {
   color: #555;
   margin-bottom: 8px;
   line-height: 1.4;
+}
+
+.main-column .placed-news-content {
+ font-size: 16px; 
 }
 
 .placed-news-effects {
