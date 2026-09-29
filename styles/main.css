@@ -257,7 +257,7 @@ body {
 
 .news-title {
   font-size: 12px;
-  text-transfo: uppercase;
+  text-transform: uppercase;
   font-weight: bold;
   color: #fff;
 }
