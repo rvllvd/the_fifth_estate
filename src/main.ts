@@ -5,6 +5,8 @@ import { setupDragAndDrop } from './utils/dragdrop';
 import { getNewsByCategory, getNewsById, getAllCategory } from './data/news';
 import type { PlacedNews } from './utils/storage';
 import { Parameters } from './utils/storage';
+import { MetricsIndicator } from './ui/metrics-indicator';
+import { MetricsModal } from './ui/metrics-modal';
 
 // Fonts
 import "@fontsource/roboto";
@@ -13,11 +15,16 @@ import "@fontsource/cormorant-garamond";
 
 class Game {
   private state: GameState;
+  private metricsIndicator: MetricsIndicator;
+  private metricsModal: MetricsModal;
   
   constructor() {
     // Загружаем сохранение или создаем новую игру
     const savedState = loadState();
     this.state = savedState || getInitialState();
+    
+    this.metricsIndicator = new MetricsIndicator();
+    this.metricsModal = new MetricsModal();
     
     this.init();
   }
@@ -29,6 +36,7 @@ class Game {
     this.setupEventListeners();
     this.updatePublishButton();
     this.restorePlacedNews();
+    this.metricsIndicator.update(this.state.placedNews);
 
     setupDragAndDrop();
   }
@@ -148,6 +156,8 @@ class Game {
     const placedCount = this.state.placedNews.length;
     publishBtn.textContent = `Опубликовать (${placedCount})`;
     publishBtn.disabled = placedCount < Parameters.countNews;
+    
+    this.metricsIndicator.update(this.state.placedNews);
   }
   
   private restorePlacedNews(): void {
@@ -220,6 +230,7 @@ class Game {
     });
     
     this.updatePublishButton();
+    this.metricsIndicator.update(this.state.placedNews);
   }
   
   private publishNewspaper(): void {
@@ -246,75 +257,13 @@ class Game {
     });
     
     // Показываем модальное окно с анимацией
-    this.showMetricsAnimation(totalInfluence, totalCredibility, totalBudget, totalReadership);
-  }
-  
-  private showMetricsAnimation(influence: number, credibility: number, budget: number, readership: number): void {
-    const modal = document.getElementById('metrics-modal');
-    if (!modal) return;
-    
-    // Устанавливаем начальные значения
-    const modalInfluence = document.getElementById('modal-influence');
-    const modalCredibility = document.getElementById('modal-credibility');
-    const modalBudget = document.getElementById('modal-budget');
-    const modalReadership = document.getElementById('modal-readership');
-    
-    if (modalInfluence) modalInfluence.textContent = '0';
-    if (modalCredibility) modalCredibility.textContent = '0';
-    if (modalBudget) modalBudget.textContent = '0';
-    if (modalReadership) modalReadership.textContent = '0';
-    
-    // Показываем модальное окно
-    modal.classList.add('show');
-    
-    // Анимируем значения с задержкой
-    setTimeout(() => {
-      this.animateMetricValue(modalInfluence, influence);
-      this.animateMetricValue(modalCredibility, credibility);
-      this.animateMetricValue(modalBudget, budget);
-      this.animateMetricValue(modalReadership, readership);
-    }, 300);
+    this.metricsModal.show(totalInfluence, totalCredibility, totalBudget, totalReadership);
     
     // После анимации скрываем окно и обновляем состояние игры
     setTimeout(() => {
-      modal.classList.remove('show');
-      this.applyPublicationEffects(influence, credibility, budget, readership);
+      this.metricsModal.hide();
+      this.applyPublicationEffects(totalInfluence, totalCredibility, totalBudget, totalReadership);
     }, 2000);
-  }
-  
-  private animateMetricValue(element: HTMLElement | null, targetValue: number): void {
-    if (!element) return;
-    
-    const currentValue = parseInt(element.textContent || '0');
-    const isPositive = targetValue > 0;
-    const parent = element.closest('.metric-change');
-    
-    if (parent) {
-      parent.classList.remove('positive', 'negative');
-      parent.classList.add(isPositive ? 'positive' : 'negative');
-    }
-    
-    // Анимация чисел
-    let start = currentValue;
-    const duration = 1000;
-    const startTime = performance.now();
-    
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing function
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(start + (targetValue - start) * easeOut);
-      
-      element.textContent = (current > 0 ? '+' : '') + current;
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    requestAnimationFrame(animate);
   }
   
   private applyPublicationEffects(influence: number, credibility: number, budget: number, readership: number): void {
@@ -359,6 +308,7 @@ class Game {
     });
     
     this.renderNewsList();
+    this.metricsIndicator.update([]);
   }
 }
 

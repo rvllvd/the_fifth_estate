@@ -109,6 +109,51 @@ body {
   box-shadow: 0 3px 6px rgba(0,0,0,0.3);
 }
 
+/* Индикатор показателей */
+#metrics-preview {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-left: 15px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+}
+
+.metrics-preview-title {
+  font-size: 8px;
+  color: #bdc3c7;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.metrics-preview-values {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.preview-metric {
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.preview-metric.positive {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.2);
+}
+
+.preview-metric.negative {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.2);
+}
+
 /* Основной контент */
 #main-content {
   display: flex;

@@ -4,9 +4,6 @@ import type { GameState } from '../utils/storage';
  * Рендер показателей в верхней панели
  */
 export function renderMetrics(state: GameState): void {
-  const topPanel = document.getElementById('top-panel');
-  if (!topPanel) return;
-  
   // Определяем классы для цветов показателей
   const getMetricClass = (value: number): string => {
     if (value <= 20) return 'danger';
@@ -14,51 +11,58 @@ export function renderMetrics(state: GameState): void {
     return 'good';
   };
   
-  topPanel.innerHTML = `
-    <div class="metrics">
-      <div class="metric">
-        <span class="metric-label">📈 Влияние</span>
-        <div class="metric-value-container">
-          <span class="metric-value ${getMetricClass(state.influence)}">${state.influence}</span>
-          <div class="progress-bar">
-            <div class="progress-fill" id="influence-bar" style="width: ${state.influence}%"></div>
-          </div>
-        </div>
-      </div>
-      <div class="metric">
-        <span class="metric-label">🎯 Доверие</span>
-        <div class="metric-value-container">
-          <span class="metric-value ${getMetricClass(state.credibility)}">${state.credibility}</span>
-          <div class="progress-bar">
-            <div class="progress-fill" id="influence-bar" style="width: ${state.credibility}%"></div>
-          </div>
-        </div>
-      </div>
-      <div class="metric">
-        <span class="metric-label">💰 Бюджет</span>
-        <div class="metric-value-container">
-          <span class="metric-value ${getMetricClass(state.budget)}">${state.budget}</span>
-          <div class="progress-bar">
-            <div class="progress-fill" id="influence-bar" style="width: ${state.budget}%"></div>
-          </div>
-        </div>
-      </div>
-      <div class="metric">
-        <span class="metric-label">👥 Читатели</span>
-        <div class="metric-value-container">
-          <span class="metric-value ${getMetricClass(state.readership)}">${state.readership}</span>
-          <div class="progress-bar">
-            <div class="progress-fill" id="influence-bar" style="width: ${state.readership}%"></div>
-          </div>
-        </div>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Ход</span>
-        <span class="metric-value">${state.turn}</span>
-      </div>
-    </div>
-    <button id="new-game-btn">Новая игра</button>
-  `;
+  // Обновляем значения показателей
+  const influence = document.getElementById('influence');
+  const credibility = document.getElementById('credibility');
+  const budget = document.getElementById('budget');
+  const readership = document.getElementById('readership');
+  const turn = document.getElementById('turn');
+  
+  if (influence) {
+    influence.textContent = state.influence.toString();
+    influence.className = `metric-value ${getMetricClass(state.influence)}`;
+  }
+  
+  if (credibility) {
+    credibility.textContent = state.credibility.toString();
+    credibility.className = `metric-value ${getMetricClass(state.credibility)}`;
+  }
+  
+  if (budget) {
+    budget.textContent = state.budget.toString();
+    budget.className = `metric-value ${getMetricClass(state.budget)}`;
+  }
+  
+  if (readership) {
+    readership.textContent = state.readership.toString();
+    readership.className = `metric-value ${getMetricClass(state.readership)}`;
+  }
+  
+  if (turn) {
+    turn.textContent = state.turn.toString();
+  }
+  
+  // Обновляем прогресс-бары
+  const influenceBar = document.getElementById('influence-bar');
+  const credibilityBar = document.getElementById('credibility-bar');
+  const budgetBar = document.getElementById('budget-bar');
+  const readershipBar = document.getElementById('readership-bar');
+  
+  if (influenceBar) {
+    influenceBar.style.width = `${state.influence}%`;
+  }
+  
+  if (credibilityBar) {
+    credibilityBar.style.width = `${state.credibility}%`;
+  }
+  
+  if (budgetBar) {
+    budgetBar.style.width = `${state.budget}%`;
+  }
+  
+  if (readershipBar) {
+    readershipBar.style.width = `${state.readership}%`;
+  }
 }
 
 /**
