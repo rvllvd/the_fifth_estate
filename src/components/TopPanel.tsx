@@ -30,8 +30,11 @@ export default function TopPanel({ metrics, onNewGame, preview }: Props) {
           </div>
         )}
       </div>
-
-      <button id="new-game-btn" onClick={onNewGame}>Новая игра</button>
+  <div className="top-panel-actions">
+      <button className="right-btn" id="upgrade-btn">Улучшения</button>
+      <button className="right-btn" id="stat-btn">Статистика</button>
+      <button className="right-btn" id="new-game-btn" onClick={onNewGame}>Новая игра</button>
+      </div>
     </div>
   );
 }

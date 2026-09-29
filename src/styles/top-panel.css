@@ -4,10 +4,12 @@
   color: white;
   padding: 8px 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   min-height: 50px;
+  position: relative;
+  gap: 15px;
 }
 
 .newspaper-logo {
@@ -18,10 +20,11 @@
   margin-right: 20px;
 }
 
+/* Показатели */
 .metrics {
   display: flex;
   gap: 15px;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .metric {
@@ -58,7 +61,15 @@
   transition: width 0.3s ease;
 }
 
-#new-game-btn {
+/* Обёртка кнопок справа */
+.top-panel-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  z-index: 3;
+}
+
+.right-btn {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
   border: none;
@@ -69,25 +80,29 @@
   border-radius: 4px;
   transition: all 0.3s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  margin-left: 15px;
 }
 
-#new-game-btn:hover {
+.right-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(0,0,0,0.3);
 }
 
-/* Индикатор показателей */
+/* Индикатор показателей — по центру панели */
 #metrics-preview {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
   padding: 4px 10px;
-  margin-left: 15px;
   min-width: 90px;
   display: flex;
   flex-direction: column;
   font-size: 14px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .metrics-preview-title {
