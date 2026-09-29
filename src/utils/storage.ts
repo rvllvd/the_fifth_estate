@@ -109,54 +109,7 @@ export function clearState(): void {
  * Получить начальное состояние
  */
 export function getInitialState(): GameState {
-  return { 
-    ...INITIAL_STATE,
-    journalists: getInitialJournalists()
-  };
-}
-
-/**
- * Получить начальных сотрудников
- */
-function getInitialJournalists(): Journalist[] {
-  return [
-    {
-      id: 'ivan_petrov',
-      name: 'Иван Петров',
-      role: 'Политический обозреватель',
-      bonus: {
-        influence: 8,
-        credibility: 0,
-        budget: -5,
-        readership: 0
-      },
-      cost: 5
-    },
-    {
-      id: 'maria_sidorova',
-      name: 'Мария Сидорова',
-      role: 'Спортивный журналист',
-      bonus: {
-        influence: 6,
-        credibility: 0,
-        budget: -4,
-        readership: 0
-      },
-      cost: 4
-    },
-    {
-      id: 'alexey_kozlov',
-      name: 'Алексей Козлов',
-      role: 'Технологический обозреватель',
-      bonus: {
-        influence: 7,
-        credibility: 0,
-        budget: -6,
-        readership: 0
-      },
-      cost: 6
-    }
-  ];
+  return { ...INITIAL_STATE };
 }
 
 /**

@@ -7,6 +7,8 @@ import type { PlacedNews } from './utils/storage';
 import { Parameters } from './utils/storage';
 import { MetricsIndicator } from './ui/metrics-indicator';
 import { MetricsModal } from './ui/metrics-modal';
+import { JournalistsModal } from './ui/journalists-modal';
+import { AVAILABLE_JOURNALISTS } from './data/journalists';
 
 // Fonts
 import "@fontsource/roboto";
@@ -17,14 +19,24 @@ class Game {
   private state: GameState;
   private metricsIndicator: MetricsIndicator;
   private metricsModal: MetricsModal;
+  private journalistsModal: JournalistsModal;
   
   constructor() {
     // Загружаем сохранение или создаем новую игру
     const savedState = loadState();
     this.state = savedState || getInitialState();
     
+    // Инициализируем сотрудников для новой игры
+    if (!savedState) {
+      this.state.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
+    }
+    
     this.metricsIndicator = new MetricsIndicator();
     this.metricsModal = new MetricsModal();
+    this.journalistsModal = new JournalistsModal(
+      (journalist) => this.hireJournalist(journalist),
+      (journalistId) => this.fireJournalist(journalistId)
+    );
     
     this.init();
   }
@@ -64,6 +76,11 @@ class Game {
       clearBtn.addEventListener('click', () => this.clearNewspaper());
     }
     
+    const hireBtn = document.getElementById('hire-btn');
+    if (hireBtn) {
+      hireBtn.addEventListener('click', () => this.openJournalistsModal());
+    }
+    
     document.addEventListener('click', (e) => {
       const removeBtn = (e.target as HTMLElement).closest('.remove-news-btn') as HTMLElement | null;
       if (removeBtn) {
@@ -89,6 +106,7 @@ class Game {
   private startNewGame(): void {
     clearState();
     this.state = getInitialState();
+    this.state.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
     this.addLog('Новая игра начана!', 'turn');
     this.render();
     this.clearNewspaperSlots();
@@ -111,6 +129,29 @@ class Game {
       (item as HTMLElement).style.opacity = '1';
       (item as HTMLElement).style.pointerEvents = 'auto';
     });
+  }
+  
+  private openJournalistsModal(): void {
+    this.journalistsModal.show(this.state.journalists);
+  }
+  
+  private hireJournalist(journalist: any): void {
+    this.setState({
+      journalists: [...this.state.journalists, journalist]
+    });
+    this.addLog(`${journalist.name} нанят на работу!`, 'good');
+    this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
+  }
+  
+  private fireJournalist(journalistId: string): void {
+    const journalist = this.state.journalists.find(j => j.id === journalistId);
+    if (!journalist) return;
+    
+    this.setState({
+      journalists: this.state.journalists.filter(j => j.id !== journalistId)
+    });
+    this.addLog(`${journalist.name} уволен`, 'bad');
+    this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
   }
   
   private render(): void {
