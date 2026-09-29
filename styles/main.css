@@ -279,6 +279,52 @@ body {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 15px;
+  align-items: center;
+}
+
+.toggle-categories-btn {
+  background: none;
+  border: none;
+  color: #bdc3c7;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+.toggle-categories-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.categories-dropdown {
+  position: absolute;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+}
+
+.categories-dropdown.show {
+  display: flex;
+}
+
+.news-categories {
+  position: relative;
 }
 
 .category-btn {

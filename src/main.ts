@@ -54,10 +54,38 @@ class Game {
   }
 
   private renderCategories() {
-    const newsCategories = document.getElementById("news-categories") 
-    if (newsCategories) {
-      getAllCategory().forEach(category => newsCategories.innerHTML += `<button class="category-btn" data-category="${category}">${category}</button>`)
-    } 
+    const categoriesDropdown = document.getElementById("categories-dropdown");
+    if (categoriesDropdown) {
+      const categories = getAllCategory();
+      categoriesDropdown.innerHTML = categories.map(category => 
+        `<button class="category-btn" data-category="${category}">${category}</button>`
+      ).join('');
+    }
+    
+    this.setupCategoryDropdown();
+  }
+  
+  private setupCategoryDropdown(): void {
+    const toggleBtn = document.getElementById('toggle-categories-btn');
+    const dropdown = document.getElementById('categories-dropdown');
+    const newsCategories = document.getElementById('news-categories');
+    
+    if (!toggleBtn || !dropdown || !newsCategories) return;
+    
+    // Показываем dropdown при наведении на кнопку
+    toggleBtn.addEventListener('mouseenter', () => {
+      dropdown.classList.add('show');
+    });
+    
+    // Скрываем dropdown когда курсор уходит из области категорий
+    newsCategories.addEventListener('mouseleave', () => {
+      dropdown.classList.remove('show');
+    });
+    
+    // Предотвращаем скрытие при наведении на сам dropdown
+    dropdown.addEventListener('mouseenter', () => {
+      dropdown.classList.add('show');
+    });
   }
 
   private setupEventListeners(): void {
@@ -109,6 +137,12 @@ class Game {
         
         const category = (btn as HTMLElement).dataset.category || 'all';
         this.renderNewsList(category);
+        
+        // Скрываем dropdown после выбора
+        const dropdown = document.getElementById('categories-dropdown');
+        if (dropdown) {
+          dropdown.classList.remove('show');
+        }
       });
     });
   }
