@@ -2,7 +2,7 @@ import type { GameState, NewsItem } from './utils/storage';
 import { saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
 import { renderMetrics, renderPanels, renderNewspaper, renderLog, renderStaff } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
-import { getNewsByCategory, getNewsById, getAllCategory } from './data/news';
+import { getNewsById, getAllCategory, getRandomNews } from './data/news';
 import type { PlacedNews } from './utils/storage';
 import { Parameters } from './utils/storage';
 import { MetricsIndicator } from './ui/metrics-indicator';
@@ -210,7 +210,16 @@ class Game {
     const newsList = document.getElementById('news-list');
     if (!newsList) return;
     
-    const news = getNewsByCategory(category);
+    let news: NewsItem[];
+    
+    if (category === 'all') {
+      // Показываем случайные новости для текущего хода
+      news = getRandomNews(10, this.state.usedNewsIds);
+    } else {
+      // Фильтрация по категории из доступных новостей
+      const availableNews = getRandomNews(50, this.state.usedNewsIds); // Больше новостей для фильтрации
+      news = availableNews.filter(item => item.category === category);
+    }
     
     newsList.innerHTML = news.map((item: NewsItem) => `
       <div class="news-item" data-news-id="${item.id}" data-category="${item.category}">
@@ -381,13 +390,22 @@ class Game {
   }
   
   private applyPublicationEffects(influence: number, credibility: number, budget: number, readership: number): void {
+    // Добавляем использованные новости в список
+    const usedNewsIds = [...this.state.usedNewsIds];
+    this.state.placedNews.forEach((placed: PlacedNews) => {
+      if (!usedNewsIds.includes(placed.newsId)) {
+        usedNewsIds.push(placed.newsId);
+      }
+    });
+    
     const newState: Partial<GameState> = {
       influence: Math.max(0, Math.min(100, this.state.influence + influence)),
       credibility: Math.max(0, Math.min(100, this.state.credibility + credibility)),
       budget: Math.max(0, Math.min(100, this.state.budget + budget)),
       readership: Math.max(0, Math.min(100, this.state.readership + readership)),
       turn: this.state.turn + 1,
-      placedNews: []
+      placedNews: [],
+      usedNewsIds
     };
     
     const isGameOver = newState.turn! > this.state.maxTurns;

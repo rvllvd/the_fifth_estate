@@ -52,6 +52,9 @@ export type GameState = {
   // Сотрудники
   journalists: Journalist[];
   
+  // Использованные новости
+  usedNewsIds: string[];
+  
   // Статус игры
   gameOver?: boolean;
   victory?: boolean;
@@ -65,7 +68,8 @@ const INITIAL_STATE: GameState = {
   turn: 1,
   maxTurns: 20,
   placedNews: [],
-  journalists: []
+  journalists: [],
+  usedNewsIds: []
 };
 
 /**
