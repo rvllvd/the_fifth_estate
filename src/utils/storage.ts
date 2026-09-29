@@ -27,6 +27,14 @@ export type PlacedNews = {
   slot: number;
 };
 
+export type Journalist = {
+  id: string;
+  name: string;
+  role: string;
+  bonus: NewsEffect;
+  cost: number;
+};
+
 export type GameState = {
   // Показатели
   influence: number;
@@ -41,6 +49,9 @@ export type GameState = {
   // Размещённые новости
   placedNews: PlacedNews[];
   
+  // Сотрудники
+  journalists: Journalist[];
+  
   // Статус игры
   gameOver?: boolean;
   victory?: boolean;
@@ -53,7 +64,8 @@ const INITIAL_STATE: GameState = {
   readership: 50,
   turn: 1,
   maxTurns: 20,
-  placedNews: []
+  placedNews: [],
+  journalists: []
 };
 
 /**
@@ -97,7 +109,54 @@ export function clearState(): void {
  * Получить начальное состояние
  */
 export function getInitialState(): GameState {
-  return { ...INITIAL_STATE };
+  return { 
+    ...INITIAL_STATE,
+    journalists: getInitialJournalists()
+  };
+}
+
+/**
+ * Получить начальных сотрудников
+ */
+function getInitialJournalists(): Journalist[] {
+  return [
+    {
+      id: 'ivan_petrov',
+      name: 'Иван Петров',
+      role: 'Политический обозреватель',
+      bonus: {
+        influence: 8,
+        credibility: 0,
+        budget: -5,
+        readership: 0
+      },
+      cost: 5
+    },
+    {
+      id: 'maria_sidorova',
+      name: 'Мария Сидорова',
+      role: 'Спортивный журналист',
+      bonus: {
+        influence: 6,
+        credibility: 0,
+        budget: -4,
+        readership: 0
+      },
+      cost: 4
+    },
+    {
+      id: 'alexey_kozlov',
+      name: 'Алексей Козлов',
+      role: 'Технологический обозреватель',
+      bonus: {
+        influence: 7,
+        credibility: 0,
+        budget: -6,
+        readership: 0
+      },
+      cost: 6
+    }
+  ];
 }
 
 /**

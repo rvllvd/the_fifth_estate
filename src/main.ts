@@ -36,7 +36,7 @@ class Game {
     this.setupEventListeners();
     this.updatePublishButton();
     this.restorePlacedNews();
-    this.metricsIndicator.update(this.state.placedNews);
+    this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
 
     setupDragAndDrop();
   }
@@ -92,7 +92,7 @@ class Game {
     this.addLog('Новая игра начана!', 'turn');
     this.render();
     this.clearNewspaperSlots();
-    this.metricsIndicator.update([]);
+    this.metricsIndicator.update([], this.state.journalists);
   }
   
   private clearNewspaper(): void {
@@ -182,7 +182,7 @@ class Game {
     publishBtn.textContent = `Опубликовать (${placedCount})`;
     publishBtn.disabled = placedCount < Parameters.countNews;
     
-    this.metricsIndicator.update(this.state.placedNews);
+    this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
   }
   
   private restorePlacedNews(): void {
@@ -255,7 +255,7 @@ class Game {
     });
     
     this.updatePublishButton();
-    this.metricsIndicator.update(this.state.placedNews);
+    this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
   }
   
   private publishNewspaper(): void {
@@ -269,6 +269,7 @@ class Game {
     let totalBudget = 0;
     let totalReadership = 0;
     
+    // Рассчитываем эффекты от новостей
     this.state.placedNews.forEach((placed: PlacedNews) => {
       const news = getNewsById(placed.newsId);
       if (!news) return;
@@ -281,6 +282,13 @@ class Game {
       totalReadership += Math.round(news.effects.readership * multiplier);
     });
     
+    // Добавляем бонусы от сотрудников
+    const journalistBonuses = this.calculateJournalistBonuses();
+    totalInfluence += journalistBonuses.influence;
+    totalCredibility += journalistBonuses.credibility;
+    totalBudget += journalistBonuses.budget;
+    totalReadership += journalistBonuses.readership;
+    
     // Показываем модальное окно с анимацией
     this.metricsModal.show(totalInfluence, totalCredibility, totalBudget, totalReadership);
     
@@ -289,6 +297,22 @@ class Game {
       this.metricsModal.hide();
       this.applyPublicationEffects(totalInfluence, totalCredibility, totalBudget, totalReadership);
     }, 2000);
+  }
+  
+  private calculateJournalistBonuses(): { influence: number; credibility: number; budget: number; readership: number } {
+    let influence = 0;
+    let credibility = 0;
+    let budget = 0;
+    let readership = 0;
+    
+    this.state.journalists.forEach(journalist => {
+      influence += journalist.bonus.influence;
+      credibility += journalist.bonus.credibility;
+      budget += journalist.bonus.budget;
+      readership += journalist.bonus.readership;
+    });
+    
+    return { influence, credibility, budget, readership };
   }
   
   private applyPublicationEffects(influence: number, credibility: number, budget: number, readership: number): void {
@@ -312,6 +336,23 @@ class Game {
     this.addLog(`Бюджет: ${budget > 0 ? '+' : ''}${budget}`, budget > 0 ? 'good' : 'bad');
     this.addLog(`Читатели: ${readership > 0 ? '+' : ''}${readership}`, readership > 0 ? 'good' : 'bad');
     
+    // Показываем бонусы от сотрудников
+    if (this.state.journalists.length > 0) {
+      this.addLog(`Бонусы сотрудников:`, 'normal');
+      this.state.journalists.forEach(journalist => {
+        const bonusText = [
+          journalist.bonus.influence !== 0 ? `Влияние ${journalist.bonus.influence > 0 ? '+' : ''}${journalist.bonus.influence}` : '',
+          journalist.bonus.credibility !== 0 ? `Доверие ${journalist.bonus.credibility > 0 ? '+' : ''}${journalist.bonus.credibility}` : '',
+          journalist.bonus.budget !== 0 ? `Бюджет ${journalist.bonus.budget > 0 ? '+' : ''}${journalist.bonus.budget}` : '',
+          journalist.bonus.readership !== 0 ? `Читатели ${journalist.bonus.readership > 0 ? '+' : ''}${journalist.bonus.readership}` : ''
+        ].filter(Boolean).join(', ');
+        
+        if (bonusText) {
+          this.addLog(`  ${journalist.name}: ${bonusText}`, 'normal');
+        }
+      });
+    }
+    
     if (isGameOver) {
       if (isVictory) {
         this.addLog('🎉 ПОБЕДА! Вы стали влиятельным изданием!', 'good');
@@ -324,7 +365,7 @@ class Game {
     
     this.clearNewspaperSlots();
     this.renderNewsList();
-    this.metricsIndicator.update([]);
+    this.metricsIndicator.update([], this.state.journalists);
   }
 }
 

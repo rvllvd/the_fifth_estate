@@ -1,4 +1,4 @@
-import type { PlacedNews } from '../utils/storage';
+import type { PlacedNews, Journalist } from '../utils/storage';
 import { getNewsById } from '../data/news';
 
 export interface MetricsChange {
@@ -15,19 +15,20 @@ export class MetricsIndicator {
     this.element = document.getElementById('metrics-preview');
   }
   
-  public update(placedNews: PlacedNews[]): void {
+  public update(placedNews: PlacedNews[], journalists: Journalist[] = []): void {
     if (!this.element) return;
     
-    const changes = this.calculateChanges(placedNews);
+    const changes = this.calculateChanges(placedNews, journalists);
     this.render(changes);
   }
   
-  private calculateChanges(placedNews: PlacedNews[]): MetricsChange {
+  private calculateChanges(placedNews: PlacedNews[], journalists: Journalist[]): MetricsChange {
     let influence = 0;
     let credibility = 0;
     let budget = 0;
     let readership = 0;
     
+    // Рассчитываем эффекты от новостей
     placedNews.forEach((placed) => {
       const news = getNewsById(placed.newsId);
       if (!news) return;
@@ -38,6 +39,14 @@ export class MetricsIndicator {
       credibility += Math.round(news.effects.credibility * multiplier);
       budget += Math.round(news.effects.budget * multiplier);
       readership += Math.round(news.effects.readership * multiplier);
+    });
+    
+    // Добавляем бонусы от сотрудников
+    journalists.forEach(journalist => {
+      influence += journalist.bonus.influence;
+      credibility += journalist.bonus.credibility;
+      budget += journalist.bonus.budget;
+      readership += journalist.bonus.readership;
     });
     
     return { influence, credibility, budget, readership };
