@@ -1,4 +1,5 @@
-import type { NewsItem, PlacedNews } from './storage';
+import type { NewsItem, PlacedNews } from '../types.ts';
+import { playSound } from './sounds.ts'
 
 let draggedNews: NewsItem | null = null;
 let draggedElement: HTMLElement | null = null;
@@ -70,6 +71,7 @@ function onDocumentClick(e: MouseEvent): void {
   const column = (e.target as HTMLElement).closest('.newspaper-column') as HTMLElement | null;
   if (column) {
     placeNewsInColumn(column);
+    playSound('/assets/sounds/newspaper_folded_drop_on_floor_001.mp3', 0.9);
   } else {
     cancelDragging();
   }

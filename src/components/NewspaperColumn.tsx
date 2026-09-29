@@ -1,6 +1,7 @@
-import PlacedNewsCard from './PlacedNewsCard';
-import type { NewsItem, PlacedNews } from '../types';
 import { getNewsById } from '../data/news';
+import type { NewsItem, PlacedNews } from '../types';
+import { playSound } from '../utils/sounds.ts';
+import PlacedNewsCard from './PlacedNewsCard';
 
 interface Props {
   tier: number;
@@ -54,9 +55,10 @@ export default function NewspaperColumn({
               onDrop={(e) => {
                 e.preventDefault();
                 const raw = e.dataTransfer.getData('application/json');
-                if (!raw) return;
+                if (!raw || news) return;
                 try {
                   const parsed: NewsItem = JSON.parse(raw);
+                  playSound('/assets/sounds/newspaper_folded_drop_on_floor_001.mp3', 1);
                   onDropNews(key, parsed);
                 } catch {/* ignore */}
               }}

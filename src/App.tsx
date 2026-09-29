@@ -6,8 +6,10 @@ import MetricsModal from './components/MetricsModal';
 import JournalistsModal from './components/JournalistsModal';
 import type { GameState, Journalist, Metrics, NewsItem, PlacedNews } from './types';
 import { clearState, getInitialState, hasSave, loadState, saveState } from './utils/storage';
+import { playSound } from './utils/sounds';
 import { getNewsById, getRandomNews } from './data/news';
 import { AVAILABLE_JOURNALISTS } from './data/journalists';
+import { useBackgroundMusic } from './hooks/useBackgroundMusic';
 import {
   applyPublication,
   calculatePublicationResult,
@@ -17,6 +19,7 @@ import {
 } from './utils/game_logic';
 
 export default function App() {
+  useBackgroundMusic('/assets/sounds/city-noise.mp3', 0.75);
   const [state, setState] = useState<GameState>(() => {
     const saved = loadState();
     if (saved) return saved;
@@ -52,6 +55,26 @@ export default function App() {
   useEffect(() => {
     saveState(state);
   }, [state]);
+
+  
+  useEffect(() => {
+    const handler = () => {
+      playSound('/assets/sounds/menu-button-click.mp3', 0.9);
+    };
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
+
+  // useEffect(() => {
+  //   const handler = (e: MouseEvent) => {
+  //     const target = e.target as HTMLElement;
+  //     if (target.closest('.news-item, .staff-card, .action-btn')) {
+  //       playSound('/assets/sounds/menu-button-click.mp3', 1);
+  //     }
+  //   };
+  //   document.addEventListener('click', handler);
+  //   return () => document.removeEventListener('click', handler);
+  // }, []);
 
   useEffect(() => {
   if (state.currentNewsIds.length > 0) return;
@@ -127,10 +150,12 @@ export default function App() {
       ...prev,
       placedNews: prev.placedNews.filter((p) => p.newsId !== newsId),
     }));
+    playSound('/assets/sounds/newspaper_grab_pick_up_001_30856.mp3', 1);
   };
 
   const handleClearNewspaper = () => {
     setState((prev) => ({ ...prev, placedNews: [] }));
+    playSound('/assets/sounds/clear.mp3', 1);
     addLog('Газета очищена', 'normal');
   };
 
@@ -141,6 +166,7 @@ export default function App() {
     }
     const result = calculatePublicationResult(state.placedNews, state.journalists);
     setModalResult(result);
+    playSound('/assets/sounds/newspaper.mp3', 1);
     addLog('Газета опубликована!', 'good');
   };
 

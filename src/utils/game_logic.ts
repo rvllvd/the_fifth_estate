@@ -1,4 +1,4 @@
-import type { GameState, NewsItem, PlacedNews, Journalist, Metrics } from '../types';
+import type { GameState, PlacedNews, Journalist, Metrics } from '../types';
 import { getNewsById } from '../data/news';
 import { Parameters } from './storage';
 

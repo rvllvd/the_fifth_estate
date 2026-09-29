@@ -102,7 +102,7 @@ export function renderStaff(journalists: Journalist[]): void {
   }
   
   staffList.innerHTML = journalists.map(journalist => `
-    <div class="staff-item">
+    <div class="staff-card">
       <div class="staff-info">
         <span class="staff-name">${journalist.name}</span>
         <span class="staff-role">${journalist.role}</span>
