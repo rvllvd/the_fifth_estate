@@ -1,4 +1,4 @@
-import type { GameState } from '../utils/storage';
+import type { GameState, Journalist } from '../utils/storage';
 
 /**
  * Рендер показателей в верхней панели
@@ -87,4 +87,32 @@ export function renderNewspaper(_state: GameState): void {
 export function renderLog(_state: GameState): void {
   // Лог уже рендерится через addLog, эта функция пока пустая
   // В будущем можно добавить первоначальное заполнение лога
+}
+
+/**
+ * Рендер списка сотрудников
+ */
+export function renderStaff(journalists: Journalist[]): void {
+  const staffList = document.getElementById('staff-list');
+  if (!staffList) return;
+  
+  if (journalists.length === 0) {
+    staffList.innerHTML = '<div class="empty-staff">Нет сотрудников</div>';
+    return;
+  }
+  
+  staffList.innerHTML = journalists.map(journalist => `
+    <div class="staff-item">
+      <div class="staff-info">
+        <span class="staff-name">${journalist.name}</span>
+        <span class="staff-role">${journalist.role}</span>
+      </div>
+      <div class="staff-stats">
+        <span class="staff-stat">📈 ${journalist.bonus.influence > 0 ? '+' : ''}${journalist.bonus.influence}</span>
+        <span class="staff-stat">🎯 ${journalist.bonus.credibility > 0 ? '+' : ''}${journalist.bonus.credibility}</span>
+        <span class="staff-stat">💰 ${journalist.bonus.budget > 0 ? '+' : ''}${journalist.bonus.budget}</span>
+        <span class="staff-stat">👥 ${journalist.bonus.readership > 0 ? '+' : ''}${journalist.bonus.readership}</span>
+      </div>
+    </div>
+  `).join('');
 }

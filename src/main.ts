@@ -1,6 +1,6 @@
 import type { GameState, NewsItem } from './utils/storage';
 import { saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
-import { renderMetrics, renderPanels, renderNewspaper, renderLog } from './ui/render';
+import { renderMetrics, renderPanels, renderNewspaper, renderLog, renderStaff } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
 import { getNewsByCategory, getNewsById, getAllCategory } from './data/news';
 import type { PlacedNews } from './utils/storage';
@@ -147,6 +147,7 @@ class Game {
     });
     this.addLog(`${journalist.name} нанят на работу!`, 'good');
     this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
+    renderStaff(this.state.journalists);
   }
   
   private fireJournalist(journalistId: string): void {
@@ -158,6 +159,7 @@ class Game {
     });
     this.addLog(`${journalist.name} уволен`, 'bad');
     this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
+    renderStaff(this.state.journalists);
   }
   
   private render(): void {
@@ -165,6 +167,7 @@ class Game {
     renderPanels(this.state);
     renderNewspaper(this.state);
     renderLog(this.state);
+    renderStaff(this.state.journalists);
   }
   
   public getState(): GameState {

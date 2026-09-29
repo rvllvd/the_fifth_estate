@@ -233,8 +233,15 @@ body {
 }
 
 .staff-stat {
-  font-size: 12px;
+  font-size: 11px;
   color: #3498db;
+}
+
+.empty-staff {
+  text-align: center;
+  color: #bdc3c7;
+  font-style: italic;
+  padding: 20px;
 }
 
 /* Категории новостей */
