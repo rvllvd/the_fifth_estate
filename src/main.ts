@@ -126,7 +126,7 @@ class Game {
           <span class="effect">🎯 ${item.effects.credibility > 0 ? '+' : ''}${item.effects.credibility}</span>
           <span class="effect">💰 ${item.effects.budget > 0 ? '+' : ''}${item.effects.budget}</span>
           <span class="effect">👥 ${item.effects.readership > 0 ? '+' : ''}${item.effects.readership}</span>
-        </div>
+        </div>  
       </div>
     `).join('');
   }
@@ -245,11 +245,84 @@ class Game {
       totalReadership += Math.round(news.effects.readership * multiplier);
     });
     
+    // Показываем модальное окно с анимацией
+    this.showMetricsAnimation(totalInfluence, totalCredibility, totalBudget, totalReadership);
+  }
+  
+  private showMetricsAnimation(influence: number, credibility: number, budget: number, readership: number): void {
+    const modal = document.getElementById('metrics-modal');
+    if (!modal) return;
+    
+    // Устанавливаем начальные значения
+    const modalInfluence = document.getElementById('modal-influence');
+    const modalCredibility = document.getElementById('modal-credibility');
+    const modalBudget = document.getElementById('modal-budget');
+    const modalReadership = document.getElementById('modal-readership');
+    
+    if (modalInfluence) modalInfluence.textContent = '0';
+    if (modalCredibility) modalCredibility.textContent = '0';
+    if (modalBudget) modalBudget.textContent = '0';
+    if (modalReadership) modalReadership.textContent = '0';
+    
+    // Показываем модальное окно
+    modal.classList.add('show');
+    
+    // Анимируем значения с задержкой
+    setTimeout(() => {
+      this.animateMetricValue(modalInfluence, influence);
+      this.animateMetricValue(modalCredibility, credibility);
+      this.animateMetricValue(modalBudget, budget);
+      this.animateMetricValue(modalReadership, readership);
+    }, 300);
+    
+    // После анимации скрываем окно и обновляем состояние игры
+    setTimeout(() => {
+      modal.classList.remove('show');
+      this.applyPublicationEffects(influence, credibility, budget, readership);
+    }, 2000);
+  }
+  
+  private animateMetricValue(element: HTMLElement | null, targetValue: number): void {
+    if (!element) return;
+    
+    const currentValue = parseInt(element.textContent || '0');
+    const isPositive = targetValue > 0;
+    const parent = element.closest('.metric-change');
+    
+    if (parent) {
+      parent.classList.remove('positive', 'negative');
+      parent.classList.add(isPositive ? 'positive' : 'negative');
+    }
+    
+    // Анимация чисел
+    let start = currentValue;
+    const duration = 1000;
+    const startTime = performance.now();
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (targetValue - start) * easeOut);
+      
+      element.textContent = (current > 0 ? '+' : '') + current;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }
+  
+  private applyPublicationEffects(influence: number, credibility: number, budget: number, readership: number): void {
     const newState: Partial<GameState> = {
-      influence: Math.max(0, Math.min(100, this.state.influence + totalInfluence)),
-      credibility: Math.max(0, Math.min(100, this.state.credibility + totalCredibility)),
-      budget: Math.max(0, Math.min(100, this.state.budget + totalBudget)),
-      readership: Math.max(0, Math.min(100, this.state.readership + totalReadership)),
+      influence: Math.max(0, Math.min(100, this.state.influence + influence)),
+      credibility: Math.max(0, Math.min(100, this.state.credibility + credibility)),
+      budget: Math.max(0, Math.min(100, this.state.budget + budget)),
+      readership: Math.max(0, Math.min(100, this.state.readership + readership)),
       turn: this.state.turn + 1,
       placedNews: []
     };
@@ -260,10 +333,10 @@ class Game {
     this.setState(newState);
     
     this.addLog(`Газета опубликована!`, 'good');
-    this.addLog(`Влияние: ${totalInfluence > 0 ? '+' : ''}${totalInfluence}`, totalInfluence > 0 ? 'good' : 'bad');
-    this.addLog(`Доверие: ${totalCredibility > 0 ? '+' : ''}${totalCredibility}`, totalCredibility > 0 ? 'good' : 'bad');
-    this.addLog(`Бюджет: ${totalBudget > 0 ? '+' : ''}${totalBudget}`, totalBudget > 0 ? 'good' : 'bad');
-    this.addLog(`Читатели: ${totalReadership > 0 ? '+' : ''}${totalReadership}`, totalReadership > 0 ? 'good' : 'bad');
+    this.addLog(`Влияние: ${influence > 0 ? '+' : ''}${influence}`, influence > 0 ? 'good' : 'bad');
+    this.addLog(`Доверие: ${credibility > 0 ? '+' : ''}${credibility}`, credibility > 0 ? 'good' : 'bad');
+    this.addLog(`Бюджет: ${budget > 0 ? '+' : ''}${budget}`, budget > 0 ? 'good' : 'bad');
+    this.addLog(`Читатели: ${readership > 0 ? '+' : ''}${readership}`, readership > 0 ? 'good' : 'bad');
     
     if (isGameOver) {
       if (isVictory) {

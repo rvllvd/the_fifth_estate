@@ -163,6 +163,36 @@
         </div>
       </div>
     </div>
+    
+    <!-- Модальное окно анимации показателей -->
+    <div id="metrics-modal" class="metrics-modal">
+      <div class="metrics-modal-content">
+        <div class="metrics-modal-title">📰 Публикация газеты</div>
+        <div class="metrics-animation">
+          <div class="metric-change" data-metric="influence">
+            <span class="metric-icon">📈</span>
+            <span class="metric-name">Влияние</span>
+            <span class="metric-value" id="modal-influence">0</span>
+          </div>
+          <div class="metric-change" data-metric="credibility">
+            <span class="metric-icon">🎯</span>
+            <span class="metric-name">Доверие</span>
+            <span class="metric-value" id="modal-credibility">0</span>
+          </div>
+          <div class="metric-change" data-metric="budget">
+            <span class="metric-icon">💰</span>
+            <span class="metric-name">Бюджет</span>
+            <span class="metric-value" id="modal-budget">0</span>
+          </div>
+          <div class="metric-change" data-metric="readership">
+            <span class="metric-icon">👥</span>
+            <span class="metric-name">Читатели</span>
+            <span class="metric-value" id="modal-readership">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
