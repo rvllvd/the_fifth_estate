@@ -59,6 +59,11 @@ class Game {
       publishBtn.addEventListener('click', () => this.publishNewspaper());
     }
     
+    const clearBtn = document.getElementById('clear-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => this.clearNewspaper());
+    }
+    
     document.addEventListener('click', (e) => {
       const removeBtn = (e.target as HTMLElement).closest('.remove-news-btn') as HTMLElement | null;
       if (removeBtn) {
@@ -86,6 +91,26 @@ class Game {
     this.state = getInitialState();
     this.addLog('Новая игра начана!', 'turn');
     this.render();
+    this.clearNewspaperSlots();
+    this.metricsIndicator.update([]);
+  }
+  
+  private clearNewspaper(): void {
+    this.setState({ placedNews: [] });
+    this.clearNewspaperSlots();
+    this.addLog('Газета очищена', 'normal');
+  }
+  
+  private clearNewspaperSlots(): void {
+    document.querySelectorAll('.empty-slot').forEach(slot => {
+      slot.innerHTML = '<div class="slot-placeholder">Перетащите новость сюда</div>';
+    });
+    
+    document.querySelectorAll('.news-item').forEach(item => {
+      item.classList.remove('placed');
+      (item as HTMLElement).style.opacity = '1';
+      (item as HTMLElement).style.pointerEvents = 'auto';
+    });
   }
   
   private render(): void {
@@ -297,16 +322,7 @@ class Game {
       this.addLog(`Ход ${newState.turn}`, 'turn');
     }
     
-    document.querySelectorAll('.empty-slot').forEach(slot => {
-      slot.innerHTML = '<div class="slot-placeholder">Перетащите новость сюда</div>';
-    });
-    
-    document.querySelectorAll('.news-item').forEach(item => {
-      item.classList.remove('placed');
-      (item as HTMLElement).style.opacity = '1';
-      (item as HTMLElement).style.pointerEvents = 'auto';
-    });
-    
+    this.clearNewspaperSlots();
     this.renderNewsList();
     this.metricsIndicator.update([]);
   }
