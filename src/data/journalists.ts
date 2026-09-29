@@ -1,4 +1,4 @@
-import type { Journalist } from '../utils/storage';
+import type { Journalist } from '../types.ts';
 
 export const AVAILABLE_JOURNALISTS: Journalist[] = [
   {
@@ -7,9 +7,9 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: 'Политический обозреватель',
     bonus: {
       influence: 8,
-      credibility: 0,
+      credibility: 5,
       budget: -5,
-      readership: 0
+      readership: 3
     },
     cost: 5
   },

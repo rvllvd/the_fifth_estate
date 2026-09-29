@@ -1,70 +1,11 @@
 // Утилиты для работы с localStorage
+import type { GameState } from '../types';
 
 const STORAGE_KEY = 'the_fifth_estate_save';
 
 export const Parameters = {
   countNews: 6,
 };
-
-export type NewsEffect = {
-  influence: number;
-  credibility: number;
-  budget: number;
-  readership: number;
-};
-
-export type NewsItem = {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  effects: NewsEffect;
-};
-
-export type PlacedNews = {
-  newsId: string;
-  tier: number;
-  slot: number;
-};
-
-export type Journalist = {
-  id: string;
-  name: string;
-  role: string;
-  bonus: NewsEffect;
-  cost: number;
-};
-
-export type GameState = {
-  // Показатели
-  influence: number;
-  credibility: number;
-  budget: number;
-  readership: number;
-  
-  // Игровой процесс
-  turn: number;
-  maxTurns: number;
-  
-  // Размещённые новости
-  placedNews: PlacedNews[];
-  
-  // Сотрудники
-  journalists: Journalist[];
-  
-  // Использованные новости
-  usedNewsIds: string[];
-  
-  // Текущие доступные новости (10 на ход)
-  currentNewsIds: string[];
-  
-  // Текущие категории (фиксируются на ход)
-  currentCategories: string[];
-  
-  // Статус игры
-  gameOver?: boolean;
-  victory?: boolean;
-}
 
 const INITIAL_STATE: GameState = {
   influence: 50,
@@ -77,7 +18,7 @@ const INITIAL_STATE: GameState = {
   journalists: [],
   usedNewsIds: [],
   currentNewsIds: [],
-  currentCategories: []
+  currentCategories: [],
 };
 
 /**

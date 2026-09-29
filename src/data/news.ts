@@ -1,4 +1,4 @@
-import type { NewsItem } from '../utils/storage';
+import type { NewsItem } from '../types.ts';
 
 export const NEWS_EXAMPLE: Omit<NewsItem, 'id'>[] = [ 
   {
@@ -144,8 +144,6 @@ export const NEWS: Omit<NewsItem, 'id'>[] = [
     category: 'Погода',
     effects: { influence: -5, credibility: -5, budget: -7, readership: 20 }
   },
-
-
   {
     title: 'СНЕГ ВЫПАЛ В ВИДЕ ШТРАФОВ. ГОРОЖАНЕ ПРОСЯТ СНЕГОУБОРОЧНУЮ ТЕХНИКУ С КВИТАНЦИЯМИ',
     content: 'Ночью вместо снега с неба сыпались квитанции об административных штрафах. Коммунальщики сгребают их в кучи, но горожане растаскивают по домам и требуют перерасчёта. Мэрия заявляет, что это «плановые осадки» и обжалованию не подлежат.',
