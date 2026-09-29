@@ -55,6 +55,12 @@ export type GameState = {
   // Использованные новости
   usedNewsIds: string[];
   
+  // Текущие доступные новости (10 на ход)
+  currentNewsIds: string[];
+  
+  // Текущие категории (фиксируются на ход)
+  currentCategories: string[];
+  
   // Статус игры
   gameOver?: boolean;
   victory?: boolean;
@@ -69,7 +75,9 @@ const INITIAL_STATE: GameState = {
   maxTurns: 20,
   placedNews: [],
   journalists: [],
-  usedNewsIds: []
+  usedNewsIds: [],
+  currentNewsIds: [],
+  currentCategories: []
 };
 
 /**

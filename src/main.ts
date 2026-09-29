@@ -2,7 +2,7 @@ import type { GameState, NewsItem } from './utils/storage';
 import { saveState, loadState, clearState, getInitialState, hasSave } from './utils/storage';
 import { renderMetrics, renderPanels, renderNewspaper, renderLog, renderStaff } from './ui/render';
 import { setupDragAndDrop } from './utils/dragdrop';
-import { getNewsById, getAllCategory, getRandomNews } from './data/news';
+import { getNewsById, getRandomNews } from './data/news';
 import type { PlacedNews } from './utils/storage';
 import { Parameters } from './utils/storage';
 import { MetricsIndicator } from './ui/metrics-indicator';
@@ -31,6 +31,14 @@ class Game {
       this.state.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
     }
     
+    // Инициализируем currentNewsIds и currentCategories для старых сохранений
+    if (!this.state.currentNewsIds) {
+      this.state.currentNewsIds = [];
+    }
+    if (!this.state.currentCategories) {
+      this.state.currentCategories = [];
+    }
+    
     this.metricsIndicator = new MetricsIndicator();
     this.metricsModal = new MetricsModal();
     this.journalistsModal = new JournalistsModal(
@@ -49,19 +57,16 @@ class Game {
     this.updatePublishButton();
     this.restorePlacedNews();
     this.metricsIndicator.update(this.state.placedNews, this.state.journalists);
+    
+    // Если есть сохранённые категории, обновляем dropdown
+    if (this.state.currentCategories.length > 0) {
+      this.updateCategoriesDropdown();
+    }
 
     setupDragAndDrop();
   }
 
   private renderCategories() {
-    const categoriesDropdown = document.getElementById("categories-dropdown");
-    if (categoriesDropdown) {
-      const categories = getAllCategory();
-      categoriesDropdown.innerHTML = categories.map(category => 
-        `<button class="category-btn" data-category="${category}">${category}</button>`
-      ).join('');
-    }
-    
     this.setupCategoryDropdown();
   }
   
@@ -127,23 +132,6 @@ class Game {
           this.removeNewsFromColumn(newsId);
         }
       }
-    });
-    
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        categoryBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        const category = (btn as HTMLElement).dataset.category || 'all';
-        this.renderNewsList(category);
-        
-        // Скрываем dropdown после выбора
-        const dropdown = document.getElementById('categories-dropdown');
-        if (dropdown) {
-          dropdown.classList.remove('show');
-        }
-      });
     });
   }
   
@@ -246,13 +234,29 @@ class Game {
     
     let news: NewsItem[];
     
-    if (category === 'all') {
-      // Показываем случайные новости для текущего хода
-      news = getRandomNews(10, this.state.usedNewsIds);
+    if (this.state.currentNewsIds.length === 0) {
+      // Генерируем новые 10 новостей для текущего хода
+      const randomNews = getRandomNews(10, this.state.usedNewsIds);
+      this.state.currentNewsIds = randomNews.map(n => n.id);
+      
+      // Фиксируем категории для текущего хода
+      this.state.currentCategories = [...new Set(randomNews.map(n => n.category))];
+      
+      news = randomNews;
+      
+      // Сохраняем обновлённое состояние
+      saveState(this.state);
+      
+      // Обновляем dropdown категорий один раз
+      this.updateCategoriesDropdown();
     } else {
-      // Фильтрация по категории из доступных новостей
-      const availableNews = getRandomNews(50, this.state.usedNewsIds); // Больше новостей для фильтрации
-      news = availableNews.filter(item => item.category === category);
+      // Получаем текущие новости по ID
+      news = this.state.currentNewsIds.map(id => getNewsById(id)).filter((n): n is NewsItem => n !== undefined);
+    }
+    
+    // Фильтруем по категории из текущих 10 новостей
+    if (category !== 'all') {
+      news = news.filter(item => item.category === category);
     }
     
     newsList.innerHTML = news.map((item: NewsItem) => `
@@ -270,6 +274,44 @@ class Game {
         </div>  
       </div>
     `).join('');
+  }
+  
+  private updateCategoriesDropdown(): void {
+    const categoriesDropdown = document.getElementById("categories-dropdown");
+    if (!categoriesDropdown) return;
+    
+    // Используем зафиксированные категории для текущего хода
+    const categories = this.state.currentCategories;
+    
+    categoriesDropdown.innerHTML = categories.map(category => 
+      `<button class="category-btn" data-category="${category}">${category}</button>`
+    ).join('');
+    
+    // Перепривязываем события для новых кнопок
+    this.setupCategoryButtons();
+  }
+  
+  private setupCategoryButtons(): void {
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach(btn => {
+      // Удаляем старые обработчики
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        newBtn.classList.add('active');
+        
+        const category = newBtn.dataset.category || 'all';
+        this.renderNewsList(category);
+        
+        // Скрываем dropdown после выбора
+        const dropdown = document.getElementById('categories-dropdown');
+        if (dropdown) {
+          dropdown.classList.remove('show');
+        }
+      });
+    });
   }
   
   private getCategoryName(category: string): string {
@@ -439,7 +481,9 @@ class Game {
       readership: Math.max(0, Math.min(100, this.state.readership + readership)),
       turn: this.state.turn + 1,
       placedNews: [],
-      usedNewsIds
+      usedNewsIds,
+      currentNewsIds: [], // Сбрасываем текущие новости для генерации новых
+      currentCategories: [] // Сбрасываем категории для генерации новых
     };
     
     const isGameOver = newState.turn! > this.state.maxTurns;
