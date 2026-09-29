@@ -14,7 +14,7 @@ export class JournalistsModal {
   }
   
   public show(currentJournalists: Journalist[]): void {
-    this.currentJournalists = currentJournalists;
+    this.currentJournalists = currentJournalists || [];
     const modal = this.element;
     if (!modal) return;
     

@@ -26,8 +26,8 @@ class Game {
     const savedState = loadState();
     this.state = savedState || getInitialState();
     
-    // Инициализируем сотрудников для новой игры
-    if (!savedState) {
+    // Инициализируем сотрудников для новой игры или если поле отсутствует
+    if (!savedState || !this.state.journalists) {
       this.state.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
     }
     
@@ -78,7 +78,12 @@ class Game {
     
     const hireBtn = document.getElementById('hire-btn');
     if (hireBtn) {
-      hireBtn.addEventListener('click', () => this.openJournalistsModal());
+      hireBtn.addEventListener('click', () => {
+        console.log('Hire button clicked');
+        this.openJournalistsModal();
+      });
+    } else {
+      console.log('Hire button not found');
     }
     
     document.addEventListener('click', (e) => {
@@ -132,7 +137,8 @@ class Game {
   }
   
   private openJournalistsModal(): void {
-    this.journalistsModal.show(this.state.journalists);
+    console.log('Opening journalists modal with:', this.state.journalists);
+    this.journalistsModal.show(this.state.journalists || []);
   }
   
   private hireJournalist(journalist: any): void {
