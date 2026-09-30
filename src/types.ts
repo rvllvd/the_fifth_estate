@@ -1,22 +1,26 @@
+export type StatScale = number; // 0..100
+export type Counter = number;  // >= 0
+
 export interface Metrics {
-  influence: number;
-  credibility: number;
-  budget: number;
-  readership: number;
+  influence: StatScale;
+  credibility: StatScale;
+  budget: StatScale;
+  readership: StatScale;
 }
-export interface NewsEffect {
-  influence: number;
-  credibility: number;
-  budget: number;
-  readership: number;
+
+export interface Resources {
+  readers: Counter;
+  money: Counter;
 }
+
+export interface Stats extends Metrics, Resources {}
 
 export interface NewsItem {
   id: string;
   title: string;
   content: string;
   category: string;
-  effects: NewsEffect;
+  effects: Metrics;
 }
 
 export interface PlacedNews {
@@ -29,17 +33,11 @@ export interface Journalist {
   id: string;
   name: string;
   role: string;
-  bonus: NewsEffect;
+  bonus: Metrics;
   cost: number;
 }
 
-export interface GameState {
-  // Показатели
-  influence: number;
-  credibility: number;
-  budget: number;
-  readership: number;
-
+export interface GameState extends Stats {
   // Игровой процесс
   turn: number;
   maxTurns: number;
@@ -54,7 +52,7 @@ export interface GameState {
   usedNewsIds: string[];
 
   // Текущие доступные новости (10 на ход)
-  currentNewsIds: string[];
+  currentNewsIds: string[10];
 
   // Текущие категории (фиксируются на ход)
   currentCategories: string[];
