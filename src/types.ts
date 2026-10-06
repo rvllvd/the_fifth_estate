@@ -1,6 +1,32 @@
 export type StatScale = number; // 0..100
 export type Counter = number; // >= 0
 
+export const SPEC = {
+  politics: "Политика",
+  economy: "Экономика",
+  society: "Общество",
+  culture: "Культура",
+  sport: "Спорт",
+  science: "Наука",
+  technology: "Технологии",
+  health: "Здоровье",
+  world: "Мир",
+  incident: "Происшествия",
+  business: "Бизнес",
+  finance: "Финансы",
+  education: "Образование",
+  ecology: "Экология",
+  space: "Космос",
+  cinema: "Кино",
+  music: "Музыка",
+  fashion: "Мода",
+  food: "Еда",
+  travel: "Путешествия",
+  auto: "Авто",
+} as const;
+
+export type Spec = keyof typeof SPEC;
+
 export interface Metrics {
   influence: StatScale;
   credibility: StatScale;
@@ -19,7 +45,7 @@ export interface NewsItem {
   id: string;
   title: string;
   content: string;
-  category: string;
+  category: Spec;
   effects: Metrics;
 }
 
@@ -35,6 +61,7 @@ export interface Journalist {
   role: string;
   bonus: Metrics;
   cost: number;
+  spec: Spec;
 }
 
 export interface GameState extends Stats {

@@ -1,7 +1,7 @@
-import { getNewsById } from '../data/news';
-import type { NewsItem, PlacedNews } from '../types';
-import { playSound } from '../utils/sounds.ts';
-import PlacedNewsCard from './PlacedNewsCard';
+import { getNewsById } from "../data/news";
+import type { NewsItem, PlacedNews } from "../types";
+import { playSound } from "../utils/sounds.ts";
+import PlacedNewsCard from "./PlacedNewsCard";
 
 interface Props {
   tier: number;
@@ -23,9 +23,11 @@ export default function NewspaperColumn({
   onRemove,
 }: Props) {
   const className =
-    tier === 1 ? 'newspaper-column main-column'
-    : tier === 2 ? 'newspaper-column second-tier'
-    : 'newspaper-column third-tier';
+    tier === 1
+      ? "newspaper-column main-column"
+      : tier === 2
+        ? "newspaper-column second-tier"
+        : "newspaper-column third-tier";
 
   const placedBySlot: Record<number, NewsItem> = {};
   for (const p of placedNews.filter((x) => x.tier === tier)) {
@@ -49,27 +51,36 @@ export default function NewspaperColumn({
           return (
             <div
               key={key}
-              className={`empty-slot ${news ? 'filled' : ''}`}
+              className={`empty-slot ${news ? "filled" : ""}`}
               data-slot={i}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault();
-                const raw = e.dataTransfer.getData('application/json');
+                const raw = e.dataTransfer.getData("application/json");
                 if (!raw || news) return;
                 try {
                   const parsed: NewsItem = JSON.parse(raw);
-                  playSound('/assets/sounds/newspaper_folded_drop_on_floor_001.mp3', 1);
                   onDropNews(key, parsed);
-                } catch {/* ignore */}
+                } catch {
+                  /* ignore */
+                }
               }}
             >
               {news ? (
-                <PlacedNewsCard news={news} tier={tier} onRemove={() => onRemove(news.id)} />
+                <PlacedNewsCard
+                  news={news}
+                  tier={tier}
+                  onRemove={() => onRemove(news.id)}
+                />
               ) : (
                 <div className="slot-placeholder">
                   <p>Перетащите новость сюда</p>
-                  <p>Колонка {["первая", "вторая", "третья"][tier-1]}</p>
-                  <p>Множетель { [2,1,0.5][tier-1] }X</p>
+                  <p>Колонка {["первая", "вторая", "третья"][tier - 1]}</p>
+                  {tier != 2 ? (
+                    <p>Множетель {[2, 1, 0.5][tier - 1]}X</p>
+                  ) : (
+                    <p></p>
+                  )}
                 </div>
               )}
             </div>

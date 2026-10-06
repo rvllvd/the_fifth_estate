@@ -1,11 +1,12 @@
-import NewsCard from './NewsCard';
-import type { NewsItem } from '../types';
+import NewsCard from "./NewsCard";
+import type { Journalist, NewsItem } from "../types";
 
 interface Props {
   news: NewsItem[];
   placedNewsIds: Set<string>;
   canPublish: boolean;
   placedCount: number;
+  journalists: Journalist[];
   onPublish: () => void;
   onClear: () => void;
 }
@@ -15,17 +16,22 @@ export default function NewsSection({
   placedNewsIds,
   canPublish,
   placedCount,
+  journalists,
   onPublish,
   onClear,
 }: Props) {
+  const coveredCategories = new Set(journalists.map((j) => j.spec));
+
   return (
     <div className="panel-section" id="news-section">
       <div className="panel-title">📰 Новости для публикации</div>
 
       <div className="news-list" id="news-list">
-        {news.map((n) => (
-          <NewsCard key={n.id} news={n} placed={placedNewsIds.has(n.id)} />
-        ))}
+        {news
+          .filter((n) => coveredCategories.has(n.category))
+          .map((n) => (
+            <NewsCard key={n.id} news={n} placed={placedNewsIds.has(n.id)} />
+          ))}
       </div>
 
       <button

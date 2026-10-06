@@ -17,6 +17,7 @@ import {
   isSlotTaken,
   isVictory,
 } from "../utils/game";
+import { playSound } from "../utils/sounds";
 
 interface GameStore extends GameState {
   // новости
@@ -44,9 +45,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // ── новости ──
   rollCurrentNews: () => {
-    const { currentNewsIds, usedNewsIds } = get();
+    const { currentNewsIds, usedNewsIds, journalists } = get();
     if (currentNewsIds.length > 0) return;
 
+    console.log(journalists);
     const randomNews = getRandomNews(10, usedNewsIds);
     if (randomNews.length === 0) return;
 
@@ -68,6 +70,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         { newsId: news.id, tier, slot },
       ],
     });
+    playSound("/assets/sounds/newspaper_folded_drop_on_floor_001.mp3", 1);
     return true;
   },
 

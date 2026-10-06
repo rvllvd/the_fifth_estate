@@ -2,7 +2,7 @@
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { useGameStore } from "../store/gameStore";
 // import { useNewsStore } from "../store";
-import type { NewsItem } from "../types";
+import { SPEC, type NewsItem } from "../types";
 // import PlacedNewsCard from "./PlacedNewsCard";
 
 interface Props {
@@ -48,9 +48,7 @@ export default function NewsCard({ news, placed }: Props) {
     >
       <div className="news-header">
         <span className="news-title">{news.title}</span>
-        <span className="news-tag">
-          {CATEGORY_NAMES[news.category] ?? news.category}
-        </span>
+        <span className="news-tag">{SPEC[news.category] ?? news.category}</span>
       </div>
       <div className="news-content">{news.content}</div>
       <div className="news-effects">

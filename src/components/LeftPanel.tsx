@@ -1,10 +1,10 @@
-import StaffSection from './StaffSection';
-import NewsSection from './NewsSection';
-import type { Journalist, NewsItem } from '../types';
+import StaffSection from "./StaffSection";
+import NewsSection from "./NewsSection";
+import type { Journalist, NewsItem } from "../types";
 
 interface Props {
   // Новости
-  news: NewsItem[];            // уже отфильтрованные по категории
+  news: NewsItem[]; // уже отфильтрованные по категории
   placedNewsIds: Set<string>;
   canPublish: boolean;
   placedCount: number;
@@ -33,6 +33,7 @@ export default function LeftPanel({
       <NewsSection
         news={news}
         placedNewsIds={placedNewsIds}
+        journalists={staff}
         canPublish={canPublish}
         placedCount={placedCount}
         onPublish={onPublish}

@@ -1,5 +1,5 @@
 import Metric from "./Metric";
-import type { GameState, Metrics } from "../types";
+import type { Metrics } from "../types";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 
 interface Props {
