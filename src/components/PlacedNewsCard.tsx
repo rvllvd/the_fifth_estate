@@ -1,6 +1,6 @@
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import type { NewsItem } from "../types";
-import { getTierMultiplier } from "../utils/game_logic";
+import { getTierMultiplier } from "../utils/game";
 
 interface Props {
   news: NewsItem;

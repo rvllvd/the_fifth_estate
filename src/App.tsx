@@ -9,7 +9,7 @@ import { playSound } from "./utils/sounds";
 import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
-import { calculatePublicationResult } from "./utils/game_logic";
+import { calculatePublicationResult } from "./utils/game";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
 
 export default function App() {

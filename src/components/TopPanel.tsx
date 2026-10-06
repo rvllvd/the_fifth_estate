@@ -4,6 +4,7 @@ import { METRIC_LABELS, metricKeys } from "../constants/stats";
 
 interface Props {
   metrics: Metrics;
+  turn: number;
   onNewGame: () => void;
   preview: Metrics;
 }

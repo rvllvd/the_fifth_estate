@@ -1,3 +1,7 @@
+export const Parameters = {
+  countNews: 6,
+};
+
 // сколько слотов на каждой полосе: 1-я — 1, 2-я — 2, 3-я — 3
 export const TIER_SLOTS: Record<number, number> = { 1: 1, 2: 2, 3: 3 };
 

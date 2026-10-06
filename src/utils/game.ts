@@ -2,12 +2,25 @@ import type { GameState, PlacedNews, Journalist, Metrics } from "../types";
 import { getNewsById } from "../data/news";
 // import { Parameters } from "./storage";
 import { MAX_VALUE_STAT } from "../constants/stats";
-import { Parameters } from "../store/gameStore";
+import { Parameters } from "../constants/game";
 
 export function getTierMultiplier(tier: number): number {
   if (tier === 1) return 2;
   if (tier === 2) return 1;
   return 0.5;
+}
+
+export function isSlotTaken(
+  placedNews: PlacedNews[],
+  slotKey: string,
+  excludeNewsId?: string,
+): boolean {
+  const [tierStr, slotStr] = slotKey.split("-");
+  const tier = Number(tierStr);
+  const slot = Number(slotStr);
+  return placedNews.some(
+    (p) => p.tier === tier && p.slot === slot && p.newsId !== excludeNewsId,
+  );
 }
 
 export function calculateJournalistBonuses(journalists: Journalist[]): Metrics {
