@@ -12,6 +12,8 @@ const INITIAL_STATE: GameState = {
   credibility: 50,
   budget: 50,
   readership: 50,
+  readers: 0,
+  money: 0,
   turn: 1,
   maxTurns: 20,
   placedNews: [],

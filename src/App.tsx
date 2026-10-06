@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import TopPanel from './components/TopPanel';
 import LeftPanel from './components/LeftPanel';
 import Newspaper from './components/Newspaper';
 import MetricsModal from './components/MetricsModal';
 import JournalistsModal from './components/JournalistsModal';
-import type { GameState, Journalist, Metrics, NewsItem, PlacedNews } from './types';
-import { clearState, getInitialState, hasSave, loadState, saveState } from './utils/storage';
+import type { GameState, Journalist, Metrics, NewsItem } from './types';
+import { clearState, getInitialState, loadState, saveState } from './utils/storage';
 import { playSound } from './utils/sounds';
 import { getNewsById, getRandomNews } from './data/news';
 import { AVAILABLE_JOURNALISTS } from './data/journalists';
@@ -14,8 +14,6 @@ import {
   applyPublication,
   calculatePublicationResult,
   canPublish,
-  isGameOver,
-  isVictory,
 } from './utils/game_logic';
 
 export default function App() {
@@ -28,26 +26,23 @@ export default function App() {
     return init;
   });
 
-  const [logs, setLogs] = useState<{ id: number; text: string; type: string }[]>([]);
+
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  const addLog = useCallback((text: string, type = 'normal') => {
-    setLogs((prev) => [...prev, { id: Date.now() + Math.random(), text: `[Ход ${state.turn}] ${text}`, type }]);
-  }, [state.turn]);
+
 
   // Первичная загрузка новостей и лог
   useEffect(() => {
     if (state.currentNewsIds.length === 0) {
       const randomNews = getRandomNews(10, state.usedNewsIds);
-      setState((prev) => ({
+      setState((prev): GameState => ({
         ...prev,
         currentNewsIds: randomNews.map((n) => n.id),
         currentCategories: [...new Set(randomNews.map((n) => n.category))],
       }));
     }
-    addLog(hasSave() ? 'Игра загружена из сохранения' : 'Добро пожаловать в The Fifth Estate!', 'turn');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -82,7 +77,7 @@ export default function App() {
   const randomNews = getRandomNews(10, state.usedNewsIds);
   if (randomNews.length === 0) return; // если все новости закончились
 
-  setState((prev) => ({
+  setState((prev): GameState => ({
       ...prev,
       currentNewsIds: randomNews.map((n) => n.id),
       currentCategories: [...new Set(randomNews.map((n) => n.category))],
@@ -111,25 +106,17 @@ export default function App() {
     const init = getInitialState();
     init.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
     setState(init);
-    setLogs([]);
     setActiveCategory('all');
-    addLog('Новая игра начата!', 'turn');
   };
 
-  const handleToggleStaff = () => {
-    // просто логика видимости — можно вынести в StaffSection
-  };
+
 
   const handleHireJournalist = (j: Journalist) => {
     setState((prev) => ({ ...prev, journalists: [...prev.journalists, j] }));
-    addLog(`${j.name} нанят на работу!`, 'good');
   };
 
   const handleFireJournalist = (id: string) => {
-    const j = state.journalists.find((x) => x.id === id);
-    if (!j) return;
     setState((prev) => ({ ...prev, journalists: prev.journalists.filter((x) => x.id !== id) }));
-    addLog(`${j.name} уволен`, 'bad');
   };
 
   const handleDropNews = (key: string, news: NewsItem) => {
@@ -156,35 +143,21 @@ export default function App() {
   const handleClearNewspaper = () => {
     setState((prev) => ({ ...prev, placedNews: [] }));
     playSound('/assets/sounds/clear.mp3', 1);
-    addLog('Газета очищена', 'normal');
   };
 
   const handlePublish = () => {
     if (!canPublish(state)) {
-      addLog('Сначала разместите достаточно новостей в газете!', 'bad');
       return;
     }
     const result = calculatePublicationResult(state.placedNews, state.journalists);
     setModalResult(result);
     playSound('/assets/sounds/newspaper.mp3', 1);
-    addLog('Газета опубликована!', 'good');
   };
 
   const handleModalClose = () => {
     if (!modalResult) return;
     const newState = applyPublication(state, modalResult);
     setState(newState);
-
-    addLog(`Влияние: ${modalResult.influence >= 0 ? '+' : ''}${modalResult.influence}`, modalResult.influence >= 0 ? 'good' : 'bad');
-    addLog(`Доверие: ${modalResult.credibility >= 0 ? '+' : ''}${modalResult.credibility}`, modalResult.credibility >= 0 ? 'good' : 'bad');
-    addLog(`Бюджет: ${modalResult.budget >= 0 ? '+' : ''}${modalResult.budget}`, modalResult.budget >= 0 ? 'good' : 'bad');
-    addLog(`Читатели: ${modalResult.readership >= 0 ? '+' : ''}${modalResult.readership}`, modalResult.readership >= 0 ? 'good' : 'bad');
-
-    if (isGameOver(newState)) {
-      addLog(isVictory(newState) ? '🎉 ПОБЕДА!' : '💀 ПОРАЖЕНИЕ!', isVictory(newState) ? 'good' : 'bad');
-    } else {
-      addLog(`Ход ${newState.turn}`, 'turn');
-    }
     setModalResult(null);
   };
 
@@ -207,7 +180,6 @@ export default function App() {
             onClear={handleClearNewspaper}
             staff={state.journalists}
             onOpenJournalists={() => setShowJournalistsModal(true)}
-            logs={logs}
           />
           <Newspaper
             placedNews={state.placedNews}

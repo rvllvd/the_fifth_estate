@@ -52,7 +52,7 @@ export interface GameState extends Stats {
   usedNewsIds: string[];
 
   // Текущие доступные новости (10 на ход)
-  currentNewsIds: string[10];
+  currentNewsIds: string[];
 
   // Текущие категории (фиксируются на ход)
   currentCategories: string[];

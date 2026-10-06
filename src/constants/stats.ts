@@ -1,20 +1,30 @@
-import type { Stats } from '../types';
+import type { Metrics, Resources, Stats } from "../types";
 
+export const METRIC_LABELS = {
+  influence: ["📈", "Влияние"],
+  credibility: ["🎯", "Доверие"],
+  budget: ["💰", "Бюджет"],
+  readership: ["👥", "Лояльность"],
+} satisfies Record<keyof Metrics, [string, string]>;
 
-export const STAT_LABELS: Record<keyof Stats, string> = {
-  influence:   'Влияние',
-  credibility: 'Доверие',
-  budget:      'Бюджет',
-  readership:  "Лояльность",
-  money:       'Деньги',
-  readers:     'Читатели',
-};
+export const RESOURCE_LABELS = {
+  money: ["💵", "Деньги"],
+  readers: ["📰", "Читатели"],
+} satisfies Record<keyof Resources, [string, string]>;
 
-export const STAT_ICONS: Record<keyof Stats, string> = {
-  influence:   '📈',
-  credibility: '🎯',
-  budget:      '💰',
-  readership:  '👥',
-  money:       '💵',
-  readers:     '📰',
-};
+export const STAT_LABELS = {
+  ...METRIC_LABELS,
+  ...RESOURCE_LABELS,
+} satisfies Record<keyof Stats, [string, string]>;
+
+export function metricKeys(): (keyof Metrics)[] {
+  return Object.keys(METRIC_LABELS) as (keyof Metrics)[];
+}
+
+export function resourcesKeys(): (keyof Resources)[] {
+  return Object.keys(RESOURCE_LABELS) as (keyof Resources)[];
+}
+
+export function statsKeys(): (keyof Stats)[] {
+  return Object.keys(STAT_LABELS) as (keyof Stats)[];
+}

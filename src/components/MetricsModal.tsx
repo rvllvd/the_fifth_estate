@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import type { Metrics } from '../types';
+import { useEffect, useState } from "react";
+import type { Metrics } from "../types";
+import { METRIC_LABELS } from "../constants/stats";
+import { entries } from "../helpers/object";
 
 interface Props {
   result: Metrics;
@@ -8,23 +10,11 @@ interface Props {
   autoCloseMs?: number;
 }
 
-const ICONS: Record<keyof Metrics, string> = {
-  influence: '📈',
-  credibility: '🎯',
-  budget: '💰',
-  readership: '👥',
-};
-
-const NAMES: Record<keyof Metrics, string> = {
-  influence: 'Влияние',
-  credibility: 'Доверие',
-  budget: 'Бюджет',
-  readership: 'Читатели',
-};
-
-const KEYS: (keyof Metrics)[] = ['influence', 'credibility', 'budget', 'readership'];
-
-export default function MetricsModal({ result, onClose, autoCloseMs = 2000 }: Props) {
+export default function MetricsModal({
+  result,
+  onClose,
+  autoCloseMs = 2000,
+}: Props) {
   const [visible, setVisible] = useState(false);
   const [displayed, setDisplayed] = useState<Metrics>({
     influence: 0,
@@ -75,21 +65,26 @@ export default function MetricsModal({ result, onClose, autoCloseMs = 2000 }: Pr
   }, [autoCloseMs, onClose]);
 
   return (
-    <div className={`metrics-modal ${visible ? 'show' : ''}`}>
+    <div className={`metrics-modal ${visible ? "show" : ""}`}>
       <div className="metrics-modal-content">
         <div className="metrics-modal-title">📰 Публикация газеты</div>
 
         <div className="metrics-animation">
-          {KEYS.map((key) => {
+          {entries(METRIC_LABELS).map(([key, [icon, name]]) => {
             const delta = result[key];
             const shown = displayed[key];
-            const cls = delta > 0 ? 'positive' : delta < 0 ? 'negative' : '';
+            const cls = delta > 0 ? "positive" : delta < 0 ? "negative" : "";
             return (
-              <div key={key} className={`metric-change ${cls}`} data-metric={key}>
-                <span className="metric-icon">{ICONS[key]}</span>
-                <span className="metric-name">{NAMES[key]}</span>
+              <div
+                key={key}
+                className={`metric-change ${cls}`}
+                data-metric={key}
+              >
+                <span className="metric-icon">{icon}</span>
+                <span className="metric-name">{name}</span>
                 <span className="metric-value">
-                  {shown > 0 ? '+' : ''}{shown}
+                  {shown > 0 ? "+" : ""}
+                  {shown}
                 </span>
               </div>
             );

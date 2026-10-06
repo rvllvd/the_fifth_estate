@@ -2,12 +2,6 @@ import StaffSection from './StaffSection';
 import NewsSection from './NewsSection';
 import type { Journalist, NewsItem } from '../types';
 
-interface LogEntry {
-  id: number;
-  text: string;
-  type: string;
-}
-
 interface Props {
   // Новости
   news: NewsItem[];            // уже отфильтрованные по категории
@@ -20,9 +14,6 @@ interface Props {
   // Сотрудники
   staff: Journalist[];
   onOpenJournalists: () => void;
-
-  // Логи
-  logs: LogEntry[];
 }
 
 export default function LeftPanel({
@@ -34,7 +25,6 @@ export default function LeftPanel({
   onClear,
   staff,
   onOpenJournalists,
-  logs,
 }: Props) {
   return (
     <div id="left-panel">

@@ -15,6 +15,10 @@
   box-shadow: 4px 0 10px rgba(0,0,0,0.2);
 }
 
+.panel-section {
+  padding: 0 5px;
+}
+
 .panel-section:not(:last-child) {
   margin-bottom: 15px;
   padding-bottom: 10px;
@@ -44,7 +48,7 @@
   cursor: pointer;
   border-radius: 6px;
   transition: all 0.3s;
-  margin: 3px 0;
+  margin: 4px 0;
   width: 100%;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
@@ -66,4 +70,8 @@
 
 .action-btn:nth-child(2) {
   margin-top: 7px;
+}
+
+.metric-preview {
+  display: none;
 }

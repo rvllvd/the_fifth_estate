@@ -1,8 +1,9 @@
-import type { Journalist } from '../types';
+import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import type { Journalist } from "../types";
 
 interface Props {
-  staff: Journalist[];          // нанятые
-  available: Journalist[];      // все доступные
+  staff: Journalist[]; // нанятые
+  available: Journalist[]; // все доступные
   onHire: (j: Journalist) => void;
   onFire: (id: string) => void;
   onClose: () => void;
@@ -26,7 +27,9 @@ export default function JournalistsModal({
       >
         <div className="journalists-modal-header">
           <h2>👥 Менеджмент сотрудников</h2>
-          <button className="close-modal-btn" onClick={onClose}>×</button>
+          <button className="close-modal-btn" onClick={onClose}>
+            ×
+          </button>
         </div>
 
         {/* ===== В штате ===== */}
@@ -44,10 +47,16 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-stats">
-                    <StatRow label="📈 Влияние"    value={j.bonus.influence} />
-                    <StatRow label="🎯 Доверие"    value={j.bonus.credibility} />
-                    <StatRow label="💰 Бюджет"     value={j.bonus.budget} />
-                    <StatRow label="👥 Читатели"   value={j.bonus.readership} />
+                    {metricKeys().map((key) => {
+                      const [icon, label] = METRIC_LABELS[key];
+                      return (
+                        <StatRow
+                          key={key}
+                          label={`${icon} ${label}`}
+                          value={j.bonus[key]}
+                        />
+                      );
+                    })}
                     <div className="cost-row">
                       <div className="stat-row">
                         <span className="stat-label">Стоимость</span>
@@ -57,9 +66,11 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-actions">
-                    {staff.length > 1 && <button className="fire-btn" onClick={() => onFire(j.id)}>
-                      Уволить
-                    </button>}
+                    {staff.length > 1 && (
+                      <button className="fire-btn" onClick={() => onFire(j.id)}>
+                        Уволить
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -82,10 +93,16 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-stats">
-                    <StatRow label="📈 Влияние"    value={j.bonus.influence} />
-                    <StatRow label="🎯 Доверие"    value={j.bonus.credibility} />
-                    <StatRow label="💰 Бюджет"     value={j.bonus.budget} />
-                    <StatRow label="👥 Читатели"   value={j.bonus.readership} />
+                    {metricKeys().map((key) => {
+                      const [icon, label] = METRIC_LABELS[key];
+                      return (
+                        <StatRow
+                          key={key}
+                          label={`${icon} ${label}`}
+                          value={j.bonus[key]}
+                        />
+                      );
+                    })}
                     <div className="cost-row">
                       <div className="stat-row">
                         <span className="stat-label">Стоимость</span>
@@ -104,19 +121,22 @@ export default function JournalistsModal({
             </div>
           )}
         </div>
-      </div>  
+      </div>
     </div>
   );
 }
 
 /** Строка стата: label + значение с цветом по знаку */
 function StatRow({ label, value }: { label: string; value: number }) {
-  const sign = value > 0 ? '+' : '';
-  const cls = value > 0 ? 'positive' : value < 0 ? 'negative' : '';
+  const sign = value > 0 ? "+" : "";
+  const cls = value > 0 ? "positive" : value < 0 ? "negative" : "";
   return (
     <div className="stat-row">
       <span className="stat-label">{label}</span>
-      <span className={`stat-value ${cls}`}>{sign}{value}</span>
+      <span className={`stat-value ${cls}`}>
+        {sign}
+        {value}
+      </span>
     </div>
   );
 }
