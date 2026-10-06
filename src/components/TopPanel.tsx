@@ -32,37 +32,21 @@ export default function TopPanel({ metrics, onNewGame, preview }: Props) {
         {hasPreview && (
           <div className="preview-line">
             <span></span>
-            {preview.influence !== 0 && (
-              <span className={preview.influence > 0 ? "positive" : "negative"}>
-                📈 {preview.influence > 0 ? "+" : ""}
-                {preview.influence}
-              </span>
-            )}
-            {preview.credibility !== 0 && (
-              <span
-                className={preview.credibility > 0 ? "positive" : "negative"}
-              >
-                🎯 {preview.credibility > 0 ? "+" : ""}
-                {preview.credibility}
-              </span>
-            )}
-            {preview.budget !== 0 && (
-              <span className={preview.budget > 0 ? "positive" : "negative"}>
-                💰 {preview.budget > 0 ? "+" : ""}
-                {preview.budget}
-              </span>
-            )}
-            {preview.readership !== 0 && (
-              <span
-                className={preview.readership > 0 ? "positive" : "negative"}
-              >
-                👥 {preview.readership > 0 ? "+" : ""}
-                {preview.readership}
-              </span>
-            )}
+            {metricKeys().map((key) => {
+              const value = preview[key];
+              if (value === 0) return null;
+              const [icon] = METRIC_LABELS[key];
+              return (
+                <span key={key} className={value > 0 ? "positive" : "negative"}>
+                  {icon} {value > 0 ? "+" : ""}
+                  {value}
+                </span>
+              );
+            })}
           </div>
         )}
       </div>
+
       <div className="top-panel-actions">
         <button className="right-btn" id="upgrade-btn">
           Улучшения

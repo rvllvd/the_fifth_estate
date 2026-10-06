@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Metrics } from "../types";
-import { METRIC_LABELS } from "../constants/stats";
+import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { entries } from "../helpers/object";
 
 interface Props {
@@ -16,12 +16,12 @@ export default function MetricsModal({
   autoCloseMs = 2000,
 }: Props) {
   const [visible, setVisible] = useState(false);
-  const [displayed, setDisplayed] = useState<Metrics>({
-    influence: 0,
-    credibility: 0,
-    budget: 0,
-    readership: 0,
-  });
+  const [displayed, setDisplayed] = useState<Metrics>(() =>
+    metricKeys().reduce((acc, key) => {
+      acc[key] = 0;
+      return acc;
+    }, {} as Metrics),
+  );
 
   // Плавное появление модалки (opacity 0 → 1 через .show)
   useEffect(() => {
@@ -41,12 +41,12 @@ export default function MetricsModal({
       const progress = Math.min((now - startTime) / duration, 1);
       const easeOut = 1 - Math.pow(1 - progress, 3);
 
-      setDisplayed({
-        influence: Math.round(result.influence * easeOut),
-        credibility: Math.round(result.credibility * easeOut),
-        budget: Math.round(result.budget * easeOut),
-        readership: Math.round(result.readership * easeOut),
-      });
+      setDisplayed(
+        metricKeys().reduce((acc, key) => {
+          acc[key] = Math.round(result[key] * easeOut);
+          return acc;
+        }, {} as Metrics),
+      );
 
       if (progress < 1) {
         raf = requestAnimationFrame(tick);

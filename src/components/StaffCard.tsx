@@ -1,4 +1,5 @@
-import type { Journalist } from '../types';
+import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import type { Journalist } from "../types";
 
 interface Props {
   journalist: Journalist;
@@ -14,11 +15,17 @@ export default function StaffCard({ journalist }: Props) {
         <span className="staff-role">{journalist.role}</span>
       </div>
       <div className="staff-stats">
-        <span className="staff-stat">📈 {bonus.influence > 0 ? '+' : ''}{bonus.influence}</span>
-        <span className="staff-stat">🎯 {bonus.credibility > 0 ? '+' : ''}{bonus.credibility}</span>
-        <span className="staff-stat">💰 {bonus.budget > 0 ? '+' : ''}{bonus.budget}</span>
-        <span className="staff-stat">👥 {bonus.readership > 0 ? '+' : ''}{bonus.readership}</span>
+        {metricKeys().map((key) => {
+          const value = bonus[key];
+          const [icon] = METRIC_LABELS[key];
+          return (
+            <span key={key} className="staff-stat">
+              {icon} {value > 0 ? "+" : ""}
+              {value}
+            </span>
+          );
+        })}
       </div>
     </div>
   );
-}   
+}
