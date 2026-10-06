@@ -1,6 +1,7 @@
-import type { GameState, PlacedNews, Journalist, Metrics } from '../types';
-import { getNewsById } from '../data/news';
-import { Parameters } from './storage';
+import type { GameState, PlacedNews, Journalist, Metrics } from "../types";
+import { getNewsById } from "../data/news";
+import { Parameters } from "./storage";
+import { MAX_VALUE_STAT } from "../constants/stats";
 
 export function getTierMultiplier(tier: number): number {
   if (tier === 1) return 2;
@@ -16,23 +17,28 @@ export function calculateJournalistBonuses(journalists: Journalist[]): Metrics {
       budget: acc.budget + j.bonus.budget,
       readership: acc.readership + j.bonus.readership,
     }),
-    { influence: 0, credibility: 0, budget: 0, readership: 0 }
+    { influence: 0, credibility: 0, budget: 0, readership: 0 },
   );
 }
 
 export function calculatePublicationResult(
   placedNews: PlacedNews[],
-  journalists: Journalist[]
+  journalists: Journalist[],
 ): Metrics {
-  let result: Metrics = { influence: 0, credibility: 0, budget: 0, readership: 0 };
+  let result: Metrics = {
+    influence: 0,
+    credibility: 0,
+    budget: 0,
+    readership: 0,
+  };
 
   for (const placed of placedNews) {
     const news = getNewsById(placed.newsId);
     if (!news) continue;
     const m = getTierMultiplier(placed.tier);
-    result.influence  += Math.round(news.effects.influence  * m);
+    result.influence += Math.round(news.effects.influence * m);
     result.credibility += Math.round(news.effects.credibility * m);
-    result.budget     += Math.round(news.effects.budget     * m);
+    result.budget += Math.round(news.effects.budget * m);
     result.readership += Math.round(news.effects.readership * m);
   }
 
@@ -48,13 +54,10 @@ export function calculatePublicationResult(
 }
 
 export function clampMetric(value: number): number {
-  return Math.max(0, Math.min(100, value));
+  return Math.max(0, Math.min(MAX_VALUE_STAT, value));
 }
 
-export function applyPublication(
-  state: GameState,
-  result: Metrics
-): GameState {
+export function applyPublication(state: GameState, result: Metrics): GameState {
   const usedNewsIds = [...state.usedNewsIds];
   for (const placed of state.placedNews) {
     if (!usedNewsIds.includes(placed.newsId)) usedNewsIds.push(placed.newsId);
@@ -62,7 +65,7 @@ export function applyPublication(
 
   return {
     ...state,
-    influence:  clampMetric(state.influence + result.influence),
+    influence: clampMetric(state.influence + result.influence),
     credibility: clampMetric(state.credibility + result.credibility),
     budget: clampMetric(state.budget + result.budget),
     readership: clampMetric(state.readership + result.readership),
@@ -74,6 +77,7 @@ export function applyPublication(
   };
 }
 
+// TODO: ПОМЕНЯТЬ УСЛОВИЯ ПОБЕДЫ И ПОРАЖЕНИЯ
 export function isVictory(state: GameState): boolean {
   return state.influence >= 70 && state.credibility >= 70;
 }

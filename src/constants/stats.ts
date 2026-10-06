@@ -1,5 +1,7 @@
 import type { Metrics, Resources, Stats } from "../types";
 
+export const MAX_VALUE_STAT = 1000;
+
 export const METRIC_LABELS = {
   influence: ["📈", "Влияние"],
   credibility: ["🎯", "Доверие"],
