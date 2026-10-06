@@ -3,7 +3,7 @@ import type { GameState, Metrics } from "../types";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 
 interface Props {
-  metrics: GameState;
+  metrics: Metrics;
   onNewGame: () => void;
   preview: Metrics;
 }

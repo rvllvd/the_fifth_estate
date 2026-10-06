@@ -1,7 +1,8 @@
 import type { GameState, PlacedNews, Journalist, Metrics } from "../types";
 import { getNewsById } from "../data/news";
-import { Parameters } from "./storage";
+// import { Parameters } from "./storage";
 import { MAX_VALUE_STAT } from "../constants/stats";
+import { Parameters } from "../store/gameStore";
 
 export function getTierMultiplier(tier: number): number {
   if (tier === 1) return 2;
@@ -14,10 +15,10 @@ export function calculateJournalistBonuses(journalists: Journalist[]): Metrics {
     (acc, j) => ({
       influence: acc.influence + j.bonus.influence,
       credibility: acc.credibility + j.bonus.credibility,
-      budget: acc.budget + j.bonus.budget,
+      reputation: acc.reputation + j.bonus.reputation,
       readership: acc.readership + j.bonus.readership,
     }),
-    { influence: 0, credibility: 0, budget: 0, readership: 0 },
+    { influence: 0, credibility: 0, reputation: 0, readership: 0 },
   );
 }
 
@@ -28,7 +29,7 @@ export function calculatePublicationResult(
   let result: Metrics = {
     influence: 0,
     credibility: 0,
-    budget: 0,
+    reputation: 0,
     readership: 0,
   };
 
@@ -38,7 +39,7 @@ export function calculatePublicationResult(
     const m = getTierMultiplier(placed.tier);
     result.influence += Math.round(news.effects.influence * m);
     result.credibility += Math.round(news.effects.credibility * m);
-    result.budget += Math.round(news.effects.budget * m);
+    result.reputation += Math.round(news.effects.reputation * m);
     result.readership += Math.round(news.effects.readership * m);
   }
 
@@ -46,7 +47,7 @@ export function calculatePublicationResult(
   result = {
     influence: result.influence + bonus.influence,
     credibility: result.credibility + bonus.credibility,
-    budget: result.budget + bonus.budget,
+    reputation: result.reputation + bonus.reputation,
     readership: result.readership + bonus.readership,
   };
 
@@ -67,7 +68,7 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
     ...state,
     influence: clampMetric(state.influence + result.influence),
     credibility: clampMetric(state.credibility + result.credibility),
-    budget: clampMetric(state.budget + result.budget),
+    reputation: clampMetric(state.reputation + result.reputation),
     readership: clampMetric(state.readership + result.readership),
     turn: state.turn + 1,
     placedNews: [],

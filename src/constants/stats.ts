@@ -5,7 +5,7 @@ export const MAX_VALUE_STAT = 1000;
 export const METRIC_LABELS = {
   influence: ["📈", "Влияние"],
   credibility: ["🎯", "Доверие"],
-  budget: ["💰", "Бюджет"],
+  reputation: ["🛡️", "Репутация"],
   readership: ["👥", "Лояльность"],
 } satisfies Record<keyof Metrics, [string, string]>;
 

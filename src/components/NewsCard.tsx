@@ -1,9 +1,14 @@
+// import { ALL_SLOTS } from "../constants/game";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import { useGameStore } from "../store/gameStore";
+// import { useNewsStore } from "../store";
 import type { NewsItem } from "../types";
+// import PlacedNewsCard from "./PlacedNewsCard";
 
 interface Props {
   news: NewsItem;
   placed: boolean;
+  // onClickNews?: (news: NewsItem) => void;
 }
 
 const CATEGORY_NAMES: Record<string, string> = {
@@ -23,6 +28,9 @@ export default function NewsCard({ news, placed }: Props) {
     e.dataTransfer.effectAllowed = "move";
   };
 
+  const clickNews = useGameStore((s) => s.clickNews);
+  // const dropNews = useNewsStore((s) => s.dropNews);
+
   const effects = metricKeys().map((key) => ({
     icon: METRIC_LABELS[key][0],
     value: news.effects[key],
@@ -35,6 +43,7 @@ export default function NewsCard({ news, placed }: Props) {
       data-category={news.category}
       draggable={!placed}
       onDragStart={handleDragStart}
+      onClick={() => clickNews(news)}
       //   style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
     >
       <div className="news-header">
