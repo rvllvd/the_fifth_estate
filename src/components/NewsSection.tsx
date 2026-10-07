@@ -30,7 +30,15 @@ export default function NewsSection({
         {news
           .filter((n) => coveredCategories.has(n.category))
           .map((n) => (
-            <NewsCard key={n.id} news={n} placed={placedNewsIds.has(n.id)} />
+            <NewsCard
+              key={n.id}
+              news={n}
+              placed={placedNewsIds.has(n.id)}
+              active={
+                journalists.filter((j) => j.spec == n.category && !j.active)
+                  .length > 0
+              }
+            />
           ))}
       </div>
 

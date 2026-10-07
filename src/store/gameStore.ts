@@ -7,7 +7,7 @@ import {
 import { create } from "zustand";
 import type { GameState, Journalist, Metrics, NewsItem } from "../types";
 import { ALL_SLOTS } from "../constants/game";
-import { getRandomNews } from "../data/news";
+import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import {
   applyPublication,
@@ -32,6 +32,7 @@ interface GameStore extends GameState {
   // журналисты
   hireJournalist: (j: Journalist) => void;
   fireJournalist: (id: string) => void;
+  updateView: () => void;
 
   // игровой цикл
   publish: () => Metrics | null; // возвращает результат для модалки
@@ -43,13 +44,25 @@ interface GameStore extends GameState {
 export const useGameStore = create<GameStore>((set, get) => ({
   ...createInitialState(),
 
+  updateView: () => {
+    const { journalists, placedNews } = get();
+
+    journalists.map((j) => (j.active = false));
+    placedNews.forEach(({ newsId }) => {
+      const news = NEWS_DATA.find((n) => n.id == newsId);
+
+      const journalist = journalists.find((j) => j.spec == news?.category);
+      if (journalist) journalist.active = true;
+    });
+  },
+
   // ── новости ──
   rollCurrentNews: () => {
     const { currentNewsIds, usedNewsIds, journalists } = get();
     if (currentNewsIds.length > 0) return;
 
     console.log(journalists);
-    const randomNews = getRandomNews(10, usedNewsIds);
+    const randomNews = getRandomNews(30, usedNewsIds);
     if (randomNews.length === 0) return;
 
     set({
@@ -60,8 +73,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // ── размещение ──
   dropNews: (key, news) => {
-    const { placedNews } = get();
-    if (isSlotTaken(placedNews, key, news.id)) return false;
+    const { placedNews, journalists } = get();
+    const freeJournalists = journalists.filter(
+      (j) => j.spec == news.category && !j.active,
+    );
+    if (isSlotTaken(placedNews, key, news.id) || freeJournalists.length == 0)
+      return false;
+
+    freeJournalists[0].active = true;
 
     const [tier, slot] = key.split("-").map(Number);
     set({
@@ -70,6 +89,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         { newsId: news.id, tier, slot },
       ],
     });
+
     playSound("/assets/sounds/newspaper_folded_drop_on_floor_001.mp3", 1);
     return true;
   },
@@ -82,12 +102,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (free) dropNews(free, news);
   },
 
-  removePlaced: (newsId) =>
+  removePlaced: (newsId) => {
+    const { journalists } = get();
+
+    const news = NEWS_DATA.find((n) => n.id == newsId);
+    const journalist = journalists.find(
+      (j) => j.spec == news?.category && j.active,
+    );
+    if (journalist) journalist.active = false;
+
     set((prev) => ({
       placedNews: prev.placedNews.filter((p) => p.newsId !== newsId),
-    })),
+    }));
+  },
 
-  clearNewspaper: () => set({ placedNews: [] }),
+  clearNewspaper: () => {
+    set({ placedNews: [] });
+    const { updateView } = get();
+    updateView();
+  },
 
   // ── журналисты ──
   hireJournalist: (j) =>
@@ -107,6 +140,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   applyResult: (result) => {
     const state = get();
+    clearState();
     set(applyPublication(state, result));
   },
 

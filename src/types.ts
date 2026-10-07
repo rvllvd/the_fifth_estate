@@ -62,6 +62,7 @@ export interface Journalist {
   bonus: Metrics;
   cost: number;
   spec: Spec;
+  active?: boolean;
 }
 
 export interface GameState extends Stats {

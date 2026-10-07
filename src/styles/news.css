@@ -86,7 +86,12 @@
   /* max-width: 95%; */
 }
 
-.news-item:hover {
+.news-item.unactive {
+  opacity: .6;
+  cursor: inherit;
+}
+
+.news-item:not(.unactive):hover {
   background-color: rgba(255,255,255,0.15);
   transform: translateX(5px);
 }

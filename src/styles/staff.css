@@ -43,6 +43,10 @@
   transition: all 0.3s;
 }
 
+.staff-card.active {
+  background-color: green;
+}
+
 .staff-card:hover {
   background-color: rgba(255,255,255,0.15);
   transform: translateY(4px);

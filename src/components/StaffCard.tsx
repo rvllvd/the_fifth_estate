@@ -9,7 +9,7 @@ export default function StaffCard({ journalist }: Props) {
   const { bonus } = journalist;
 
   return (
-    <div className="staff-card">
+    <div className={`staff-card ${journalist.active ? "active" : ""}`}>
       <div className="staff-info">
         <span className="staff-name">{journalist.name}</span>
         <span className="staff-role">{journalist.role}</span>

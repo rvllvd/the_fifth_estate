@@ -8,6 +8,7 @@ import { SPEC, type NewsItem } from "../types";
 interface Props {
   news: NewsItem;
   placed: boolean;
+  active: boolean;
   // onClickNews?: (news: NewsItem) => void;
 }
 
@@ -18,7 +19,7 @@ const CATEGORY_NAMES: Record<string, string> = {
   life: "Жизнь",
 };
 
-export default function NewsCard({ news, placed }: Props) {
+export default function NewsCard({ news, placed, active = true }: Props) {
   const handleDragStart = (e: React.DragEvent) => {
     if (placed) {
       e.preventDefault();
@@ -38,7 +39,7 @@ export default function NewsCard({ news, placed }: Props) {
 
   return (
     <div
-      className={`news-item ${placed ? "placed" : ""}`}
+      className={`news-item ${placed ? "placed" : ""} ${active ? "active" : "unactive"}`}
       data-news-id={news.id}
       data-category={news.category}
       draggable={!placed}
