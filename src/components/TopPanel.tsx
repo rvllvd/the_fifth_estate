@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function TopPanel({ metrics, onNewGame, preview }: Props) {
-  const hasPreview = Object.values(preview).some((v) => v !== 0);
+  const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
 
   return (
     <div id="top-panel">
@@ -35,7 +35,7 @@ export default function TopPanel({ metrics, onNewGame, preview }: Props) {
             <span></span>
             {metricKeys().map((key) => {
               const value = preview[key];
-              if (value === 0) return null;
+              // if (value === 0) return null;
               const [icon] = METRIC_LABELS[key];
               return (
                 <span key={key} className={value > 0 ? "positive" : "negative"}>

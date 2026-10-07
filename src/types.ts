@@ -47,12 +47,14 @@ export interface NewsItem {
   content: string;
   category: Spec;
   effects: Metrics;
+  journalistId?: string;
 }
 
 export interface PlacedNews {
   newsId: string;
   tier: number;
   slot: number;
+  journalistId?: string;
 }
 
 export interface Journalist {
@@ -62,7 +64,7 @@ export interface Journalist {
   bonus: Metrics;
   cost: number;
   spec: Spec;
-  active?: boolean;
+  newsId?: string;
 }
 
 export interface GameState extends Stats {

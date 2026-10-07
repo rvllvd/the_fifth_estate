@@ -7,7 +7,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Политический обозреватель",
     spec: "politics",
     bonus: { influence: 8, credibility: 5, reputation: -5, readership: 3 },
-    cost: 5,
+    cost: 50,
   },
   {
     id: "maria_sidorova",
@@ -15,7 +15,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Спортивный журналист",
     spec: "sport",
     bonus: { influence: 6, credibility: 0, reputation: -4, readership: 0 },
-    cost: 4,
+    cost: 40,
   },
   {
     id: "alexey_kozlov",
@@ -23,7 +23,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Технологический обозреватель",
     spec: "technology",
     bonus: { influence: 7, credibility: 0, reputation: -6, readership: 0 },
-    cost: 6,
+    cost: 60,
   },
   {
     id: "elena_smirnova",
@@ -31,7 +31,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Культурный критик",
     spec: "culture",
     bonus: { influence: 5, credibility: 3, reputation: -4, readership: 2 },
-    cost: 4,
+    cost: 40,
   },
   {
     id: "dmitry_volkov",
@@ -39,7 +39,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Экономический аналитик",
     spec: "economy",
     bonus: { influence: 4, credibility: 5, reputation: -3, readership: 1 },
-    cost: 3,
+    cost: 30,
   },
   {
     id: "anna_kuznetsova",
@@ -47,7 +47,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Социальный обозреватель",
     spec: "society",
     bonus: { influence: 6, credibility: 2, reputation: -5, readership: 3 },
-    cost: 5,
+    cost: 50,
   },
   {
     id: "sergey_morozov",
@@ -55,7 +55,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Криминальный репортёр",
     spec: "incident",
     bonus: { influence: 10, credibility: -2, reputation: -7, readership: 5 },
-    cost: 7,
+    cost: 70,
   },
   {
     id: "olga_fedorova",
@@ -63,7 +63,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Образовательный журналист",
     spec: "education",
     bonus: { influence: 3, credibility: 8, reputation: -2, readership: 0 },
-    cost: 2,
+    cost: 20,
   },
   {
     id: "pavel_ivanov",
@@ -71,7 +71,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Международный корреспондент",
     spec: "world",
     bonus: { influence: 9, credibility: 4, reputation: -8, readership: 2 },
-    cost: 8,
+    cost: 80,
   },
   {
     id: "natalia_popova",
@@ -79,7 +79,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Медицинский обозреватель",
     spec: "health",
     bonus: { influence: 4, credibility: 6, reputation: -3, readership: 1 },
-    cost: 3,
+    cost: 30,
   },
   {
     id: "victor_sokolov",
@@ -87,7 +87,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Спортивный комментатор",
     spec: "sport",
     bonus: { influence: 5, credibility: 1, reputation: -4, readership: 4 },
-    cost: 4,
+    cost: 40,
   },
   {
     id: "ekaterina_nikolaeva",
@@ -95,7 +95,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Технологический блогер",
     spec: "technology",
     bonus: { influence: 7, credibility: 2, reputation: -5, readership: 3 },
-    cost: 5,
+    cost: 50,
   },
   {
     id: "andrey_romanov",
@@ -103,7 +103,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Политический аналитик",
     spec: "politics",
     bonus: { influence: 9, credibility: 3, reputation: -6, readership: 1 },
-    cost: 6,
+    cost: 60,
   },
   {
     id: "marina_alexeeva",
@@ -111,7 +111,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Экологический журналист",
     spec: "ecology",
     bonus: { influence: 6, credibility: 5, reputation: -4, readership: 2 },
-    cost: 4,
+    cost: 40,
   },
   {
     id: "igor_lebedev",
@@ -119,7 +119,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Финансовый обозреватель",
     spec: "finance",
     bonus: { influence: 5, credibility: 7, reputation: -3, readership: 0 },
-    cost: 3,
+    cost: 30,
   },
   {
     id: "tatyana_vasilieva",
@@ -127,7 +127,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Развлекательный журналист",
     spec: "cinema",
     bonus: { influence: 4, credibility: 0, reputation: -3, readership: 6 },
-    cost: 3,
+    cost: 30,
   },
   {
     id: "maxim_golubev",
@@ -135,7 +135,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Научный обозреватель",
     spec: "science",
     bonus: { influence: 3, credibility: 9, reputation: -2, readership: 0 },
-    cost: 2,
+    cost: 20,
   },
   {
     id: "yulia_semenova",
@@ -143,7 +143,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Общественный деятель",
     spec: "society",
     bonus: { influence: 7, credibility: 4, reputation: -5, readership: 2 },
-    cost: 5,
+    cost: 50,
   },
   {
     id: "konstantin_borisov",
@@ -151,7 +151,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Бизнес-журналист",
     spec: "business",
     bonus: { influence: 6, credibility: 6, reputation: -4, readership: 1 },
-    cost: 4,
+    cost: 40,
   },
   {
     id: "veronika_mikhailova",
@@ -159,7 +159,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Лайфстайл редактор",
     spec: "fashion",
     bonus: { influence: 5, credibility: 2, reputation: -3, readership: 5 },
-    cost: 3,
+    cost: 30,
   },
 ];
 

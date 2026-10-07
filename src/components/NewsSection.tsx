@@ -35,7 +35,7 @@ export default function NewsSection({
               news={n}
               placed={placedNewsIds.has(n.id)}
               active={
-                journalists.filter((j) => j.spec == n.category && !j.active)
+                journalists.filter((j) => j.spec == n.category && !j.newsId)
                   .length > 0
               }
             />

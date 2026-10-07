@@ -5,7 +5,7 @@ import {
   saveState,
 } from "../utils/storage";
 import { create } from "zustand";
-import type { GameState, Journalist, Metrics, NewsItem } from "../types";
+import type { GameState, Journalist, Metrics, NewsItem, Stats } from "../types";
 import { ALL_SLOTS } from "../constants/game";
 import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
@@ -39,6 +39,8 @@ interface GameStore extends GameState {
   applyResult: (result: Metrics) => void;
   newGame: () => void;
   reset: () => void;
+
+  isGameOver: () => boolean;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -47,12 +49,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
   updateView: () => {
     const { journalists, placedNews } = get();
 
-    journalists.map((j) => (j.active = false));
+    journalists.map((j) => (j.newsId = undefined));
+    // news.map((j) => (j.newsId = undefined));
     placedNews.forEach(({ newsId }) => {
       const news = NEWS_DATA.find((n) => n.id == newsId);
 
       const journalist = journalists.find((j) => j.spec == news?.category);
-      if (journalist) journalist.active = true;
+      if (journalist) journalist.newsId = newsId;
+      if (news) news.journalistId = news.id;
     });
   },
 
@@ -61,7 +65,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { currentNewsIds, usedNewsIds, journalists } = get();
     if (currentNewsIds.length > 0) return;
 
-    console.log(journalists);
     const randomNews = getRandomNews(30, usedNewsIds);
     if (randomNews.length === 0) return;
 
@@ -74,13 +77,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // ── размещение ──
   dropNews: (key, news) => {
     const { placedNews, journalists } = get();
-    const freeJournalists = journalists.filter(
-      (j) => j.spec == news.category && !j.active,
+    const freeJournalist = journalists.find(
+      (j) => j.spec == news.category && !j.newsId,
     );
-    if (isSlotTaken(placedNews, key, news.id) || freeJournalists.length == 0)
-      return false;
+    if (isSlotTaken(placedNews, key, news.id) || !freeJournalist) return false;
 
-    freeJournalists[0].active = true;
+    freeJournalist.newsId = news.id;
+    const news_source = NEWS_DATA.find((n) => n.id == news.id);
+    if (news_source) news_source.journalistId = freeJournalist.id;
 
     const [tier, slot] = key.split("-").map(Number);
     set({
@@ -103,17 +107,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   removePlaced: (newsId) => {
-    const { journalists } = get();
-
-    const news = NEWS_DATA.find((n) => n.id == newsId);
-    const journalist = journalists.find(
-      (j) => j.spec == news?.category && j.active,
-    );
-    if (journalist) journalist.active = false;
+    const { updateView } = get();
 
     set((prev) => ({
       placedNews: prev.placedNews.filter((p) => p.newsId !== newsId),
     }));
+    updateView();
   },
 
   clearNewspaper: () => {
@@ -135,23 +134,34 @@ export const useGameStore = create<GameStore>((set, get) => ({
   publish: () => {
     const state = get();
     if (!canPublish(state)) return null;
+    state.clearNewspaper();
     return calculatePublicationResult(state.placedNews, state.journalists);
   },
 
   applyResult: (result) => {
     const state = get();
-    clearState();
     set(applyPublication(state, result));
   },
 
   newGame: () => {
-    clearState();
+    const { clearNewspaper } = get();
     const init = getInitialState();
     init.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
     set(init);
+    clearNewspaper();
   },
 
   reset: () => set(getInitialState),
+
+  isGameOver: () => {
+    const { influence, credibility, reputation, readership } = get();
+    let res = false;
+    [influence, credibility, reputation, readership].forEach((v) => {
+      if (v <= 0) return (res = true);
+    });
+
+    return res;
+  },
 }));
 
 // ─── автосохранение ──────────────────────────────────────────────

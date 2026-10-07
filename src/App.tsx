@@ -11,12 +11,14 @@ import { AVAILABLE_JOURNALISTS } from "./data/journalists";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { calculatePublicationResult } from "./utils/game";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
+import AlertModal from "./components/AlertModal";
 
 export default function App() {
   useBackgroundMusic("/assets/sounds/city-noise.mp3", 0.75);
 
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   // читаем
@@ -33,6 +35,7 @@ export default function App() {
 
   // экшены
   const rollCurrentNews = useGameStore((s) => s.rollCurrentNews);
+  const isGameOver = useGameStore((s) => s.isGameOver);
   const dropNews = useGameStore((s) => s.dropNews);
   const removePlaced = useGameStore((s) => s.removePlaced);
   const clearNewspaper = useGameStore((s) => s.clearNewspaper);
@@ -54,6 +57,10 @@ export default function App() {
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
   }, []);
+
+  useEffect(() => {
+    if (isGameOver()) setShowAlertModal(true);
+  });
 
   const currentNews = useMemo<NewsItem[]>(
     () =>
@@ -101,6 +108,10 @@ export default function App() {
     if (!result) return;
     setModalResult(result);
     playSound("/assets/sounds/newspaper.mp3", 1);
+
+    // setTimeout(() => {
+    //   if (isGameOver()) setShowAlertModal(true);
+    // }, 2500);
   };
 
   const handleModalClose = () => {
@@ -148,6 +159,14 @@ export default function App() {
           onHire={hireJournalist}
           onFire={fireJournalist}
           onClose={() => setShowJournalistsModal(false)}
+        />
+      )}
+
+      {showAlertModal && (
+        <AlertModal
+          text={"Вы проиграли"}
+          onClose={() => setShowAlertModal(false)}
+          onNewGame={handleNewGame}
         />
       )}
     </>

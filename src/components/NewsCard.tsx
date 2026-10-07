@@ -12,13 +12,6 @@ interface Props {
   // onClickNews?: (news: NewsItem) => void;
 }
 
-const CATEGORY_NAMES: Record<string, string> = {
-  politics: "Политика",
-  sports: "Спорт",
-  tech: "Технологии",
-  life: "Жизнь",
-};
-
 export default function NewsCard({ news, placed, active = true }: Props) {
   const handleDragStart = (e: React.DragEvent) => {
     if (placed) {

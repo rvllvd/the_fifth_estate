@@ -147,10 +147,24 @@
   border-radius: 4px;
   padding: 12px;
   height: 150px;
+  font-weight: 500;
   font-family: 'Cormorant Garamond', serif;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: all 0.3s;
   overflow: scroll;
+}
+
+.placed-news-author {
+  float: right;
+  /* background-color: #4a4a4a; */
+  /* border-radius: 5px; */
+  /* font-size: 15px; */
+  /* font-weight: 700; */
+  /* color: white; */
+  /* padding: 8px; */
+  /* font-family: cursive; */
+  /* text-align: center; */
+  color: #1c0681
 }
 
 .placed-news:hover {

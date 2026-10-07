@@ -20,12 +20,12 @@ export default function JournalistsModal({
   const hireable = available.filter((j) => !staffIds.has(j.id));
 
   return (
-    <div className="journalists-modal show" onClick={onClose}>
+    <div className="journalists modal show" onClick={onClose}>
       <div
-        className="journalists-modal-content"
+        className="journalists modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="journalists-modal-header">
+        <div className="journalists modal-header">
           <h2>👥 Менеджмент сотрудников</h2>
           <button className="close-modal-btn" onClick={onClose}>
             ×

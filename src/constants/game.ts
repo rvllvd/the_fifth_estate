@@ -1,5 +1,5 @@
 export const Parameters = {
-  countNews: 6,
+  countNews: 3,
 };
 
 // сколько слотов на каждой полосе: 1-я — 1, 2-я — 2, 3-я — 3

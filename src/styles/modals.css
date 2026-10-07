@@ -100,7 +100,7 @@
 }
 
 /* Модальное окно менеджмента сотрудников */
-.journalists-modal {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -116,12 +116,16 @@
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.journalists-modal.show {
+.alert.modal {
+  text-align: center;
+}
+
+.modal.show {
   opacity: 1;
   visibility: visible;
 }
 
-.journalists-modal-content {
+.modal-content {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   border-radius: 12px;
   padding: 30px;
@@ -134,12 +138,12 @@
   transition: transform 0.3s ease;
 }
 
-.journalists-modal.show .journalists-modal-content {
+.modal.show .modal-content {
   transform: scale(1);
 }
 
-.journalists-modal-header {
-  display: flex;
+.modal-header {
+
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
@@ -147,7 +151,11 @@
   padding-bottom: 15px;
 }
 
-.journalists-modal-header h2 {
+.journalists.modal-header {
+  display: flex;
+}
+
+.modal-header h2 {
   font-size: 24px;
   font-weight: bold;
   color: #ffd700;
