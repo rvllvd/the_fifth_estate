@@ -25,3 +25,74 @@
 .dark-theme .progress-fill {
   background: linear-gradient(90deg, #ff5555 0%, #ffaa00 50%, #55ff55 100%);
 }
+
+/* Additional dark overrides */
+.dark-theme #left-panel {
+  background: linear-gradient(180deg, #1e1e2f 0%, #2a2a3b 100%);
+  color: #e0e0e0;
+}
+
+.dark-theme .action-btn {
+  background: linear-gradient(135deg, #555555 0%, #444444 100%);
+  color: #e0e0e0;
+}
+
+.dark-theme .action-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #666666 0%, #555555 100%);
+}
+
+.dark-theme #newspaper {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.dark-theme .newspaper-page {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-theme .newspaper-header,
+.dark-theme .newspaper-title,
+.dark-theme .newspaper-meta {
+  color: #e0e0e0;
+}
+
+.dark-theme .placed-news {
+  background-color: #2e2e2e;
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+.dark-theme .placed-news-title {
+  color: #fff;
+}
+
+.dark-theme .placed-news-content {
+  color: #ccc;
+}
+
+.dark-theme .remove-news-btn {
+  color: #ff5555;
+}
+
+.dark-theme .remove-news-btn:hover {
+  color: #ff7777;
+}
+
+.dark-theme .modal {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-theme .modal .close-modal-btn {
+  color: #fff;
+}
+
+.dark-theme .stat-row .stat-label {
+  color: #bbb;
+}
+
+.dark-theme .stat-row .stat-value {
+  color: #e0e0e0;
+}
+
