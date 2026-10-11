@@ -1,0 +1,27 @@
+/* Dark theme overrides for The Fifth Estate */
+.dark-theme body {
+  background-color: #111111;
+  color: #e0e0e0;
+}
+
+.dark-theme #top-panel {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #f0f0f0;
+}
+
+.dark-theme .right-btn {
+  background: linear-gradient(135deg, #444444 0%, #222222 100%);
+  color: #fff;
+}
+
+.dark-theme .metric-value-container span {
+  color: #fff;
+}
+
+.dark-theme .progress-bar {
+  background-color: #333;
+}
+
+.dark-theme .progress-fill {
+  background: linear-gradient(90deg, #ff5555 0%, #ffaa00 50%, #55ff55 100%);
+}

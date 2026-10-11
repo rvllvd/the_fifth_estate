@@ -1,11 +1,8 @@
-import {
-  clearState,
-  createInitialState,
-  getInitialState,
-  saveState,
-} from "../utils/storage";
+// import { clearState, createInitialState, getInitialState, saveState } from "../utils/storage";
+import { createInitialState, getInitialState, saveState } from "../utils/storage";
 import { create } from "zustand";
-import type { GameState, Journalist, Metrics, NewsItem, Stats } from "../types";
+// import type { GameState, Journalist, Metrics, NewsItem, Stats } from "../types";
+import type { GameState, Journalist, Metrics, NewsItem } from "../types";
 import { ALL_SLOTS } from "../constants/game";
 import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
@@ -62,7 +59,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // ── новости ──
   rollCurrentNews: () => {
-    const { currentNewsIds, usedNewsIds, journalists } = get();
+    const { currentNewsIds, usedNewsIds } = get();
     if (currentNewsIds.length > 0) return;
 
     const randomNews = getRandomNews(30, usedNewsIds);

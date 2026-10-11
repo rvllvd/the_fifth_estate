@@ -1,6 +1,6 @@
 import { getNewsById } from "../data/news";
 import type { NewsItem, PlacedNews } from "../types";
-import { playSound } from "../utils/sounds.ts";
+// import { playSound } from "../utils/sounds.ts";
 import PlacedNewsCard from "./PlacedNewsCard";
 
 interface Props {

@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import './styles/themes/dark.css'; // import dark theme overrides
+import './styles/themes/vanilla.css'; // import vanilla theme (original)
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
 import Newspaper from "./components/Newspaper";
@@ -19,10 +21,25 @@ export default function App() {
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const [isDark, setIsDark] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
+  // toggle theme handler
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
+
+  // apply theme class to body
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+  }, [isDark]);
+
   // читаем
-  const turn = useGameStore((s) => s.turn);
+  //   // const turn = useGameStore((s) => s.turn);
   const influence = useGameStore((s) => s.influence);
   const credibility = useGameStore((s) => s.credibility);
   const reputation = useGameStore((s) => s.reputation);
@@ -121,9 +138,9 @@ export default function App() {
       <div id="app">
         <TopPanel
           metrics={{ influence, credibility, reputation, readership }}
-          turn={turn}
           onNewGame={handleNewGame}
           preview={preview}
+          onToggleTheme={toggleTheme}
         />
         <div id="main-content">
           <LeftPanel

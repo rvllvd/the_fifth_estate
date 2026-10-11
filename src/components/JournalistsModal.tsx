@@ -1,4 +1,4 @@
-import { METRIC_LABELS, metricKeys } from "../constants/stats";
+// // // // import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { SPEC, type Journalist } from "../types";
 
 interface Props {
@@ -147,16 +147,17 @@ export default function JournalistsModal({
 }
 
 /** Строка стата: label + значение с цветом по знаку */
+/*
 function StatRow({ label, value }: { label: string; value: number }) {
   const sign = value > 0 ? "+" : "";
   const cls = value > 0 ? "positive" : value < 0 ? "negative" : "";
   return (
     <div className="stat-row">
       <span className="stat-label">{label}</span>
-      <span className={`stat-value ${cls}`}>
-        {sign}
-        {value}
+      <span className={`stat-value ${cls}`}>\
+        {sign}{value}
       </span>
     </div>
   );
 }
+*/

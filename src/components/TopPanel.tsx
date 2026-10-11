@@ -4,12 +4,12 @@ import { METRIC_LABELS, metricKeys } from "../constants/stats";
 
 interface Props {
   metrics: Metrics;
-  turn: number;
   onNewGame: () => void;
   preview: Metrics;
+  onToggleTheme: () => void;
 }
 
-export default function TopPanel({ metrics, onNewGame, preview }: Props) {
+export default function TopPanel({ metrics, onNewGame, preview, onToggleTheme }: Props) {
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
 
   return (
@@ -57,6 +57,9 @@ export default function TopPanel({ metrics, onNewGame, preview }: Props) {
         </button>
         <button className="right-btn" id="new-game-btn" onClick={onNewGame}>
           Новая игра
+        </button>
+        <button className="right-btn" id="theme-toggle-btn" onClick={onToggleTheme}>
+          Сменить тему
         </button>
       </div>
     </div>
