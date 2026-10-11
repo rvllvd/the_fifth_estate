@@ -108,10 +108,6 @@ export default function App() {
     if (!result) return;
     setModalResult(result);
     playSound("/assets/sounds/newspaper.mp3", 1);
-
-    // setTimeout(() => {
-    //   if (isGameOver()) setShowAlertModal(true);
-    // }, 2500);
   };
 
   const handleModalClose = () => {

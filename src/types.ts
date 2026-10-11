@@ -52,6 +52,7 @@ export interface NewsItem {
 
 export interface PlacedNews {
   newsId: string;
+  metrics?: Metrics;
   tier: number;
   slot: number;
   journalistId?: string;
@@ -61,7 +62,11 @@ export interface Journalist {
   id: string;
   name: string;
   role: string;
-  bonus: Metrics;
+  desc?: string;
+  bonus?: (
+    current_placed_news: PlacedNews,
+    placed_news: PlacedNews[],
+  ) => Metrics;
   cost: number;
   spec: Spec;
   newsId?: string;

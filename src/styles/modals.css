@@ -241,6 +241,10 @@
   margin-bottom: 12px;
 }
 
+.journalist-stats-desc {
+  color: antiquewhite
+}
+
 .stat-row {
   display: flex;
   justify-content: space-between;

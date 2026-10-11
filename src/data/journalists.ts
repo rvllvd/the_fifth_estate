@@ -1,4 +1,5 @@
-import type { Journalist } from "../types";
+import type { Journalist, Metrics } from "../types";
+import { getNewsById } from "./news";
 
 export const AVAILABLE_JOURNALISTS: Journalist[] = [
   {
@@ -6,7 +7,51 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Иван Петров",
     role: "Политический обозреватель",
     spec: "politics",
-    bonus: { influence: 8, credibility: 5, reputation: -5, readership: 3 },
+    desc: "Новости с одинаковыми темами переменожаются между собой",
+    bonus: (current, placedNews) => {
+      let result: Metrics = current.metrics || {
+        influence: 0,
+        credibility: 0,
+        readership: 0,
+        reputation: 0,
+      };
+      placedNews.forEach((n) => {
+        const news = getNewsById(current.newsId);
+        const news2 = getNewsById(n.newsId);
+
+        if (
+          current.metrics &&
+          n.metrics &&
+          news2 &&
+          news?.category == news2?.category
+        ) {
+          result = {
+            influence: news?.effects.influence * news2?.effects.influence,
+            credibility: news?.effects.credibility * news2?.effects.credibility,
+            readership: news?.effects.readership * news2?.effects.readership,
+            reputation: news?.effects.reputation * news2?.effects.reputation,
+          };
+        }
+      });
+      console.log(result);
+      return result;
+    },
+    // bonus: (placed_news) => {
+    //   let collect = new Set<PlacedNews[]>();
+    //   placed_news.forEach(n => {
+    //     const news = getNewsById(n.newsId)
+
+    //     if (!news) throw new Error(`Не найден айдишник у news ${n}`);
+    //     const news_filtred = placed_news.filter(n2 => {
+    //       const news2 = getNewsById(n2.newsId)
+    //       if (!news2) throw new Error(`Не найден айдишник у news ${n2}`);
+    //       return news2.id !== news.id && news2.category == news.category
+
+    //     });
+    //     if (news_filtred.length > 0) collect.add(news_filtred.sort())
+    //   })
+    //   collect.map
+    // },
     cost: 50,
   },
   {
@@ -14,7 +59,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Мария Сидорова",
     role: "Спортивный журналист",
     spec: "sport",
-    bonus: { influence: 6, credibility: 0, reputation: -4, readership: 0 },
+    // bonus: { influence: 6, credibility: 0, reputation: -4, readership: 0 },
     cost: 40,
   },
   {
@@ -22,7 +67,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Алексей Козлов",
     role: "Технологический обозреватель",
     spec: "technology",
-    bonus: { influence: 7, credibility: 0, reputation: -6, readership: 0 },
+    // bonus: { influence: 7, credibility: 0, reputation: -6, readership: 0 },
     cost: 60,
   },
   {
@@ -30,7 +75,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Елена Смирнова",
     role: "Культурный критик",
     spec: "culture",
-    bonus: { influence: 5, credibility: 3, reputation: -4, readership: 2 },
+    // bonus: { influence: 5, credibility: 3, reputation: -4, readership: 2 },
     cost: 40,
   },
   {
@@ -38,7 +83,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Дмитрий Волков",
     role: "Экономический аналитик",
     spec: "economy",
-    bonus: { influence: 4, credibility: 5, reputation: -3, readership: 1 },
+    // bonus: { influence: 4, credibility: 5, reputation: -3, readership: 1 },
     cost: 30,
   },
   {
@@ -46,7 +91,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Анна Кузнецова",
     role: "Социальный обозреватель",
     spec: "society",
-    bonus: { influence: 6, credibility: 2, reputation: -5, readership: 3 },
+    // bonus: { influence: 6, credibility: 2, reputation: -5, readership: 3 },
     cost: 50,
   },
   {
@@ -54,7 +99,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Сергей Морозов",
     role: "Криминальный репортёр",
     spec: "incident",
-    bonus: { influence: 10, credibility: -2, reputation: -7, readership: 5 },
+    // bonus: { influence: 10, credibility: -2, reputation: -7, readership: 5 },
     cost: 70,
   },
   {
@@ -62,7 +107,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Ольга Фёдорова",
     role: "Образовательный журналист",
     spec: "education",
-    bonus: { influence: 3, credibility: 8, reputation: -2, readership: 0 },
+    // bonus: { influence: 3, credibility: 8, reputation: -2, readership: 0 },
     cost: 20,
   },
   {
@@ -70,7 +115,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Павел Иванов",
     role: "Международный корреспондент",
     spec: "world",
-    bonus: { influence: 9, credibility: 4, reputation: -8, readership: 2 },
+    // bonus: { influence: 9, credibility: 4, reputation: -8, readership: 2 },
     cost: 80,
   },
   {
@@ -78,7 +123,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Наталья Попова",
     role: "Медицинский обозреватель",
     spec: "health",
-    bonus: { influence: 4, credibility: 6, reputation: -3, readership: 1 },
+    // bonus: { influence: 4, credibility: 6, reputation: -3, readership: 1 },
     cost: 30,
   },
   {
@@ -86,7 +131,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Виктор Соколов",
     role: "Спортивный комментатор",
     spec: "sport",
-    bonus: { influence: 5, credibility: 1, reputation: -4, readership: 4 },
+    // bonus: { influence: 5, credibility: 1, reputation: -4, readership: 4 },
     cost: 40,
   },
   {
@@ -94,7 +139,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Екатерина Николаева",
     role: "Технологический блогер",
     spec: "technology",
-    bonus: { influence: 7, credibility: 2, reputation: -5, readership: 3 },
+    // bonus: { influence: 7, credibility: 2, reputation: -5, readership: 3 },
     cost: 50,
   },
   {
@@ -102,7 +147,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Андрей Романов",
     role: "Политический аналитик",
     spec: "politics",
-    bonus: { influence: 9, credibility: 3, reputation: -6, readership: 1 },
+    // bonus: { influence: 9, credibility: 3, reputation: -6, readership: 1 },
     cost: 60,
   },
   {
@@ -110,7 +155,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Марина Алексеева",
     role: "Экологический журналист",
     spec: "ecology",
-    bonus: { influence: 6, credibility: 5, reputation: -4, readership: 2 },
+    // bonus: { influence: 6, credibility: 5, reputation: -4, readership: 2 },
     cost: 40,
   },
   {
@@ -118,7 +163,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Игорь Лебедев",
     role: "Финансовый обозреватель",
     spec: "finance",
-    bonus: { influence: 5, credibility: 7, reputation: -3, readership: 0 },
+    // bonus: { influence: 5, credibility: 7, reputation: -3, readership: 0 },
     cost: 30,
   },
   {
@@ -126,7 +171,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Татьяна Васильева",
     role: "Развлекательный журналист",
     spec: "cinema",
-    bonus: { influence: 4, credibility: 0, reputation: -3, readership: 6 },
+    // bonus: { influence: 4, credibility: 0, reputation: -3, readership: 6 },
     cost: 30,
   },
   {
@@ -134,7 +179,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Максим Голубев",
     role: "Научный обозреватель",
     spec: "science",
-    bonus: { influence: 3, credibility: 9, reputation: -2, readership: 0 },
+    // bonus: { influence: 3, credibility: 9, reputation: -2, readership: 0 },
     cost: 20,
   },
   {
@@ -142,7 +187,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Юлия Семёнова",
     role: "Общественный деятель",
     spec: "society",
-    bonus: { influence: 7, credibility: 4, reputation: -5, readership: 2 },
+    // bonus: { influence: 7, credibility: 4, reputation: -5, readership: 2 },
     cost: 50,
   },
   {
@@ -150,7 +195,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Константин Борисов",
     role: "Бизнес-журналист",
     spec: "business",
-    bonus: { influence: 6, credibility: 6, reputation: -4, readership: 1 },
+    // bonus: { influence: 6, credibility: 6, reputation: -4, readership: 1 },
     cost: 40,
   },
   {
@@ -158,7 +203,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Вероника Михайлова",
     role: "Лайфстайл редактор",
     spec: "fashion",
-    bonus: { influence: 5, credibility: 2, reputation: -3, readership: 5 },
+    // bonus: { influence: 5, credibility: 2, reputation: -3, readership: 5 },
     cost: 30,
   },
 ];

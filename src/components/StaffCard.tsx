@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function StaffCard({ journalist }: Props) {
-  const { bonus } = journalist;
+  const { bonus, desc } = journalist;
 
   return (
     <div className={`staff-card ${journalist.newsId ? "active" : ""}`}>
@@ -15,7 +15,7 @@ export default function StaffCard({ journalist }: Props) {
         <span className="staff-role">{journalist.role}</span>
       </div>
       <div className="staff-stats">
-        {metricKeys().map((key) => {
+        {/* {metricKeys().map((key) => {
           const value = bonus[key];
           const [icon] = METRIC_LABELS[key];
           return (
@@ -24,7 +24,8 @@ export default function StaffCard({ journalist }: Props) {
               {value}
             </span>
           );
-        })}
+        })} */}
+        {bonus && desc && <span className="staff-stat">{desc}</span>}
       </div>
     </div>
   );

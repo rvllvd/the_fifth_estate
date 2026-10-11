@@ -56,7 +56,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
       const journalist = journalists.find((j) => j.spec == news?.category);
       if (journalist) journalist.newsId = newsId;
-      if (news) news.journalistId = news.id;
+      if (news && journalist) news.journalistId = journalist.id;
     });
   },
 

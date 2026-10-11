@@ -47,7 +47,7 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-stats">
-                    {metricKeys().map((key) => {
+                    {/* {metricKeys().map((key) => {
                       const [icon, label] = METRIC_LABELS[key];
                       return (
                         <StatRow
@@ -56,7 +56,10 @@ export default function JournalistsModal({
                           value={j.bonus[key]}
                         />
                       );
-                    })}
+                    })} */}
+                    {j.bonus && j.desc && (
+                      <span className="journalist-stats-desc">⚡{j.desc}</span>
+                    )}
                     <div className="cost-row">
                       <div className="stat-row">
                         <span className="stat-label">Стоимость</span>
@@ -100,7 +103,7 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-stats">
-                    {metricKeys().map((key) => {
+                    {/* {metricKeys().map((key) => {
                       const [icon, label] = METRIC_LABELS[key];
                       return (
                         <StatRow
@@ -109,7 +112,10 @@ export default function JournalistsModal({
                           value={j.bonus[key]}
                         />
                       );
-                    })}
+                    })} */}
+                    {j.bonus && j.desc && (
+                      <span className="journalist-stats-desc">⚡ {j.desc}</span>
+                    )}
                     <div className="cost-row">
                       <div className="stat-row">
                         <span className="stat-label">Стоимость</span>
