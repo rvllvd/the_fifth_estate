@@ -1,4 +1,4 @@
-import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import { getJournalistById } from "../data/journalists";
 import type { NewsItem } from "../types";
 import { getTierMultiplier } from "../utils/game";
@@ -11,8 +11,10 @@ interface Props {
 
 export default function PlacedNewsCard({ news, tier, onRemove }: Props) {
   const m = getTierMultiplier(tier);
-  const effects = metricKeys().map((key) => {
-    const [icon, label] = METRIC_LABELS[key];
+  const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
+  const effects = keys.map((key) => {
+    const icon = STAT_ICONS[key];
+    const label = STAT_LABELS[key];
     return {
       label: `${icon} ${label}`,
       value: Math.round(news.effects[key] * m),

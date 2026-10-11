@@ -1,5 +1,5 @@
 // // // // import { METRIC_LABELS, metricKeys } from "../constants/stats";
-import { SPEC, type Journalist } from "../types";
+import type { Journalist } from "../types";
 
 interface Props {
   staff: Journalist[]; // нанятые
@@ -70,7 +70,7 @@ export default function JournalistsModal({
                     <div className="spec-row">
                       <div className="stat-row">
                         <span className="stat-label">Специализация</span>
-                        <span className="stat-value">{SPEC[j.spec]}</span>
+                        <span className="stat-value">{j.spec || "-"}</span>
                       </div>
                     </div>
                   </div>
@@ -126,7 +126,7 @@ export default function JournalistsModal({
                     <div className="spec-row">
                       <div className="stat-row">
                         <span className="stat-label">Специализация</span>
-                        <span className="stat-value">{SPEC[j.spec]}</span>
+                        <span className="stat-value">{j.spec || "-"}</span>
                       </div>
                     </div>
                   </div>

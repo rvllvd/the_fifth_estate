@@ -151,9 +151,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   reset: () => set(getInitialState),
 
   isGameOver: () => {
-    const { influence, credibility, reputation, readership } = get();
+    const { influence, credibility, budget, readership } = get();
     let res = false;
-    [influence, credibility, reputation, readership].forEach((v) => {
+    [influence, credibility, budget, readership].forEach((v) => {
       if (v <= 0) return (res = true);
     });
 

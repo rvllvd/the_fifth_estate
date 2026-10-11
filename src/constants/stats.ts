@@ -1,32 +1,29 @@
-import type { Metrics, Resources, Stats } from "../types";
+import type { Metrics } from "../types";
 
-export const MAX_VALUE_STAT = 1000;
+export const MAX_VALUE_STAT = 100;
 
-export const METRIC_LABELS = {
+export const STAT_LABELS: Record<keyof Metrics, string> = {
+  influence: "Влияние",
+  credibility: "Доверие",
+  budget: "Бюджет",
+  readership: "Читатели",
+};
+
+export const STAT_ICONS: Record<keyof Metrics, string> = {
+  influence: "📈",
+  credibility: "🎯",
+  budget: "💰",
+  readership: "👥",
+};
+
+// Для обратной совместимости
+export const METRIC_LABELS: Record<keyof Metrics, [string, string]> = {
   influence: ["📈", "Влияние"],
   credibility: ["🎯", "Доверие"],
-  reputation: ["🛡️", "Репутация"],
-  readership: ["👥", "Лояльность"],
-} satisfies Record<keyof Metrics, [string, string]>;
-
-export const RESOURCE_LABELS = {
-  money: ["💵", "Деньги"],
-  readers: ["📰", "Читатели"],
-} satisfies Record<keyof Resources, [string, string]>;
-
-export const STAT_LABELS = {
-  ...METRIC_LABELS,
-  ...RESOURCE_LABELS,
-} satisfies Record<keyof Stats, [string, string]>;
+  budget: ["💰", "Бюджет"],
+  readership: ["👥", "Читатели"],
+};
 
 export function metricKeys(): (keyof Metrics)[] {
-  return Object.keys(METRIC_LABELS) as (keyof Metrics)[];
-}
-
-export function resourcesKeys(): (keyof Resources)[] {
-  return Object.keys(RESOURCE_LABELS) as (keyof Resources)[];
-}
-
-export function statsKeys(): (keyof Stats)[] {
-  return Object.keys(STAT_LABELS) as (keyof Stats)[];
+  return Object.keys(STAT_LABELS) as (keyof Metrics)[];
 }

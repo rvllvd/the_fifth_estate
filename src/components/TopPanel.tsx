@@ -1,6 +1,6 @@
 import Metric from "./Metric";
 import type { Metrics } from "../types";
-import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
 
 interface Props {
   metrics: Metrics;
@@ -11,12 +11,14 @@ interface Props {
 
 export default function TopPanel({ metrics, onNewGame, preview, onToggleTheme }: Props) {
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
+  const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
 
   return (
     <div id="top-panel">
       <div className="metrics">
-        {metricKeys().map((key) => {
-          const [icon, label] = METRIC_LABELS[key];
+        {keys.map((key) => {
+          const icon = STAT_ICONS[key];
+          const label = STAT_LABELS[key];
           return (
             <Metric
               key={key}
@@ -33,10 +35,10 @@ export default function TopPanel({ metrics, onNewGame, preview, onToggleTheme }:
         {hasPreview && (
           <div className="preview-line">
             <span></span>
-            {metricKeys().map((key) => {
+            {keys.map((key) => {
               const value = preview[key];
               // if (value === 0) return null;
-              const [icon] = METRIC_LABELS[key];
+              const icon = STAT_ICONS[key];
               return (
                 <span key={key} className={value > 0 ? "positive" : "negative"}>
                   {icon} {value > 0 ? "+" : ""}

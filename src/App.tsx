@@ -21,7 +21,10 @@ export default function App() {
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
-  const [isDark, setIsDark] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark";
+  });
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   // toggle theme handler
@@ -29,12 +32,14 @@ export default function App() {
     setIsDark((prev) => !prev);
   };
 
-  // apply theme class to body
+  // apply theme class to body and save to localStorage
   useEffect(() => {
     if (isDark) {
       document.body.classList.add("dark-theme");
+      localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
     }
   }, [isDark]);
 
@@ -42,7 +47,7 @@ export default function App() {
   //   // const turn = useGameStore((s) => s.turn);
   const influence = useGameStore((s) => s.influence);
   const credibility = useGameStore((s) => s.credibility);
-  const reputation = useGameStore((s) => s.reputation);
+  const budget = useGameStore((s) => s.budget);
   const readership = useGameStore((s) => s.readership);
   const currentNewsIds = useGameStore((s) => s.currentNewsIds);
   const usedNewsIds = useGameStore((s) => s.usedNewsIds);
@@ -137,7 +142,7 @@ export default function App() {
     <>
       <div id="app">
         <TopPanel
-          metrics={{ influence, credibility, reputation, readership }}
+          metrics={{ influence, credibility, budget, readership }}
           onNewGame={handleNewGame}
           preview={preview}
           onToggleTheme={toggleTheme}

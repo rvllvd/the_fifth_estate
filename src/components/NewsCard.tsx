@@ -1,8 +1,8 @@
 // import { ALL_SLOTS } from "../constants/game";
-import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import { useGameStore } from "../store/gameStore";
 // import { useNewsStore } from "../store";
-import { SPEC, type NewsItem } from "../types";
+import type { NewsItem } from "../types";
 // import PlacedNewsCard from "./PlacedNewsCard";
 
 interface Props {
@@ -25,8 +25,9 @@ export default function NewsCard({ news, placed, active = true }: Props) {
   const clickNews = useGameStore((s) => s.clickNews);
   // const dropNews = useNewsStore((s) => s.dropNews);
 
-  const effects = metricKeys().map((key) => ({
-    icon: METRIC_LABELS[key][0],
+  const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
+  const effects = keys.map((key) => ({
+    icon: STAT_ICONS[key],
     value: news.effects[key],
   }));
 
@@ -42,7 +43,7 @@ export default function NewsCard({ news, placed, active = true }: Props) {
     >
       <div className="news-header">
         <span className="news-title">{news.title}</span>
-        <span className="news-tag">{SPEC[news.category] ?? news.category}</span>
+        <span className="news-tag">{news.category}</span>
       </div>
       <div className="news-content">{news.content}</div>
       <div className="news-effects">

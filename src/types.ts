@@ -1,36 +1,10 @@
 export type StatScale = number; // 0..100
-export type Counter = number; // >= 0
-
-export const SPEC = {
-  politics: "Политика",
-  economy: "Экономика",
-  society: "Общество",
-  culture: "Культура",
-  sport: "Спорт",
-  science: "Наука",
-  technology: "Технологии",
-  health: "Здоровье",
-  world: "Мир",
-  incident: "Происшествия",
-  business: "Бизнес",
-  finance: "Финансы",
-  education: "Образование",
-  ecology: "Экология",
-  space: "Космос",
-  cinema: "Кино",
-  music: "Музыка",
-  fashion: "Мода",
-  food: "Еда",
-  travel: "Путешествия",
-  auto: "Авто",
-} as const;
-
-export type Spec = keyof typeof SPEC;
+export type Counter = number;  // >= 0
 
 export interface Metrics {
   influence: StatScale;
   credibility: StatScale;
-  reputation: StatScale;
+  budget: StatScale;
   readership: StatScale;
 }
 
@@ -45,31 +19,26 @@ export interface NewsItem {
   id: string;
   title: string;
   content: string;
-  category: Spec;
+  category: string;
   effects: Metrics;
   journalistId?: string;
 }
 
 export interface PlacedNews {
   newsId: string;
-  metrics?: Metrics;
   tier: number;
   slot: number;
-  journalistId?: string;
 }
 
 export interface Journalist {
   id: string;
   name: string;
   role: string;
-  desc?: string;
-  bonus?: (
-    current_placed_news: PlacedNews,
-    placed_news: PlacedNews[],
-  ) => Metrics;
+  bonus?: Metrics;
   cost: number;
-  spec: Spec;
+  spec?: string;
   newsId?: string;
+  desc?: string;
 }
 
 export interface GameState extends Stats {
