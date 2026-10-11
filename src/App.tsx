@@ -47,7 +47,7 @@ export default function App() {
   //   // const turn = useGameStore((s) => s.turn);
   const influence = useGameStore((s) => s.influence);
   const credibility = useGameStore((s) => s.credibility);
-  const budget = useGameStore((s) => s.budget);
+  const reputation = useGameStore((s) => s.reputation);
   const readership = useGameStore((s) => s.readership);
   const currentNewsIds = useGameStore((s) => s.currentNewsIds);
   const usedNewsIds = useGameStore((s) => s.usedNewsIds);
@@ -142,7 +142,7 @@ export default function App() {
     <>
       <div id="app">
         <TopPanel
-          metrics={{ influence, credibility, budget, readership }}
+          metrics={{ influence, credibility, reputation: reputation, readership }}
           onNewGame={handleNewGame}
           preview={preview}
           onToggleTheme={toggleTheme}

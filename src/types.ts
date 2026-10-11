@@ -4,7 +4,7 @@ export type Counter = number;  // >= 0
 export interface Metrics {
   influence: StatScale;
   credibility: StatScale;
-  budget: StatScale;
+  reputation: StatScale;
   readership: StatScale;
 }
 
