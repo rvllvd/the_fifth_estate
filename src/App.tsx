@@ -7,7 +7,7 @@ import Newspaper from "./components/Newspaper";
 import MetricsModal from "./components/MetricsModal";
 import JournalistsModal from "./components/JournalistsModal";
 import AlertModal from "./components/AlertModal";
-import type { Metrics, NewsItem } from "./types";
+import type { GameState, Metrics, NewsItem, PlacedNews } from "./types";
 import { playSound } from "./utils/sounds";
 import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
@@ -21,6 +21,12 @@ import { setSoundEffectsSettings } from "./utils/sounds";
 
 export default function App() {
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
+  const [publicationPreview, setPublicationPreview] = useState<{
+    result: Metrics;
+    placedNews: PlacedNews[];
+    gameState: GameState;
+    animationDuration: number;
+  } | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -139,6 +145,15 @@ export default function App() {
     if (isGameOver()) setShowAlertModal(true);
   });
 
+  useEffect(() => {
+    if (!publicationPreview) return;
+    const timeoutId = window.setTimeout(() => {
+      setModalResult(publicationPreview.result);
+      setPublicationPreview(null);
+    }, publicationPreview.animationDuration);
+    return () => window.clearTimeout(timeoutId);
+  }, [publicationPreview]);
+
   const currentNews = useMemo<NewsItem[]>(
     () =>
       currentNewsIds
@@ -220,9 +235,20 @@ export default function App() {
   };
 
   const handlePublish = () => {
+    const printedNews = placedNews.map((item) => ({ ...item }));
+    const printedGameState = {
+      ...gameState,
+      journalists: [...gameState.journalists],
+    };
     const result = publishStore();
     if (!result) return;
-    setModalResult(result);
+    const animationDuration = animationEnabled ? 1200 : 0;
+    setPublicationPreview({
+      result,
+      placedNews: printedNews,
+      gameState: printedGameState,
+      animationDuration,
+    });
     playSound("/assets/sounds/newspaper.mp3", 1);
   };
 
@@ -269,8 +295,9 @@ export default function App() {
             onOpenJournalists={() => setShowJournalistsModal(true)}
           />
           <Newspaper
-            placedNews={placedNews}
-            gameState={gameState}
+            placedNews={publicationPreview?.placedNews ?? placedNews}
+            gameState={publicationPreview?.gameState ?? gameState}
+            isPublishing={Boolean(publicationPreview && animationEnabled)}
             onDropNews={dropNews}
             onRemove={handleRemovePlaced}
           />

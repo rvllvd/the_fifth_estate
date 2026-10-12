@@ -4,6 +4,7 @@ import type { GameState, NewsItem, PlacedNews } from '../types';
 interface Props {
   placedNews: PlacedNews[];
   gameState: GameState;
+  isPublishing?: boolean;
   onDropNews: (key: string, news: NewsItem) => void;
   onRemove: (newsId: string) => void;
 }
@@ -14,9 +15,15 @@ const COLUMNS = [
   { tier: 3, title: 'Третья полоса (x0.5)',  slots: 3, multiplier: 0.5 },
 ];
 
-export default function Newspaper({ placedNews, gameState, onDropNews, onRemove }: Props) {
+export default function Newspaper({
+  placedNews,
+  gameState,
+  isPublishing = false,
+  onDropNews,
+  onRemove,
+}: Props) {
   return (
-    <div id="newspaper">
+    <div id="newspaper" className={isPublishing ? "publish-scoring" : ""}>
       <div className="newspaper-page">
         <div className="newspaper-header">
           <div className="newspaper-title">The Fifth Estate</div>
