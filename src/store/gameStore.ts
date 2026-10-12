@@ -2,7 +2,13 @@
 import { createInitialState, getInitialState, saveState } from "../utils/storage";
 import { create } from "zustand";
 // import type { GameState, Journalist, Metrics, NewsItem, Stats } from "../types";
-import type { GameState, Journalist, Metrics, NewsItem } from "../types";
+import type {
+  GameState,
+  Journalist,
+  Metrics,
+  NewsItem,
+  PublishedNewsLogItem,
+} from "../types";
 import { ALL_SLOTS } from "../constants/game";
 import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
@@ -10,11 +16,13 @@ import {
   applyPublication,
   calculatePublicationResult,
   canPublish,
+  getTierMultiplier,
   isGameOver,
   isSlotTaken,
   isVictory,
 } from "../utils/game";
 import { playSound } from "../utils/sounds";
+import { getNewsById } from "../data/news";
 
 interface GameStore extends GameState {
   // новости
@@ -131,8 +139,39 @@ export const useGameStore = create<GameStore>((set, get) => ({
   publish: () => {
     const state = get();
     if (!canPublish(state)) return null;
+    const publishedNews = state.placedNews.map((placed) => ({ ...placed }));
+    const result = calculatePublicationResult(publishedNews, state.journalists);
+    const newsLog: PublishedNewsLogItem[] = publishedNews.flatMap((placed) => {
+      const news = getNewsById(placed.newsId);
+      if (!news || !placed.metrics) return [];
+      const multiplier = getTierMultiplier(placed.tier);
+
+      return [{
+        newsId: news.id,
+        title: news.title,
+        category: news.category,
+        tier: placed.tier,
+        metrics: {
+          influence: Math.round(placed.metrics.influence * multiplier),
+          credibility: Math.round(placed.metrics.credibility * multiplier),
+          reputation: Math.round(placed.metrics.reputation * multiplier),
+          readership: Math.round(placed.metrics.readership * multiplier),
+        },
+      }];
+    });
+    const publicationHistory = [
+      ...state.publicationHistory,
+      {
+        id: `${Date.now()}-${state.publicationHistory.length}`,
+        turn: state.turn,
+        publishedAt: Date.now(),
+        news: newsLog,
+        result,
+      },
+    ];
     state.clearNewspaper();
-    return calculatePublicationResult(state.placedNews, state.journalists);
+    set({ publicationHistory });
+    return result;
   },
 
   applyResult: (result) => {

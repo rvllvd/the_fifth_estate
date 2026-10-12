@@ -18,6 +18,7 @@ const INITIAL_STATE: GameState = {
   usedNewsIds: [],
   currentNewsIds: [],
   currentCategories: [],
+  publicationHistory: [],
 };
 
 export function getInitialState(): GameState {
@@ -45,6 +46,7 @@ export function loadState(): GameState | null {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as GameState;
+      state.publicationHistory ??= [];
       state.journalists = state.journalists.map((savedJournalist) => {
         const journalist = AVAILABLE_JOURNALISTS.find(
           (available) => available.id === savedJournalist.id,

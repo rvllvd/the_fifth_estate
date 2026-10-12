@@ -224,6 +224,118 @@
   min-width: 190px;
 }
 
+.statistics-modal-content {
+  width: min(900px, 92vw);
+}
+
+.statistics-modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.statistics-modal-header .close-modal-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.statistics-modal-header .close-modal-btn:hover {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.statistics-empty {
+  padding: 24px 8px;
+  color: #bdc3c7;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.publication-history {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.publication-entry {
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.publication-entry-header,
+.publication-news,
+.publication-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.publication-entry-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.publication-entry-header h3 {
+  color: #ffd700;
+  font-size: 16px;
+}
+
+.publication-entry-header time,
+.publication-news-category {
+  color: #bdc3c7;
+  font-size: 12px;
+}
+
+.publication-news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0;
+  list-style: none;
+}
+
+.publication-news {
+  align-items: flex-start;
+}
+
+.publication-news-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  color: #fff;
+  font-size: 13px;
+}
+
+.publication-contributions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.publication-contributions .positive {
+  color: #27ae60;
+}
+
+.publication-contributions .negative {
+  color: #e74c3c;
+}
+
+.publication-total {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
 .modal-header {
 
   justify-content: space-between;

@@ -42,6 +42,22 @@ export interface Journalist {
   desc?: string;
 }
 
+export interface PublishedNewsLogItem {
+  newsId: string;
+  title: string;
+  category: string;
+  tier: number;
+  metrics: Metrics;
+}
+
+export interface PublicationLogEntry {
+  id: string;
+  turn: number;
+  publishedAt: number;
+  news: PublishedNewsLogItem[];
+  result: Metrics;
+}
+
 export interface GameState extends Stats {
   // Игровой процесс
   turn: number;
@@ -61,6 +77,9 @@ export interface GameState extends Stats {
 
   // Текущие категории (фиксируются на ход)
   currentCategories: string[];
+
+  // История опубликованных выпусков
+  publicationHistory: PublicationLogEntry[];
 
   // Статус игры
   gameOver?: boolean;

@@ -422,6 +422,35 @@
   accent-color: #c9a227;
 }
 
+.dark-theme .publication-entry {
+  border-color: #5c4033;
+  background: rgba(26, 18, 12, 0.45);
+}
+
+.dark-theme .publication-entry-header {
+  border-bottom-color: #3d2817;
+}
+
+.dark-theme .publication-entry-header h3 {
+  color: #c9a227;
+  font-family: 'Cinzel', serif;
+}
+
+.dark-theme .publication-entry-header time,
+.dark-theme .publication-news-category,
+.dark-theme .statistics-empty {
+  color: #a89070;
+}
+
+.dark-theme .publication-news-title,
+.dark-theme .publication-total {
+  color: #e8d5b0;
+}
+
+.dark-theme .publication-total {
+  border-top-color: #3d2817;
+}
+
 .dark-theme .modal-header h2 {
   color: #c9a227;
   font-family: 'Cinzel', serif;

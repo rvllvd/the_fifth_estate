@@ -6,10 +6,17 @@ interface Props {
   metrics: Metrics;
   onNewGame: () => void;
   preview: Metrics;
+  onOpenStatistics: () => void;
   onOpenSettings: () => void;
 }
 
-export default function TopPanel({ metrics, onNewGame, preview, onOpenSettings }: Props) {
+export default function TopPanel({
+  metrics,
+  onNewGame,
+  preview,
+  onOpenStatistics,
+  onOpenSettings,
+}: Props) {
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
   const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
 
@@ -54,7 +61,7 @@ export default function TopPanel({ metrics, onNewGame, preview, onOpenSettings }
         <button className="right-btn" id="upgrade-btn">
           Улучшения
         </button>
-        <button className="right-btn" id="stat-btn">
+        <button className="right-btn" id="stat-btn" onClick={onOpenStatistics}>
           Статистика
         </button>
         <button

@@ -16,6 +16,7 @@ import { calculatePublicationResult } from "./utils/game";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
+import StatisticsModal from "./components/StatisticsModal";
 
 export default function App() {
   useBackgroundMusic("/assets/sounds/city-noise.mp3", 0.75);
@@ -24,6 +25,7 @@ export default function App() {
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showStatisticsModal, setShowStatisticsModal] = useState(false);
 
   const openSettings = () => {
     // alert('Settings opened');
@@ -68,6 +70,7 @@ export default function App() {
   const usedNewsIds = useGameStore((s) => s.usedNewsIds);
   const placedNews = useGameStore((s) => s.placedNews);
   const journalists = useGameStore((s) => s.journalists);
+  const publicationHistory = useGameStore((s) => s.publicationHistory);
   const canPublishNow = useGameStore(selectCanPublish);
 
   // экшены
@@ -162,6 +165,7 @@ export default function App() {
           metrics={{ influence, credibility, reputation, readership }}
           onNewGame={handleNewGame}
           preview={preview}
+          onOpenStatistics={() => setShowStatisticsModal(true)}
           onOpenSettings={openSettings}
         />
         <div id="main-content">
@@ -199,6 +203,13 @@ export default function App() {
 
       {showSettingsModal && (
         <SettingsModal visible={showSettingsModal} onClose={closeSettings} onToggleTheme={toggleTheme} />
+      )}
+
+      {showStatisticsModal && (
+        <StatisticsModal
+          history={publicationHistory}
+          onClose={() => setShowStatisticsModal(false)}
+        />
       )}
 
       {showAlertModal && (
