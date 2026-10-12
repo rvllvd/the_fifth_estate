@@ -422,6 +422,25 @@
   accent-color: #c9a227;
 }
 
+.dark-theme .settings-volume-control {
+  color: #a89070;
+}
+
+.dark-theme .settings-volume-control input {
+  accent-color: #c9a227;
+}
+
+.dark-theme .settings-reset-btn {
+  background: linear-gradient(180deg, #4a3525 0%, #2d1f15 100%);
+  border: 2px solid #5c4033;
+  color: #d4c4a8;
+}
+
+.dark-theme .settings-reset-btn:hover {
+  background: linear-gradient(180deg, #5c4033 0%, #3d2817 100%);
+  border-color: #c9a227;
+}
+
 .dark-theme .publication-entry {
   border-color: #5c4033;
   background: rgba(26, 18, 12, 0.45);

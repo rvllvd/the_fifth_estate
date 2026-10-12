@@ -1,31 +1,46 @@
 import { useEffect, useRef } from 'react';
 
-export function useBackgroundMusic(src: string, volume = 0.15) {
+export function useBackgroundMusic(
+  src: string,
+  volume = 0.15,
+  enabled = true,
+) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const audio = new Audio(src);
     audio.loop = true;
-    audio.volume = volume;
     audio.preload = 'auto';
     audioRef.current = audio;
-
-    // Пытаемся запустить сразу
-    audio.play().catch(() => {
-      // Браузер заблокировал — ждём первого клика
-      const unlock = () => {
-        audio.play().catch(() => {});
-        window.removeEventListener('click', unlock);
-        window.removeEventListener('keydown', unlock);
-      };
-      window.addEventListener('click', unlock, { once: true });
-      window.addEventListener('keydown', unlock, { once: true });
-    });
 
     return () => {
       audio.pause();
       audio.src = '';
       audioRef.current = null;
     };
-  }, [src, volume]);
+  }, [src]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = Math.max(0, Math.min(1, volume));
+    if (!enabled || volume === 0) {
+      audio.pause();
+      return;
+    }
+
+    const play = () => {
+      audio.play().catch(() => {
+        window.addEventListener('click', play, { once: true });
+        window.addEventListener('keydown', play, { once: true });
+      });
+    };
+
+    play();
+    return () => {
+      window.removeEventListener('click', play);
+      window.removeEventListener('keydown', play);
+    };
+  }, [enabled, volume, src]);
 }

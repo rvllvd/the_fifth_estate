@@ -220,8 +220,38 @@
   cursor: pointer;
 }
 
+.settings-volume-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(280px, 100%);
+  color: #bdc3c7;
+  font-size: 13px;
+}
+
+.settings-volume-control input {
+  width: 100%;
+  accent-color: #c0392b;
+  cursor: pointer;
+}
+
+.settings-volume-control input:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .settings-theme-btn {
   min-width: 190px;
+}
+
+.settings-reset-btn {
+  min-width: 190px;
+  background: linear-gradient(135deg, #7f8c8d 0%, #566573 100%);
+}
+
+.settings-reset-btn:hover {
+  background: linear-gradient(135deg, #95a5a6 0%, #687b7c 100%);
 }
 
 .statistics-modal-content {

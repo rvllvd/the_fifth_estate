@@ -17,26 +17,56 @@ import { useGameStore, selectCanPublish } from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
+import { setSoundEffectsSettings } from "./utils/sounds";
 
 export default function App() {
-  useBackgroundMusic("/assets/sounds/city-noise.mp3", 0.75);
-
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
+  const [musicEnabled, setMusicEnabled] = useState(
+    () => localStorage.getItem("backgroundMusicEnabled") !== "false",
+  );
+  const [musicVolume, setMusicVolume] = useState(() => {
+    const stored = Number(localStorage.getItem("backgroundMusicVolume"));
+    return Number.isFinite(stored) && localStorage.getItem("backgroundMusicVolume") !== null
+      ? Math.max(0, Math.min(1, stored))
+      : 0.75;
+  });
+  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(
+    () => localStorage.getItem("soundEffectsEnabled") !== "false",
+  );
+  const [soundEffectsVolume, setSoundEffectsVolume] = useState(() => {
+    const stored = Number(localStorage.getItem("soundEffectsVolume"));
+    return Number.isFinite(stored) && localStorage.getItem("soundEffectsVolume") !== null
+      ? Math.max(0, Math.min(1, stored))
+      : 1;
+  });
+  const [animationEnabled, setAnimationEnabled] = useState(
+    () => localStorage.getItem("animationEnabled") !== "false",
+  );
 
-  const openSettings = () => {
-    // alert('Settings opened');
-    console.log("openSettings called");
-    setShowSettingsModal(true);
-  };
-  const closeSettings = () => setShowSettingsModal(false);
   const [isDark, setIsDark] = useState<boolean>(() => {
     const saved = localStorage.getItem("theme");
     return saved === "dark";
   });
+
+  useBackgroundMusic(
+    "/assets/sounds/city-noise.mp3",
+    musicVolume,
+    musicEnabled,
+  );
+
+  const openSettings = () => setShowSettingsModal(true);
+  const closeSettings = () => setShowSettingsModal(false);
+
+  useEffect(() => {
+    setSoundEffectsSettings(soundEffectsEnabled, soundEffectsVolume);
+    localStorage.setItem("soundEffectsEnabled", String(soundEffectsEnabled));
+    localStorage.setItem("soundEffectsVolume", String(soundEffectsVolume));
+  }, [soundEffectsEnabled, soundEffectsVolume]);
+
   // toggle theme handler
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -54,11 +84,9 @@ export default function App() {
   }, [isDark]);
 
   useEffect(() => {
-    document.body.classList.toggle(
-      "animations-disabled",
-      localStorage.getItem("animationEnabled") === "false",
-    );
-  }, []);
+    document.body.classList.toggle("animations-disabled", !animationEnabled);
+    localStorage.setItem("animationEnabled", String(animationEnabled));
+  }, [animationEnabled]);
 
   // читаем
   //   // const turn = useGameStore((s) => s.turn);
@@ -128,7 +156,57 @@ export default function App() {
     [placedNews, journalists],
   );
 
-  const handleNewGame = () => newGame();
+  const handleNewGame = () => {
+    if (window.confirm("Начать новую игру? Текущий прогресс будет потерян.")) {
+      newGame();
+    }
+  };
+
+  const toggleAnimation = () => setAnimationEnabled((enabled) => !enabled);
+
+  const toggleMusic = () => {
+    setMusicEnabled((enabled) => {
+      const next = !enabled;
+      localStorage.setItem("backgroundMusicEnabled", String(next));
+      return next;
+    });
+  };
+
+  const updateMusicVolume = (volume: number) => {
+    setMusicVolume(volume);
+    localStorage.setItem("backgroundMusicVolume", String(volume));
+  };
+
+  const toggleSoundEffects = () => {
+    setSoundEffectsEnabled((enabled) => {
+      const next = !enabled;
+      setSoundEffectsSettings(next, soundEffectsVolume);
+      localStorage.setItem("soundEffectsEnabled", String(next));
+      return next;
+    });
+  };
+
+  const updateSoundEffectsVolume = (volume: number) => {
+    setSoundEffectsVolume(volume);
+    setSoundEffectsSettings(soundEffectsEnabled, volume);
+    localStorage.setItem("soundEffectsVolume", String(volume));
+  };
+
+  const resetSettings = () => {
+    setMusicEnabled(true);
+    setMusicVolume(0.75);
+    setSoundEffectsEnabled(true);
+    setSoundEffectsVolume(1);
+    setAnimationEnabled(true);
+    setIsDark(false);
+    localStorage.setItem("backgroundMusicEnabled", "true");
+    localStorage.setItem("backgroundMusicVolume", "0.75");
+    localStorage.setItem("soundEffectsEnabled", "true");
+    localStorage.setItem("soundEffectsVolume", "1");
+    localStorage.setItem("animationEnabled", "true");
+    localStorage.setItem("theme", "light");
+    document.body.classList.remove("animations-disabled", "dark-theme");
+  };
 
   const handleRemovePlaced = (newsId: string) => {
     removePlaced(newsId);
@@ -211,7 +289,22 @@ export default function App() {
       )}
 
       {showSettingsModal && (
-        <SettingsModal visible={showSettingsModal} onClose={closeSettings} onToggleTheme={toggleTheme} />
+        <SettingsModal
+          visible={showSettingsModal}
+          onClose={closeSettings}
+          onToggleTheme={toggleTheme}
+          animationEnabled={animationEnabled}
+          onToggleAnimation={toggleAnimation}
+          musicEnabled={musicEnabled}
+          musicVolume={musicVolume}
+          onToggleMusic={toggleMusic}
+          onMusicVolumeChange={updateMusicVolume}
+          soundEffectsEnabled={soundEffectsEnabled}
+          soundEffectsVolume={soundEffectsVolume}
+          onToggleSoundEffects={toggleSoundEffects}
+          onSoundEffectsVolumeChange={updateSoundEffectsVolume}
+          onResetSettings={resetSettings}
+        />
       )}
 
       {showStatisticsModal && (

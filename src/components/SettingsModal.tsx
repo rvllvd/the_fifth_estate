@@ -1,23 +1,36 @@
-import { useState } from 'react';
-
 type Props = {
   visible: boolean;
   onClose: () => void;
   onToggleTheme: () => void;
+  animationEnabled: boolean;
+  onToggleAnimation: () => void;
+  musicEnabled: boolean;
+  musicVolume: number;
+  onToggleMusic: () => void;
+  onMusicVolumeChange: (volume: number) => void;
+  soundEffectsEnabled: boolean;
+  soundEffectsVolume: number;
+  onToggleSoundEffects: () => void;
+  onSoundEffectsVolumeChange: (volume: number) => void;
+  onResetSettings: () => void;
 };
 
-export default function SettingsModal({ visible, onClose, onToggleTheme }: Props) {
-  const [enabled, setEnabled] = useState(
-    () => localStorage.getItem('animationEnabled') !== 'false',
-  );
-
-  const toggle = () => {
-    const newVal = !enabled;
-    setEnabled(newVal);
-    localStorage.setItem('animationEnabled', newVal ? 'true' : 'false');
-    document.body.classList.toggle('animations-disabled', !newVal);
-  };
-
+export default function SettingsModal({
+  visible,
+  onClose,
+  onToggleTheme,
+  animationEnabled,
+  onToggleAnimation,
+  musicEnabled,
+  musicVolume,
+  onToggleMusic,
+  onMusicVolumeChange,
+  soundEffectsEnabled,
+  soundEffectsVolume,
+  onToggleSoundEffects,
+  onSoundEffectsVolumeChange,
+  onResetSettings,
+}: Props) {
   if (!visible) return null;
 
   return (
@@ -43,7 +56,63 @@ export default function SettingsModal({ visible, onClose, onToggleTheme }: Props
           <div className="settings-option">
             <label className="settings-animation-control">
               <span>Анимация танцующих букв</span>
-              <input type="checkbox" checked={enabled} onChange={toggle} />
+              <input
+                type="checkbox"
+                checked={animationEnabled}
+                onChange={onToggleAnimation}
+              />
+            </label>
+          </div>
+          <div className="settings-option">
+            <label className="settings-animation-control">
+              <span>Фоновая музыка</span>
+              <input
+                type="checkbox"
+                checked={musicEnabled}
+                onChange={onToggleMusic}
+              />
+            </label>
+            <label className="settings-volume-control">
+              <span>Громкость: {Math.round(musicVolume * 100)}%</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={musicVolume}
+                onChange={(event) =>
+                  onMusicVolumeChange(Number(event.currentTarget.value))
+                }
+                disabled={!musicEnabled}
+                aria-label="Громкость фоновой музыки"
+              />
+            </label>
+          </div>
+          <div className="settings-option">
+            <label className="settings-animation-control">
+              <span>Звуковые эффекты</span>
+              <input
+                type="checkbox"
+                checked={soundEffectsEnabled}
+                onChange={onToggleSoundEffects}
+              />
+            </label>
+            <label className="settings-volume-control">
+              <span>Громкость: {Math.round(soundEffectsVolume * 100)}%</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={soundEffectsVolume}
+                onChange={(event) =>
+                  onSoundEffectsVolumeChange(
+                    Number(event.currentTarget.value),
+                  )
+                }
+                disabled={!soundEffectsEnabled}
+                aria-label="Громкость звуковых эффектов"
+              />
             </label>
           </div>
           <div className="settings-option">
@@ -54,6 +123,16 @@ export default function SettingsModal({ visible, onClose, onToggleTheme }: Props
               onClick={onToggleTheme}
             >
               Сменить тему
+            </button>
+          </div>
+          <div className="settings-option">
+            <span className="settings-option-title">Сброс настроек</span>
+            <button
+              className="settings-reset-btn right-btn"
+              type="button"
+              onClick={onResetSettings}
+            >
+              Сбросить настройки
             </button>
           </div>
         </section>
