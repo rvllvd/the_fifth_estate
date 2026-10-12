@@ -1,5 +1,4 @@
 import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
-import { getJournalistById } from "../data/journalists";
 import type { NewsContribution, NewsItem } from "../types";
 import { getTierMultiplier } from "../utils/game";
 import DancingText from "./DancingText";
@@ -47,8 +46,8 @@ export default function PlacedNewsCard({
           </span>
         ))}
         <span className="placed-news-author">
-          {news.journalistId &&
-            `👤 Автор: ${getJournalistById(news.journalistId)?.name}`}
+          {contribution?.journalistName &&
+            `👤 Автор: ${contribution.journalistName}`}
         </span>
       </div>
       {contribution && (
