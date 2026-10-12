@@ -382,19 +382,147 @@
   background: linear-gradient(135deg, #2d1f15 0%, #1a120c 100%);
   border: 3px solid #5c4033;
   color: #d4c4a8;
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.9),
     inset 0 1px 0 rgba(255, 200, 100, 0.1);
 }
 
-.dark-theme .modal .close-modal-btn {
+.dark-theme .modal-content {
+  background: linear-gradient(135deg, #2d1f15 0%, #1a120c 100%);
+  border: 3px solid #5c4033;
+  color: #d4c4a8;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 200, 100, 0.1);
+}
+
+.dark-theme .metrics-modal-content {
+  background: linear-gradient(135deg, #2d1f15 0%, #1a120c 100%);
+  border: 3px solid #5c4033;
+  color: #d4c4a8;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 200, 100, 0.1);
+}
+
+.dark-theme .modal-header {
+  border-bottom-color: #5c4033;
+}
+
+.dark-theme .modal-header h2 {
+  color: #c9a227;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 15px rgba(201, 162, 39, 0.5);
+}
+
+.dark-theme .journalists-section h3 {
   color: #c9a227;
   font-family: 'Cinzel', serif;
 }
 
-.dark-theme .modal .close-modal-btn:hover {
+.dark-theme .journalist-card {
+  background: linear-gradient(135deg, #2d1f15 0%, #1a120c 100%);
+  border: 2px solid #5c4033;
+  color: #d4c4a8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme .journalist-card:hover {
+  border-color: #c9a227;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7), 0 0 15px rgba(201, 162, 39, 0.2);
+}
+
+.dark-theme .journalist-info {
+  border-bottom-color: #3d2817;
+}
+
+.dark-theme .journalist-name {
+  color: #e8d5b0;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 8px rgba(255, 200, 100, 0.4);
+}
+
+.dark-theme .journalist-role {
+  color: #d4c4a8;
+}
+
+.dark-theme .journalist-stats-desc {
+  color: #c9a227;
+}
+
+.dark-theme .cost-row {
+  border-top-color: #3d2817;
+}
+
+.dark-theme .hire-btn {
+  background: linear-gradient(135deg, #2d5a27 0%, #1a3d15 100%);
+  border: 2px solid #4a6b45;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.dark-theme .hire-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3d7a37 0%, #2d5a27 100%);
+  border-color: #c9a227;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), 0 0 15px rgba(201, 162, 39, 0.3);
+}
+
+.dark-theme .fire-btn {
+  background: linear-gradient(135deg, #8b2500 0%, #5c1800 100%);
+  border: 2px solid #a32d00;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.dark-theme .fire-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a32d00 0%, #8b2500 100%);
+  border-color: #c9a227;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), 0 0 15px rgba(201, 162, 39, 0.3);
+}
+
+.dark-theme .hire-btn:disabled,
+.dark-theme .fire-btn:disabled {
+  background: linear-gradient(135deg, #2a1a12 0%, #1a1008 100%);
+  border-color: #3d2817;
+  opacity: 0.5;
+}
+
+.dark-theme .metric-change {
+  background: linear-gradient(135deg, rgba(45, 31, 21, 0.6) 0%, rgba(26, 18, 12, 0.6) 100%);
+  border: 1px solid #5c4033;
+}
+
+.dark-theme .metric-name {
+  color: #d4c4a8;
+}
+
+.dark-theme .metric-value {
+  color: #e8d5b0;
+}
+
+.dark-theme .metric-change.positive .metric-value {
+  color: #c9a227;
+  text-shadow: 0 0 8px rgba(201, 162, 39, 0.4);
+}
+
+.dark-theme .metric-change.negative .metric-value {
+  color: #8b2500;
+  text-shadow: 0 0 8px rgba(139, 37, 0, 0.4);
+}
+
+.dark-theme .metrics-modal-title {
+  color: #c9a227;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
+}
+
+.dark-theme .close-modal-btn {
+  color: #c9a227;
+  font-family: 'Cinzel', serif;
+}
+
+.dark-theme .close-modal-btn:hover {
   color: #e8d5b0;
   text-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
+  background-color: rgba(201, 162, 39, 0.2);
 }
 
 /* Статистика в модалках */
