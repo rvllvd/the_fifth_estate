@@ -75,9 +75,9 @@ export default function TopPanel({
       </div>
 
       <div className="top-panel-actions">
-        <button className="right-btn" id="upgrade-btn">
+        {/* <button className="right-btn" id="upgrade-btn">
           Улучшения
-        </button>
+        </button> */}
         <button className="right-btn" id="stat-btn" onClick={onOpenStatistics}>
           Статистика
         </button>
