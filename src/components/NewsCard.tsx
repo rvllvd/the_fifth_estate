@@ -1,5 +1,6 @@
 // import { ALL_SLOTS } from "../constants/game";
 import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
+import { getNewsCategoryLabel } from "../constants/categories";
 import { useGameStore } from "../store/gameStore";
 // import { useNewsStore } from "../store";
 import type { NewsItem } from "../types";
@@ -14,7 +15,12 @@ interface Props {
   // onClickNews?: (news: NewsItem) => void;
 }
 
-export default function NewsCard({ news, placed, active = true, style }: Props) {
+export default function NewsCard({
+  news,
+  placed,
+  active = true,
+  style,
+}: Props) {
   const handleDragStart = (e: React.DragEvent) => {
     if (placed) {
       e.preventDefault();
@@ -48,7 +54,7 @@ export default function NewsCard({ news, placed, active = true, style }: Props) 
         <span className="news-title">
           <DancingText text={news.title} />
         </span>
-        <span className="news-tag">{news.category}</span>
+        <span className="news-tag">{getNewsCategoryLabel(news.category)}</span>
       </div>
       <div className="news-content">{news.content}</div>
       <div className="news-effects">
