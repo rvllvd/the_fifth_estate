@@ -47,6 +47,7 @@ export default function NewsCard({
       className={`news-item ${placed ? "placed" : ""} ${active ? "active" : "unactive"}`}
       data-news-id={news.id}
       data-category={news.category}
+      title={news.content}
       draggable={!placed}
       onDragStart={handleDragStart}
       onClick={() => clickNews(news)}
