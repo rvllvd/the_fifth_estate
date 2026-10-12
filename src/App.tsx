@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./styles/themes/dark.scss";
 import "./styles/themes/cyberpunk.scss";
-import "./styles/themes/vanilla.css"; // import vanilla theme (original)
+import "./styles/themes/vanilla.scss"; // import vanilla theme (original)
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
 import Newspaper from "./components/Newspaper";

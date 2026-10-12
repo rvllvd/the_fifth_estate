@@ -1,13 +1,13 @@
 /* Основные стили для The Fifth Estate */
-@import './fonts.css';
-@import './top-panel.css';
-@import './left-panel.css';
-@import './staff.css';
-@import './news.css';
-@import './newspaper.css';
-@import './modals.css';
-@import './scrollbars.css';
-@import './animations.css';
+@use './fonts';
+@use './top-panel';
+@use './left-panel';
+@use './staff';
+@use './news';
+@use './newspaper';
+@use './modals';
+@use './scrollbars';
+@use './animations';
 
 * {
   margin: 0;
