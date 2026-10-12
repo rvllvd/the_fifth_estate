@@ -69,14 +69,14 @@ export default function TopPanel({
 
       <div className="top-panel-economy">
         <div className="resource-display" id="readers-display">
-          <strong>{formatMoney(readers)}</strong>
+          {/* <span className="resource-label">👥 Аудитория</span> */}
+          <strong>{formatMoney(readers)} читателей</strong>
           {readerChangePreview !== null && readerChangePreview !== 0 && (
             <span className={readerChangePreview > 0 ? "positive" : "negative"}>
               {readerChangePreview > 0 ? "+" : ""}
               {formatMoney(readerChangePreview)} после выпуска
             </span>
           )}
-          <span className="resource-label">👥 Читатели</span>
         </div>
 
         <div id="metrics-preview">
@@ -105,8 +105,13 @@ export default function TopPanel({
           {/* <span className="resource-label">💵 Деньги</span> */}
           <strong>💵 ${formatMoney(money)}</strong>
           <span className="resource-flow">
-            +${formatMoney(readers * MONEY_PER_READER_PER_TURN)} доход · −$
-            {formatMoney(payroll)} зарплата / час
+            <span className="resource-income">
+              +${formatMoney(readers * MONEY_PER_READER_PER_TURN)} доход/час
+            </span>
+            <span className="resource-payroll">
+              {" "}
+              · −${formatMoney(payroll)} зарплата
+            </span>
           </span>
           {moneyChangePreview !== null && moneyChangePreview !== 0 && (
             <span className={moneyChangePreview > 0 ? "positive" : "negative"}>
