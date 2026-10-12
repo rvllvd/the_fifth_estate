@@ -114,6 +114,17 @@
   margin-bottom: 6px;
 }
 
+.metrics-modal-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.metrics-modal-actions .right-btn {
+  min-width: 180px;
+  padding: 10px 20px;
+}
+
 @keyframes valueChange {
   0% { transform: scale(1); }
   50% { transform: scale(1.3); }

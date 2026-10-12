@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Metrics } from "../types";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { entries } from "../helpers/object";
@@ -9,19 +9,14 @@ interface Props {
   result: Metrics;
   contributions: NewsContribution[];
   onClose: () => void;
-  /** Через сколько мс автозакрыть (0 — не закрывать) */
-  autoCloseMs?: number;
 }
 
 export default function MetricsModal({
   result,
   contributions,
   onClose,
-  autoCloseMs = 2000,
 }: Props) {
   const [visible, setVisible] = useState(false);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
   const [displayed, setDisplayed] = useState<Metrics>(() =>
     metricKeys().reduce((acc, key) => {
       acc[key] = 0;
@@ -63,13 +58,6 @@ export default function MetricsModal({
     return () => cancelAnimationFrame(raf);
   }, [result]);
 
-  // Автозакрытие
-  useEffect(() => {
-    if (!autoCloseMs) return;
-    const t = setTimeout(() => onCloseRef.current(), autoCloseMs);
-    return () => clearTimeout(t);
-  }, [autoCloseMs]);
-
   return (
     <div className={`metrics-modal ${visible ? "show" : ""}`}>
       <div className="metrics-modal-content">
@@ -105,6 +93,11 @@ export default function MetricsModal({
               <NewsMetricBreakdown contribution={contribution} alwaysShow />
             </div>
           ))}
+        </div>
+        <div className="metrics-modal-actions">
+          <button className="right-btn" type="button" onClick={onClose}>
+            Продолжить
+          </button>
         </div>
       </div>
     </div>
