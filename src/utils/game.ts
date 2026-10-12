@@ -37,9 +37,9 @@ export function isSlotTaken(
 //       influence: acc.influence + j.bonus.influence,
 //       credibility: acc.credibility + j.bonus.credibility,
 //       reputation: acc.reputation + j.bonus.reputation,
-//       readership: acc.readership + j.bonus.readership,
+//       loyalty: acc.loyalty + j.bonus.loyalty,
 //     }),
-//     { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+//     { influence: 0, credibility: 0, reputation: 0, loyalty: 0 },
 //   );
 // }
 
@@ -53,9 +53,9 @@ export function calculatePublicationResult(
       influence: result.influence + contribution.final.influence,
       credibility: result.credibility + contribution.final.credibility,
       reputation: result.reputation + contribution.final.reputation,
-      readership: result.readership + contribution.final.readership,
+      loyalty: result.loyalty + contribution.final.loyalty,
     }),
-    { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+    { influence: 0, credibility: 0, reputation: 0, loyalty: 0 },
   );
 }
 
@@ -72,9 +72,16 @@ export function calculateNewsContributions(
       return [];
     }
 
-    const journalist = journalists.find((member) => member.newsId === placed.newsId);
+    const journalist = journalists.find(
+      (member) => member.newsId === placed.newsId,
+    );
     const base = { ...news.effects };
-    let bonus: Metrics = { influence: 0, credibility: 0, reputation: 0, readership: 0 };
+    let bonus: Metrics = {
+      influence: 0,
+      credibility: 0,
+      reputation: 0,
+      loyalty: 0,
+    };
     let bonusDescription: string | undefined;
 
     if (journalist?.bonus) {
@@ -88,8 +95,8 @@ export function calculateNewsContributions(
           journalist,
           news,
           relatedNews,
-          placedNewsItems: newsItems.filter(
-            (item): item is NewsItem => Boolean(item),
+          placedNewsItems: newsItems.filter((item): item is NewsItem =>
+            Boolean(item),
           ),
           placedNews,
           journalists,
@@ -109,21 +116,23 @@ export function calculateNewsContributions(
         metrics[key] = Math.round((base[key] + bonus[key]) * multiplier);
         return metrics;
       },
-      { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+      { influence: 0, credibility: 0, reputation: 0, loyalty: 0 },
     );
 
-    return [{
-      newsId: news.id,
-      title: news.title,
-      category: news.category,
-      tier: placed.tier,
-      journalistName: journalist?.name,
-      base,
-      bonus,
-      multiplier,
-      final,
-      bonusDescription,
-    }];
+    return [
+      {
+        newsId: news.id,
+        title: news.title,
+        category: news.category,
+        tier: placed.tier,
+        journalistName: journalist?.name,
+        base,
+        bonus,
+        multiplier,
+        final,
+        bonusDescription,
+      },
+    ];
   });
 }
 
@@ -169,10 +178,19 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
 
   return {
     ...state,
-    influence: clampGlobalMetric(state.influence + result.influence, "influence"),
-    credibility: clampGlobalMetric(state.credibility + result.credibility, "credibility"),
-    reputation: clampGlobalMetric(state.reputation + result.reputation, "reputation"),
-    readership: clampGlobalMetric(state.readership + result.readership, "readership"),
+    influence: clampGlobalMetric(
+      state.influence + result.influence,
+      "influence",
+    ),
+    credibility: clampGlobalMetric(
+      state.credibility + result.credibility,
+      "credibility",
+    ),
+    reputation: clampGlobalMetric(
+      state.reputation + result.reputation,
+      "reputation",
+    ),
+    loyalty: clampGlobalMetric(state.loyalty + result.loyalty, "loyalty"),
     turn: state.turn + 1,
     placedNews: [],
     usedNewsIds,
@@ -194,9 +212,7 @@ export function isGameOver(state: GameState): boolean {
     state.turn > state.maxTurns ||
     state.readers <= GAME_BALANCE.minimumReaders ||
     state.money <= GAME_BALANCE.minimumMoney ||
-    METRIC_KEYS.some(
-      (key) => state[key] <= METRIC_DEFINITIONS[key].min,
-    )
+    METRIC_KEYS.some((key) => state[key] <= METRIC_DEFINITIONS[key].min)
   );
 }
 

@@ -1,8 +1,5 @@
 import type { Metrics } from "../types";
-import {
-  METRIC_DEFINITIONS,
-  METRIC_KEYS,
-} from "./global";
+import { METRIC_DEFINITIONS, METRIC_KEYS } from "./global";
 
 export { MAX_VALUE_STAT } from "./global";
 
@@ -21,14 +18,14 @@ const DEFEAT_DESCRIPTIONS: Record<keyof Metrics, string> = {
     "Говорят: доверяй, но проверяй. Проверили — доверия к вам больше нет, а газету не покупают даже ради проверки.",
   reputation:
     "Репутация редакции испорчена окончательно: теперь ваше имя упоминают только в предупреждениях рекламодателям.",
-  readership:
+  loyalty:
     "Читатели разошлись по другим газетам. Похоже, последний экземпляр купили, чтобы подложить под шатающийся стол.",
 };
 
 export function getDefeatDescriptions(metrics: Metrics): string[] {
-  return METRIC_KEYS
-    .filter((key) => metrics[key] <= METRIC_DEFINITIONS[key].min)
-    .map((key) => DEFEAT_DESCRIPTIONS[key]);
+  return METRIC_KEYS.filter(
+    (key) => metrics[key] <= METRIC_DEFINITIONS[key].min,
+  ).map((key) => DEFEAT_DESCRIPTIONS[key]);
 }
 
 export const METRIC_LABELS: Record<keyof Metrics, [string, string]> =

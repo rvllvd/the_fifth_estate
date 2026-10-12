@@ -5,7 +5,7 @@ const noBonus: Metrics = {
   influence: 0,
   credibility: 0,
   reputation: 0,
-  readership: 0,
+  loyalty: 0,
 };
 const BONUS = GAME_BALANCE.journalistBonuses;
 
@@ -29,10 +29,10 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
           news.effects.reputation *
             related.effects.reputation *
             BONUS.sameCategorySynergy.metricScale,
-        readership:
-          bonus.readership +
-          news.effects.readership *
-            related.effects.readership *
+        loyalty:
+          bonus.loyalty +
+          news.effects.loyalty *
+            related.effects.loyalty *
             BONUS.sameCategorySynergy.metricScale,
       }),
       { ...noBonus },
@@ -58,15 +58,19 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
   // Late-day sports reporting attracts more readers but slightly risks credibility.
   eveningSports: ({ game }) => {
     const hour = new Date(game.gameTime).getUTCHours();
-    const { startHour, endHour, readership, credibility } =
-      BONUS.eveningSports;
+    const {
+      startHour,
+      endHour,
+      loyalty: loyalty,
+      credibility,
+    } = BONUS.eveningSports;
     const active = hour >= startHour && hour < endHour;
     return {
       metrics: active
-        ? { ...noBonus, readership, credibility }
+        ? { ...noBonus, loyalty: loyalty, credibility }
         : { ...noBonus },
       explanation: active
-        ? `Спортивный итог дня: +${readership} читателей, но ${credibility} к доверию.`
+        ? `Спортивный итог дня: +${loyalty} читателей, но ${credibility} к доверию.`
         : "",
     };
   },
@@ -74,29 +78,29 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
   // Weekend cinema coverage draws a larger audience on Saturday and Sunday.
   weekendPremiere: ({ game, news }) => {
     const day = new Date(game.gameTime).getUTCDay();
-    const { days, category, readership, reputation } = BONUS.weekendPremiere;
+    const { days, category, loyalty, reputation } = BONUS.weekendPremiere;
     const active = days.includes(day) && news.category === category;
     return {
       metrics: active
-        ? { ...noBonus, readership, reputation }
+        ? { ...noBonus, loyalty: loyalty, reputation }
         : { ...noBonus },
       explanation: active
-        ? `Кинопремьеры выходного дня: +${readership} читателей и +${reputation} репутации.`
+        ? `Кинопремьеры выходного дня: +${loyalty} читателей и +${reputation} репутации.`
         : "",
     };
   },
 
-  // Investigative stories gain influence and readership, at the cost of reputation.
+  // Investigative stories gain influence and loyalty, at the cost of reputation.
   sensationalIncident: ({ news }) => {
-    const { category, influence, reputation, readership } =
+    const { category, influence, reputation, loyalty } =
       BONUS.sensationalIncident;
     const active = news.category === category;
     return {
       metrics: active
-        ? { ...noBonus, influence, reputation, readership }
+        ? { ...noBonus, influence, reputation, loyalty: loyalty }
         : { ...noBonus },
       explanation: active
-        ? `Громкое происшествие привлекает внимание: +${influence} влияния, +${readership} читателей, ${reputation} репутации.`
+        ? `Громкое происшествие привлекает внимание: +${influence} влияния, +${loyalty} читателей, ${reputation} репутации.`
         : "",
     };
   },
@@ -133,7 +137,10 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
       (other) => other.id !== journalist.id && other.newsId,
     ).length;
     return {
-      metrics: { ...noBonus, credibility: colleagues * credibilityPerColleague },
+      metrics: {
+        ...noBonus,
+        credibility: colleagues * credibilityPerColleague,
+      },
       explanation: colleagues
         ? `Редакционная команда работает вместе: ${colleagues} коллег(а) в выпуске, +${colleagues * credibilityPerColleague} к доверию.`
         : "",
@@ -142,31 +149,29 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
 
   // Science, education and health stories earn extra credibility from careful sourcing.
   carefulSourcing: ({ news }) => {
-    const { categories, credibility, readership } = BONUS.carefulSourcing;
+    const { categories, credibility, loyalty } = BONUS.carefulSourcing;
     const active = categories.includes(news.category);
     return {
       metrics: active
-        ? { ...noBonus, credibility, readership }
+        ? { ...noBonus, credibility, loyalty: loyalty }
         : { ...noBonus },
       explanation: active
-        ? `Тщательная проверка фактов: +${credibility} к доверию и +${readership} читатель.`
+        ? `Тщательная проверка фактов: +${credibility} к доверию и +${loyalty} читатель.`
         : "",
     };
   },
 
-  // When readership is low, culture coverage helps rebuild the audience and reputation.
+  // When loyalty is low, culture coverage helps rebuild the audience and reputation.
   audienceRecovery: ({ game, news }) => {
-    const { maximumReadership, readership, reputation } =
-      BONUS.audienceRecovery;
+    const { maximumloyalty, loyalty, reputation } = BONUS.audienceRecovery;
     const { category } = BONUS.audienceRecovery;
-    const active =
-      game.readership < maximumReadership && news.category === category;
+    const active = game.loyalty < maximumloyalty && news.category === category;
     return {
       metrics: active
-        ? { ...noBonus, readership, reputation }
+        ? { ...noBonus, loyalty: loyalty, reputation }
         : { ...noBonus },
       explanation: active
-        ? `Помогаем вернуть аудиторию: +${readership} читателей и +${reputation} репутации.`
+        ? `Помогаем вернуть аудиторию: +${loyalty} читателей и +${reputation} репутации.`
         : "",
     };
   },

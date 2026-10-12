@@ -17,12 +17,12 @@ export const METRIC_DEFINITIONS = {
   },
   reputation: {
     label: "Репутация",
-    icon: "💰",
+    icon: "📰",
     initial: 50,
     min: 0,
     max: 100,
   },
-  readership: {
+  loyalty: {
     label: "Лояльность",
     icon: "👥",
     initial: 50,
@@ -40,14 +40,14 @@ export const INITIAL_METRICS: Metrics = {
   influence: METRIC_DEFINITIONS.influence.initial,
   credibility: METRIC_DEFINITIONS.credibility.initial,
   reputation: METRIC_DEFINITIONS.reputation.initial,
-  readership: METRIC_DEFINITIONS.readership.initial,
+  loyalty: METRIC_DEFINITIONS.loyalty.initial,
 };
 
 export const ZERO_METRICS: Metrics = {
   influence: 0,
   credibility: 0,
   reputation: 0,
-  readership: 0,
+  loyalty: 0,
 };
 
 export const MIN_VALUE_STAT = METRIC_DEFINITIONS.influence.min;
@@ -96,20 +96,20 @@ export const GAME_BALANCE = {
     eveningSports: {
       startHour: 16,
       endHour: 18,
-      readership: 7,
+      loyalty: 7,
       credibility: -1,
     },
     weekendPremiere: {
       days: [0, 6] as number[],
       category: "cinema",
-      readership: 6,
+      loyalty: 6,
       reputation: 1,
     },
     sensationalIncident: {
       category: "incident",
       influence: 3,
       reputation: -2,
-      readership: 5,
+      loyalty: 5,
     },
     publicTrust: { minimumCredibility: 50, credibility: 4 },
     diverseNewsroom: { minimumCategories: 3, influence: 5 },
@@ -117,12 +117,12 @@ export const GAME_BALANCE = {
     carefulSourcing: {
       categories: ["science", "education", "health"] as string[],
       credibility: 6,
-      readership: 1,
+      loyalty: 1,
     },
     audienceRecovery: {
-      maximumReadership: 40,
+      maximumloyalty: 40,
       category: "culture",
-      readership: 6,
+      loyalty: 6,
       reputation: 2,
     },
     marketAuthority: {
@@ -134,15 +134,15 @@ export const GAME_BALANCE = {
   },
   // These weights combine article results with the quality/health of the whole newsroom.
   audienceChange: {
-    readershipEffect: 0.55,
+    loyaltyEffect: 0.55,
     influenceEffect: 0.12,
     credibilityEffect: 0.2,
     reputationEffect: 0.13,
     qualityEffect: 8,
-    readershipLevelEffect: 0.04,
-    readershipLevelScale: 100,
+    loyaltyLevelEffect: 0.04,
+    loyaltyLevelScale: 100,
     editorialQualityBaseline: 0.5,
-    readershipBaseline: 0.5,
+    loyaltyBaseline: 0.5,
     influenceQuality: 0.2,
     credibilityQuality: 0.45,
     reputationQuality: 0.35,
@@ -190,7 +190,10 @@ export function calculateAudienceChange(
   result: Metrics,
 ): number {
   const finalMetrics = {
-    influence: clampMetric(currentMetrics.influence + result.influence, "influence"),
+    influence: clampMetric(
+      currentMetrics.influence + result.influence,
+      "influence",
+    ),
     credibility: clampMetric(
       currentMetrics.credibility + result.credibility,
       "credibility",
@@ -199,10 +202,7 @@ export function calculateAudienceChange(
       currentMetrics.reputation + result.reputation,
       "reputation",
     ),
-    readership: clampMetric(
-      currentMetrics.readership + result.readership,
-      "readership",
-    ),
+    loyalty: clampMetric(currentMetrics.loyalty + result.loyalty, "loyalty"),
   };
   const weights = GAME_BALANCE.audienceChange;
   const normalizeMetric = (key: keyof Metrics, value: number) => {
@@ -218,16 +218,16 @@ export function calculateAudienceChange(
       weights.reputationQuality;
 
   return Math.round(
-    result.readership * weights.readershipEffect +
+    result.loyalty * weights.loyaltyEffect +
       result.influence * weights.influenceEffect +
       result.credibility * weights.credibilityEffect +
       result.reputation * weights.reputationEffect +
       (editorialQuality - weights.editorialQualityBaseline) *
         weights.qualityEffect +
-      (normalizeMetric("readership", finalMetrics.readership) -
-        weights.readershipBaseline) *
-        weights.readershipLevelScale *
-        weights.readershipLevelEffect,
+      (normalizeMetric("loyalty", finalMetrics.loyalty) -
+        weights.loyaltyBaseline) *
+        weights.loyaltyLevelScale *
+        weights.loyaltyLevelEffect,
   );
 }
 
@@ -244,7 +244,9 @@ export function createInitialGameTime(): number {
   return startOfDay + secondsAfterMidnight * 1000;
 }
 
-export function getRandomPublicationTimeAdvance(randomValue = Math.random()): number {
+export function getRandomPublicationTimeAdvance(
+  randomValue = Math.random(),
+): number {
   const { min, max } = GAME_BALANCE.publicationTimeAdvanceMinutes;
   return (min + Math.floor(randomValue * (max - min + 1))) * 60_000;
 }

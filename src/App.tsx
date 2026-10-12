@@ -39,7 +39,8 @@ export default function App() {
   );
   const [musicVolume, setMusicVolume] = useState(() => {
     const stored = Number(localStorage.getItem("backgroundMusicVolume"));
-    return Number.isFinite(stored) && localStorage.getItem("backgroundMusicVolume") !== null
+    return Number.isFinite(stored) &&
+      localStorage.getItem("backgroundMusicVolume") !== null
       ? Math.max(0, Math.min(1, stored))
       : 0.75;
   });
@@ -48,7 +49,8 @@ export default function App() {
   );
   const [soundEffectsVolume, setSoundEffectsVolume] = useState(() => {
     const stored = Number(localStorage.getItem("soundEffectsVolume"));
-    return Number.isFinite(stored) && localStorage.getItem("soundEffectsVolume") !== null
+    return Number.isFinite(stored) &&
+      localStorage.getItem("soundEffectsVolume") !== null
       ? Math.max(0, Math.min(1, stored))
       : 1;
   });
@@ -94,7 +96,7 @@ export default function App() {
   const gameTime = useGameStore((s) => s.gameTime);
   const credibility = useGameStore((s) => s.credibility);
   const reputation = useGameStore((s) => s.reputation);
-  const readership = useGameStore((s) => s.readership);
+  const loyalty = useGameStore((s) => s.loyalty);
   const currentNewsIds = useGameStore((s) => s.currentNewsIds);
   const usedNewsIds = useGameStore((s) => s.usedNewsIds);
   const placedNews = useGameStore((s) => s.placedNews);
@@ -277,7 +279,7 @@ export default function App() {
       </div>
       <div id="app">
         <TopPanel
-          metrics={{ influence, credibility, reputation, readership }}
+          metrics={{ influence, credibility, reputation, loyalty: loyalty }}
           gameTime={gameTime}
           onNewGame={handleNewGame}
           preview={preview}
@@ -366,7 +368,7 @@ export default function App() {
             influence,
             credibility,
             reputation,
-            readership,
+            loyalty: loyalty,
           }).concat(
             getEconomyDefeatDescriptions(gameState.readers, gameState.money),
           )}

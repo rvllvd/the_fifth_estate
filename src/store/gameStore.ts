@@ -1,5 +1,9 @@
 // import { clearState, createInitialState, getInitialState, saveState } from "../utils/storage";
-import { createInitialState, getInitialState, saveState } from "../utils/storage";
+import {
+  createInitialState,
+  getInitialState,
+  saveState,
+} from "../utils/storage";
 import { create } from "zustand";
 // import type { GameState, Journalist, Metrics, NewsItem, Stats } from "../types";
 import type {
@@ -166,9 +170,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
         influence: total.influence + contribution.final.influence,
         credibility: total.credibility + contribution.final.credibility,
         reputation: total.reputation + contribution.final.reputation,
-        readership: total.readership + contribution.final.readership,
+        loyalty: total.loyalty + contribution.final.loyalty,
       }),
-      { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+      { influence: 0, credibility: 0, reputation: 0, loyalty: 0 },
     );
     const newsLog: PublishedNewsLogItem[] = contributions;
     const publicationHistory = [

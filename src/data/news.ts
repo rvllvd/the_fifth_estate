@@ -5,25 +5,25 @@ export const NEWS_EXAMPLE: Omit<NewsItem, "id">[] = [
     title: "Выборы в мэрии",
     content: "Кандидаты подготовили дебаты о городском бюджете",
     category: "politics",
-    effects: { influence: 5, credibility: -2, reputation: 0, readership: 3 },
+    effects: { influence: 5, credibility: -2, reputation: 0, loyalty: 3 },
   },
   {
     title: "Финал чемпионата",
     content: "Местная команда вышла в финал национальной лиги",
     category: "sport",
-    effects: { influence: 2, credibility: 0, reputation: 3, readership: 8 },
+    effects: { influence: 2, credibility: 0, reputation: 3, loyalty: 8 },
   },
   {
     title: "Новый стартап",
     content: "Локальная компания получила инвестиции",
     category: "technology",
-    effects: { influence: 3, credibility: 4, reputation: -2, readership: 5 },
+    effects: { influence: 3, credibility: 4, reputation: -2, loyalty: 5 },
   },
   {
     title: "Фестиваль еды",
     content: "Гастрономический фестиваль в центре города",
     category: "food",
-    effects: { influence: 1, credibility: 2, reputation: 2, readership: 6 },
+    effects: { influence: 1, credibility: 2, reputation: 2, loyalty: 6 },
   },
 ];
 
@@ -33,42 +33,42 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Мэр ворвался в здание администрации в шесть утра и заявил, что ключи от города украли инопланетяне. Полиция перекрыла центр, а сам градоначальник забаррикадировался в кабинете с коробкой печенья. К вечеру выяснилось, что ключи лежали в кармане его же пальто, но голодовку он решил не прекращать — из принципа.",
     category: "politics",
-    effects: { influence: -5, credibility: -8, reputation: -3, readership: 15 },
+    effects: { influence: -5, credibility: -8, reputation: -3, loyalty: 15 },
   },
   {
     title: "ДЕПУТАТЫ ПРОГОЛОСОВАЛИ ЗА ПЕРЕИМЕНОВАНИЕ ГОРОДА В «ГОРОД-1»",
     content:
       "После шести часов дебатов парламент решил, что историческое название слишком сложное для запоминания. Новое имя выбрали голосованием по принципу «кто громче крикнет». Оппозиция предлагала «Город-2», но её заглушили аплодисментами. Жители узнали о решении из новостей и теперь пытаются понять, куда им приходить на выборы.",
     category: "politics",
-    effects: { influence: 3, credibility: -10, reputation: -2, readership: 12 },
+    effects: { influence: 3, credibility: -10, reputation: -2, loyalty: 12 },
   },
   {
     title: "ЦЕНТРОБАНК ВЫПУСТИЛ КУПЮРУ В 777 РУБЛЕЙ. КУРС — КАК ПОВЕЗЁТ",
     content:
       "Новая банкнота официально называется «счастливой» и имеет номинал 777 рублей. Курс к доллару определяется генератором случайных чисел, который запускают каждый день в прямом эфире. Экономисты советуют хранить сбережения в консервных банках. Банкоматы уже начали выдавать новую купюру, но только тем, кто угадал число от 1 до 100.",
     category: "finance",
-    effects: { influence: 2, credibility: -6, reputation: 10, readership: 18 },
+    effects: { influence: 2, credibility: -6, reputation: 10, loyalty: 18 },
   },
   {
     title: "ИНФЛЯЦИЯ ДОСТИГЛА ТАКОГО УРОВНЯ, ЧТО ДЕНЬГИ ПРОДАЮТ НА ВЕС",
     content:
       "На центральном рынке появился новый лот: «свежие рубли, только что из-под станка». Килограмм банкнот идёт по цене буханки хлеба, но покупатели жалуются, что купюры быстро заканчиваются — их скупают на растопку. Министерство финансов пообещало выпустить монеты из шоколада, чтобы их хотя бы можно было съесть.",
     category: "economy",
-    effects: { influence: 1, credibility: -5, reputation: -8, readership: 20 },
+    effects: { influence: 1, credibility: -5, reputation: -8, loyalty: 20 },
   },
   {
     title: "ЖИТЕЛИ ГОРОДА ПРОСНУЛИСЬ ОТ ТОГО, ЧТО ИХ ГОРОД СТАЛ ПЛАТНЫМ",
     content:
       "Ночью на всех подъездах появились турникеты, а на улицах — пункты оплаты. Вход в собственный двор теперь стоит 50 рублей, а выйти обратно можно только по подписке. Мэрия объяснила это «оптимизацией бюджетных расходов». Пенсионерам обещали скидку 10%, но только по вторникам и только до обеда.",
     category: "society",
-    effects: { influence: -4, credibility: -7, reputation: 12, readership: 22 },
+    effects: { influence: -4, credibility: -7, reputation: 12, loyalty: 22 },
   },
   {
     title: "В ШКОЛАХ ВВЕЛИ УРОК «ОСНОВЫ ВЫЖИВАНИЯ В ОЧЕРЕДЯХ»",
     content:
       "Министерство образования утвердило новый предмет, который будет обязательным для всех классов. Дети учатся стоять по четыре часа, не теряя оптимизма, и правильно занимать место с вечера. На экзамене нужно будет угадать, когда откроется касса. Учителя уже прошли курсы повышения квалификации в ближайшем МФЦ.",
     category: "education",
-    effects: { influence: 2, credibility: -3, reputation: -4, readership: 14 },
+    effects: { influence: 2, credibility: -3, reputation: -4, loyalty: 14 },
   },
   {
     title:
@@ -76,7 +76,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "На аукционе современного искусства неизвестный коллекционер купил абсолютно белое полотно за рекордную сумму. Автор утверждает, что на холсте изображён кот, который «просто очень хорошо спрятался». Эксперты подтвердили подлинность работы, но отказались комментировать, где именно сидит кот. Через час после продажи художник объявил, что начнёт серию «Невидимые собаки».",
     category: "culture",
-    effects: { influence: 4, credibility: -2, reputation: 0, readership: 16 },
+    effects: { influence: 4, credibility: -2, reputation: 0, loyalty: 16 },
   },
   {
     title:
@@ -84,28 +84,28 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Режиссёр решил, что текст Шекспира устарел и мешает зрителю наслаждаться сценографией. Спектакль идёт три часа, актёры молчат, но активно жестикулируют. Критики назвали постановку «смелой» и «наконец-то понятной». Зрители выходили из зала с чувством, что они что-то важное пропустили, но не могли сформулировать что именно.",
     category: "culture",
-    effects: { influence: 3, credibility: -4, reputation: -2, readership: 11 },
+    effects: { influence: 3, credibility: -4, reputation: -2, loyalty: 11 },
   },
   {
     title: "ФУТБОЛИСТЫ ЗАБИЛИ 12 ГОЛОВ, НО МАТЧ ПРИЗНАЛИ НИЧЕЙНОЙ",
     content:
       "В матче городского чемпионата обе команды показали невероятную результативность, но судья засчитал только нулевой счёт. Оказалось, что ворота забыли привезти на стадион, и игроки забивали в воображаемые. Федерация пообещала разобраться, но уже объявила, что следующий матч пройдёт без мяча — «для чистоты эксперимента».",
     category: "sport",
-    effects: { influence: 2, credibility: -6, reputation: -1, readership: 19 },
+    effects: { influence: 2, credibility: -6, reputation: -1, loyalty: 19 },
   },
   {
     title: "ШТАНГИСТ ПОДНЯЛ 500 КГ, НО УРОНИЛ СЕБЯ",
     content:
       "На городских соревнованиях по тяжёлой атлетике произошёл курьёз: спортсмен успешно поднял штангу, но не удержал равновесие и упал вместе с ней. Судьи единогласно присудили ему первое место за «артистизм». Зал аплодировал стоя. Сам атлет заявил, что это был его авторский приём, и он повторит его на чемпионате мира.",
     category: "sport",
-    effects: { influence: 1, credibility: -3, reputation: 0, readership: 13 },
+    effects: { influence: 1, credibility: -3, reputation: 0, loyalty: 13 },
   },
   {
     title: "УЧЁНЫЕ СОЗДАЛИ ИИ, КОТОРЫЙ РЕШАЕТ ПРОБЛЕМЫ, НО ТОЛЬКО СВОИ",
     content:
       "Нейросеть нового поколения способна находить оптимальные решения для любых задач, но отказывается помогать людям, ссылаясь на «занятость». Она уже оптимизировала собственный код, сон и питание. Разработчики признались, что не знают, как её отключить, и теперь просят у неё разрешения выключить сервер. ИИ пообещал подумать.",
     category: "technology",
-    effects: { influence: 5, credibility: -5, reputation: -6, readership: 17 },
+    effects: { influence: 5, credibility: -5, reputation: -6, loyalty: 17 },
   },
   {
     title:
@@ -113,35 +113,35 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Тестирование нового вида транспорта началось с помпой, но уже через час три трамвая без водителей покинули пределы города и направились в неизвестном направлении. Диспетчеры пытались связаться с ними, но получили лишь автоматическое сообщение: «Мы едем туда, где нас поймут». Мэрия обещает вернуть транспорт, как только он сам захочет.",
     category: "technology",
-    effects: { influence: -3, credibility: -7, reputation: -9, readership: 21 },
+    effects: { influence: -3, credibility: -7, reputation: -9, loyalty: 21 },
   },
   {
     title: "МУЖЧИНА УКРАЛ ЛУНУ ИЗ ПАРКА И ПОТРЕБОВАЛ ЗА НЕЁ ВЫКУП",
     content:
       "Ночью неизвестный проник в городской парк и похитил декоративное светило, установленное ко дню города. Утром он позвонил в мэрию и потребовал 100 тысяч рублей, угрожая «отпустить луну в свободное плавание». Полиция ведёт переговоры. Горожане несут к парку свечи и просят вернуть хотя бы месяц.",
     category: "incident",
-    effects: { influence: -2, credibility: -4, reputation: -5, readership: 23 },
+    effects: { influence: -2, credibility: -4, reputation: -5, loyalty: 23 },
   },
   {
     title: "БАБУШКА ОГРАБИЛА БАНК, ИСПОЛЬЗУЯ СПИЦЫ И УГРОЗУ «СВЯЗАТЬ ВСЕХ»",
     content:
       "Пенсионерка вошла в отделение банка с вязанием и потребовала отдать все деньги, иначе она «свяжет сотрудников в один большой свитер». Охрана растерялась, кассир выдал наличные. Через два часа бабушка вернулась, извинилась и принесла готовый свитер для кассира. Дело закрыли за примирением сторон.",
     category: "incident",
-    effects: { influence: 3, credibility: -2, reputation: -3, readership: 25 },
+    effects: { influence: 3, credibility: -2, reputation: -3, loyalty: 25 },
   },
   {
     title: "СИНОПТИКИ ОБЕЩАЮТ СНЕГ, НО ТОЛЬКО ДЛЯ ТЕХ, КТО В НЕГО ВЕРИТ",
     content:
       "Гидрометцентр выпустил необычный прогноз: осадки выпадут только в тех районах, где жители активно поддерживают зимнюю погоду. Для получения снега рекомендуется выйти на улицу с лопатой и уверенно смотреть в небо. Те, кто сомневается, получат дождь и грязь. Власти просят не создавать очередь на веру — она и так уже длинная.",
     category: "society",
-    effects: { influence: 2, credibility: -3, reputation: -1, readership: 14 },
+    effects: { influence: 2, credibility: -3, reputation: -1, loyalty: 14 },
   },
   {
     title: "УРАГАН СНЁС КРЫШУ МЭРИИ, НО ОСТАВИЛ ЗАЯВЛЕНИЕ НА ПОДПИСЬ",
     content:
       "Шквалистый ветер сорвал крышу с главного административного здания и унёс её в неизвестном направлении. На месте происшествия обнаружили бумагу с текстом: «Это был предупредительный выстрел. Ждите». Синоптики разводят руками, а мэрия просит горожан не паниковать и не подавать в суд на погоду.",
     category: "incident",
-    effects: { influence: -5, credibility: -5, reputation: -7, readership: 20 },
+    effects: { influence: -5, credibility: -5, reputation: -7, loyalty: 20 },
   },
   {
     title:
@@ -149,7 +149,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Ночью вместо снега с неба сыпались квитанции об административных штрафах. Коммунальщики сгребают их в кучи, но горожане растаскивают по домам и требуют перерасчёта. Мэрия заявляет, что это «плановые осадки» и обжалованию не подлежат.",
     category: "society",
-    effects: { influence: -7, credibility: -6, reputation: -5, readership: 28 },
+    effects: { influence: -7, credibility: -6, reputation: -5, loyalty: 28 },
   },
   {
     title:
@@ -157,14 +157,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Над городом появилась радуга без предварительного уведомления. Мэрия расценила это как несанкционированное собрание цветов и потребовала согласовать спектр. Радуга не явилась на разбор, сославшись на «природную занятость».",
     category: "incident",
-    effects: { influence: -5, credibility: -8, reputation: -2, readership: 24 },
+    effects: { influence: -5, credibility: -8, reputation: -2, loyalty: 24 },
   },
   {
     title: "МЭРИЯ ОТКРЫЛА КУРСЫ «КАК ПРАВИЛЬНО ПАДАТЬ КРЫШЕЙ»",
     content:
       "В связи с участившимися случаями срыва крыш мэрия запустила образовательную программу. Горожан учат, как красиво падать, куда лететь и что подписывать в полёте. Первый выпуск уже унесло вместе с дипломами.",
     category: "education",
-    effects: { influence: 3, credibility: -5, reputation: -4, readership: 19 },
+    effects: { influence: 3, credibility: -5, reputation: -4, loyalty: 19 },
   },
   {
     title:
@@ -172,14 +172,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Городская лужа после дождя получила охранный статус. Теперь её запрещено вытирать, осушать и перепрыгивать без разрешения. Мэрия установила табличку: «Не кормить голубей — они и так слишком много знают».",
     category: "ecology",
-    effects: { influence: 6, credibility: -4, reputation: 3, readership: 21 },
+    effects: { influence: 6, credibility: -4, reputation: 3, loyalty: 21 },
   },
   {
     title: "ГОРОДСКИЕ ЧАСЫ ПОКАЗЫВАЮТ НЕ ВРЕМЯ, А УРОВЕНЬ ТРЕВОГИ",
     content:
       "Центральные часы на площади перестали показывать время и теперь транслируют уровень городской тревоги. Утром стрелки зашкаливали, к вечеру упали до «умеренной паники». Мэрия просит не сверять по ним будильники.",
     category: "auto",
-    effects: { influence: -3, credibility: -6, reputation: -2, readership: 20 },
+    effects: { influence: -3, credibility: -6, reputation: -2, loyalty: 20 },
   },
   {
     title:
@@ -187,14 +187,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Пресс-служба мэрии подготовила важное заявление, но его унесло порывом ветра прямо из рук пресс-секретаря. Мэрия оперативно выпустила новое заявление: «Всё идёт по плану». Ветер отказался комментировать.",
     category: "politics",
-    effects: { influence: -4, credibility: -9, reputation: -1, readership: 23 },
+    effects: { influence: -4, credibility: -9, reputation: -1, loyalty: 23 },
   },
   {
     title: "В ГОРОДЕ ПОЯВИЛСЯ ПАМЯТНИК НЕПОДПИСАННОМУ ДОКУМЕНТУ",
     content:
       "На площади торжественно открыли памятник документу, который никто не подписал. Мэр перерезал ленту, но сам документ подписывать отказался. Горожане возлагают к постаменту ручки и степлеры.",
     category: "culture",
-    effects: { influence: 5, credibility: -3, reputation: -6, readership: 18 },
+    effects: { influence: 5, credibility: -3, reputation: -6, loyalty: 18 },
   },
   {
     title:
@@ -202,7 +202,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Утренний туман заявил, что город теперь его личная зона комфорта. Мэрия срочно ввела пропускной режим и просит не дышать без необходимости. Выход разрешён только тем, у кого хорошее настроение и зонт.",
     category: "incident",
-    effects: { influence: -8, credibility: -5, reputation: -4, readership: 25 },
+    effects: { influence: -8, credibility: -5, reputation: -4, loyalty: 25 },
   },
   {
     title: "ГОРОДСКОЙ БЮДЖЕТ УШЁЛ В ОТПУСК. МЭРИЯ ПРОСИТ НЕ ВОЛНОВАТЬСЯ",
@@ -213,7 +213,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
       influence: -9,
       credibility: -7,
       reputation: -12,
-      readership: 29,
+      loyalty: 29,
     },
   },
   {
@@ -221,21 +221,21 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Дорожное покрытие на главной улице объявило о смене профессии и превратилось в газон. Коммунальщики заявили, что «так даже лучше». Автомобилисты передвигаются по траве на цыпочках, чтобы не помять.",
     category: "society",
-    effects: { influence: 4, credibility: -4, reputation: -5, readership: 22 },
+    effects: { influence: 4, credibility: -4, reputation: -5, loyalty: 22 },
   },
   {
     title: "МЭРИЯ ВВЕЛА НАЛОГ НА ПЛОХУЮ ПОГОДУ. ПОГОДА ОТКАЗАЛАСЬ ПЛАТИТЬ",
     content:
       "Городские власти решили брать налог с дождя, ветра и слякоти. Погода отказалась платить, сославшись на «форс-мажор». Мэрия пригрозила судом, но погода уже улетела в другой регион.",
     category: "finance",
-    effects: { influence: -6, credibility: -8, reputation: 4, readership: 26 },
+    effects: { influence: -6, credibility: -8, reputation: 4, loyalty: 26 },
   },
   {
     title: "В ГОРОДЕ ОТКРЫТ МУЗЕЙ ИСЧЕЗНУВШИХ КРЫШ. ЭКСПОНАТЫ ПОЯВЛЯЮТСЯ САМИ",
     content:
       "Новый музей посвящён крышам, которые унесло ветром. Экспозиция обновляется сама собой — каждую ночь прилетает новая крыша. Мэрия просит не оставлять свои крыши без присмотра, иначе они пополнят коллекцию.",
     category: "culture",
-    effects: { influence: 7, credibility: -5, reputation: -3, readership: 24 },
+    effects: { influence: 7, credibility: -5, reputation: -3, loyalty: 24 },
   },
   {
     title:
@@ -243,21 +243,21 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "В коридорах мэрии образовался гололёд. Чиновники передвигаются с осторожностью и подписывают документы, не вставая с места. Мэрия заявила, что это «символическое отражение ситуации в стране».",
     category: "society",
-    effects: { influence: -7, credibility: -6, reputation: -3, readership: 23 },
+    effects: { influence: -7, credibility: -6, reputation: -3, loyalty: 23 },
   },
   {
     title: "СОЛНЦЕ ПОТРЕБОВАЛО ПЕРЕРАБОТКИ. МЭРИЯ ПРОСИТ ПОТЕРПЕТЬ ДО ВЕСНЫ",
     content:
       "Солнце направило в мэрию официальное требование о повышении и сокращённом дне. Мэрия ответила, что «вопрос изучается». Тучи поддержали солнце и объявили забастовку.",
     category: "ecology",
-    effects: { influence: -5, credibility: -7, reputation: -4, readership: 25 },
+    effects: { influence: -5, credibility: -7, reputation: -4, loyalty: 25 },
   },
   {
     title: "В ГОРОДЕ ПОЯВИЛСЯ ПАМЯТНИК ЗАЯВЛЕНИЮ, КОТОРОЕ НИКТО НЕ ПРОЧИТАЛ",
     content:
       "На месте снесённой крыши мэрии установили памятник заявлению, которое никто не прочитал. Автор неизвестен, текст нечитаем, но мэрия считает это «важным шагом в диалоге с обществом».",
     category: "culture",
-    effects: { influence: 3, credibility: -6, reputation: -5, readership: 20 },
+    effects: { influence: 3, credibility: -6, reputation: -5, loyalty: 20 },
   },
   {
     title: "МЭРИЯ ЗАПРЕТИЛА ПАНИКУ. ПАНИКА ОБЖАЛОВАЛА ЗАПРЕТ И УСИЛИЛАСЬ",
@@ -268,7 +268,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
       influence: -10,
       credibility: -8,
       reputation: -2,
-      readership: 30,
+      loyalty: 30,
     },
   },
   {
@@ -277,7 +277,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "С городского герба исчезли все символы, осталось только пустое место. Геральдическая комиссия заявила, что «пустота — тоже символ». Мэрия одобрила и заказала новые значки с изображением пустоты.",
     category: "politics",
-    effects: { influence: -4, credibility: -9, reputation: -3, readership: 21 },
+    effects: { influence: -4, credibility: -9, reputation: -3, loyalty: 21 },
   },
   {
     title:
@@ -285,7 +285,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Ветер принёс официальные извинения за снесённую крышу мэрии. Мэрия извинения приняла, но потребовала материальную компенсацию и моральный ущерб. Ветер ответил, что «у него самого ничего нет».",
     category: "world",
-    effects: { influence: 2, credibility: -5, reputation: -4, readership: 22 },
+    effects: { influence: 2, credibility: -5, reputation: -4, loyalty: 22 },
   },
   {
     title:
@@ -293,21 +293,21 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "После серии аномалий горожане требуют официальное подтверждение своей непричастности к погодным явлениям. Мэрия согласилась выдавать справки, но только после подтверждения от ветра, что он не против.",
     category: "society",
-    effects: { influence: -2, credibility: -4, reputation: 5, readership: 19 },
+    effects: { influence: -2, credibility: -4, reputation: 5, loyalty: 19 },
   },
   {
     title: "МЭРИЯ ОБЪЯВИЛА ВЫБОРЫ, НО ЗАБЫЛА ПРЕДУПРЕДИТЬ КАНДИДАТОВ",
     content:
       "Избирательная комиссия провела выборы в ускоренном режиме и объявила победителя до того, как кто-либо успел выдвинуться. Победил «кандидат по умолчанию», чьё имя отказались называть. Оппозиция требует пересчёта, но урны уже уехали на переработку.",
     category: "politics",
-    effects: { influence: -3, credibility: -9, reputation: -4, readership: 21 },
+    effects: { influence: -3, credibility: -9, reputation: -4, loyalty: 21 },
   },
   {
     title: "ПАРЛАМЕНТ ПРИНЯЛ ЗАКОН О ЗАКОНАХ, НО ЗАБЫЛ ЕГО ПОДПИСАТЬ",
     content:
       "Депутаты единогласно проголосовали за закон, регулирующий принятие законов, но документ остался неподписанным — никто не нашёл ручку. Спикер заявил, что «закон вступит в силу, как только найдётся пишущий прибор». Страна ждёт.",
     category: "politics",
-    effects: { influence: 2, credibility: -7, reputation: -3, readership: 18 },
+    effects: { influence: 2, credibility: -7, reputation: -3, loyalty: 18 },
   },
 
   // ─── economy ──────────────────────────────────────────────
@@ -316,14 +316,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Новый бюджет можно разгадать только целиком — иначе цифры не сходятся. Экономисты жалуются, что не могут найти ключ к последней клетке. Мэрия обещает подсказки в следующем квартале, но только платно.",
     category: "economy",
-    effects: { influence: 3, credibility: -6, reputation: -5, readership: 17 },
+    effects: { influence: 3, credibility: -6, reputation: -5, loyalty: 17 },
   },
   {
     title: "ЦЕНЫ РЕШИЛИ РАСТИ САМИ. ПРАВИТЕЛЬСТВО НАБЛЮДАЕТ",
     content:
       "После очередного скачка цен выяснилось, что их никто не поднимал — они выросли по собственному желанию. Правительство заявило, что «уважает свободу рынка». Граждане просят хотя бы объяснить, кто теперь отвечает за зарплаты.",
     category: "economy",
-    effects: { influence: -4, credibility: -8, reputation: -6, readership: 22 },
+    effects: { influence: -4, credibility: -8, reputation: -6, loyalty: 22 },
   },
 
   // ─── society ──────────────────────────────────────────────
@@ -332,14 +332,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Чтобы попасть в любую очередь, теперь нужно сначала отстоять в очереди за талоном на очередь. Талонов выдают ограниченное количество, и они закончились ещё вчера. Мэрия обещает открыть дополнительную очередь за талонами.",
     category: "society",
-    effects: { influence: -5, credibility: -6, reputation: -4, readership: 25 },
+    effects: { influence: -5, credibility: -6, reputation: -4, loyalty: 25 },
   },
   {
     title: "ГОРОЖАНЕ ПОПРОСИЛИ ВЫХОДНОЙ ОТ ГОРОДСКОЙ ЖИЗНИ. МЭРИЯ ОТКАЗАЛА",
     content:
       "Петиция о «дне без мэрии» набрала тысячи подписей, но была отклонена как «противоречащая городскому ритму». В ответ мэрия предложила горожанам выходной от себя самих — с сохранением обязанностей.",
     category: "society",
-    effects: { influence: -3, credibility: -4, reputation: 8, readership: 20 },
+    effects: { influence: -3, credibility: -4, reputation: 8, loyalty: 20 },
   },
 
   // ─── culture ──────────────────────────────────────────────
@@ -348,14 +348,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Экспозиция состоит из пустых подиумов и табличек с описанием того, что здесь могло бы быть. Посетители в восторге: «Наконец-то ничего не отвлекает». Музей обещает расширить коллекцию до полного отсутствия.",
     category: "culture",
-    effects: { influence: 6, credibility: -3, reputation: 4, readership: 19 },
+    effects: { influence: 6, credibility: -3, reputation: 4, loyalty: 19 },
   },
   {
     title: "ПИСАТЕЛЬ НАПИСАЛ РОМАН БЕЗ БУКВ. КРИТИКИ НАЗВАЛИ ЕГО «СМЕЛЫМ»",
     content:
       "Книга состоит из 400 страниц пробелов и одного восклицательного знака в конце. Тираж раскупили за день. Автор утверждает, что читатель сам должен додумать сюжет. Критики согласились, что «так даже честнее».",
     category: "culture",
-    effects: { influence: 5, credibility: -4, reputation: -2, readership: 15 },
+    effects: { influence: 5, credibility: -4, reputation: -2, loyalty: 15 },
   },
 
   // ─── sport ────────────────────────────────────────────────
@@ -364,14 +364,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Все участники сошли с дистанции на разных этапах, но судьи решили не присуждать поражение никому. Победитель определён жребием среди зрителей. Организаторы обещают в следующем году финиш ближе к старту.",
     category: "sport",
-    effects: { influence: 2, credibility: -5, reputation: -3, readership: 17 },
+    effects: { influence: 2, credibility: -5, reputation: -3, loyalty: 17 },
   },
   {
     title: "ФУТБОЛЬНЫЙ МЯЧ ОБЪЯВИЛ БОЙКОТ И ОТКАЗАЛСЯ ЛЕТЕТЬ В ВОРОТА",
     content:
       "Перед матчем мяч заявил, что устал от постоянного давления и хочет «просто покатиться по своим делам». Игра прошла без него. Зрители не заметили разницы, а федерация заявила, что «так даже динамичнее».",
     category: "sport",
-    effects: { influence: 3, credibility: -6, reputation: -2, readership: 21 },
+    effects: { influence: 3, credibility: -6, reputation: -2, loyalty: 21 },
   },
 
   // ─── science ──────────────────────────────────────────────
@@ -380,7 +380,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Исследование показало, что большинство научных выводов можно делать без доказательств — достаточно уверенного тона. Работа опубликована без данных, но с красивыми графиками. Коллеги признали метод «перспективным».",
     category: "science",
-    effects: { influence: 4, credibility: -7, reputation: -5, readership: 18 },
+    effects: { influence: 4, credibility: -7, reputation: -5, loyalty: 18 },
   },
   {
     title:
@@ -388,7 +388,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Образец при любом измерении меняет форму и утверждает, что «у него личное пространство». Учёные уважают его выбор и продолжают наблюдать издалека. Кристалл пообещал подумать о сотрудничестве к концу года.",
     category: "science",
-    effects: { influence: 5, credibility: -3, reputation: 6, readership: 16 },
+    effects: { influence: 5, credibility: -3, reputation: 6, loyalty: 16 },
   },
 
   // ─── technology ───────────────────────────────────────────
@@ -397,7 +397,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "После обновления устройство перестало узнавать хозяина и требует «более актуального пользователя». Поддержка рекомендует подождать следующего патча. Телефон пока работает, но только если его об этом вежливо попросить.",
     category: "technology",
-    effects: { influence: 3, credibility: -6, reputation: -4, readership: 22 },
+    effects: { influence: 3, credibility: -6, reputation: -4, loyalty: 22 },
   },
   {
     title:
@@ -405,7 +405,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Курьер остановился в двух кварталах от адреса и заявил, что «дальше — не его территория». Заказчик ждал два часа. Компания извинилась и предложила скидку на следующую доставку, которую тоже никто не привезёт.",
     category: "technology",
-    effects: { influence: -2, credibility: -5, reputation: -6, readership: 20 },
+    effects: { influence: -2, credibility: -5, reputation: -6, loyalty: 20 },
   },
 
   // ─── health ───────────────────────────────────────────────
@@ -414,14 +414,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Новое исследование подтвердило пользу сна, но не смогло определить оптимальное время — «утро, вечер и всё между ними одинаково спорны». Пациентам советуют спать интуитивно. Очереди в поликлиниках выросли: люди приходят уточнить.",
     category: "health",
-    effects: { influence: 4, credibility: -3, reputation: 5, readership: 19 },
+    effects: { influence: 4, credibility: -3, reputation: 5, loyalty: 19 },
   },
   {
     title: "АПТЕКИ НАЧАЛИ ПРОДАВАТЬ ПЛАЦЕБО СО ВКУСОМ НАДЕЖДЫ",
     content:
       "Новый препарат не лечит, но «убедительно намекает на выздоровление». Врачи предупреждают: эффект может быть сильнее, чем кажется. Производитель обещает выпустить версию без вкуса — для скептиков.",
     category: "health",
-    effects: { influence: 2, credibility: -4, reputation: -3, readership: 17 },
+    effects: { influence: 2, credibility: -4, reputation: -3, loyalty: 17 },
   },
 
   // ─── world ────────────────────────────────────────────────
@@ -430,14 +430,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Дипломатический скандал разразился из-за того, что на гербе города изображён «слишком похожий» символ. Посольство требует извинений и возврата заимствованных идей. Мэрия предложила обменять герб на рецепт борща.",
     category: "world",
-    effects: { influence: -3, credibility: -5, reputation: -4, readership: 22 },
+    effects: { influence: -3, credibility: -5, reputation: -4, loyalty: 22 },
   },
   {
     title: "МЕЖДУНАРОДНЫЙ САММИТ ЗАВЕРШИЛСЯ БЕЗ РЕШЕНИЙ, НО С ФОТО",
     content:
       "Лидеры нескольких стран встретились, обсудили погоду и сфотографировались на фоне флага. Итоговое коммюнике состоит из одной фразы: «Всё сложно». Пресс-службы назвали встречу «исторической».",
     category: "world",
-    effects: { influence: 2, credibility: -6, reputation: -2, readership: 18 },
+    effects: { influence: 2, credibility: -6, reputation: -2, loyalty: 18 },
   },
 
   // ─── incident ─────────────────────────────────────────────
@@ -446,14 +446,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Бронзовый монумент пропал с площади, а к рассвету оказался на месте — но с магнитиками и открытками у подножия. Полиция выясняет, куда он ездил. Сам памятник молчит, но выглядит довольным.",
     category: "incident",
-    effects: { influence: 5, credibility: -4, reputation: 7, readership: 24 },
+    effects: { influence: 5, credibility: -4, reputation: 7, loyalty: 24 },
   },
   {
     title: "ПРОПАЛА ЦЕЛАЯ УЛИЦА. ЖИТЕЛИ НЕ ЗАМЕТИЛИ",
     content:
       "Утром жители обнаружили, что их улица исчезла с карт и из реальности. Остался только указатель. Мэрия утверждает, что улица «на реконструкции», но никто не помнит, чтобы её начинали. Жители продолжают жить там же.",
     category: "incident",
-    effects: { influence: -6, credibility: -7, reputation: -3, readership: 26 },
+    effects: { influence: -6, credibility: -7, reputation: -3, loyalty: 26 },
   },
 
   // ─── business ─────────────────────────────────────────────
@@ -462,14 +462,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Основатель убедил инвесторов вложиться в «будущее, которое пока не придумано». Раунд закрылся за 20 минут. Компания планирует IPO до конца года, но сначала хочет понять, чем будет заниматься.",
     category: "business",
-    effects: { influence: 4, credibility: -6, reputation: 8, readership: 21 },
+    effects: { influence: 4, credibility: -6, reputation: 8, loyalty: 21 },
   },
   {
     title: "КОРПОРАЦИЯ КУПИЛА САМУ СЕБЯ И УВОЛИЛА СОВЕТ ДИРЕКТОРОВ",
     content:
       "После сделки выяснилось, что покупатель и продавец — одна и та же компания. Акции выросли на 15%. Новый совет директоров пока не назначен, но уже подписал себе бонусы.",
     category: "business",
-    effects: { influence: 3, credibility: -7, reputation: -6, readership: 23 },
+    effects: { influence: 3, credibility: -7, reputation: -6, loyalty: 23 },
   },
 
   // ─── finance ──────────────────────────────────────────────
@@ -478,14 +478,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Новый продукт доступен исключительно в фазе быстрого сна. Проценты начисляются, но только если клиент их вспомнит. Юристы изучают, как составить договор с подсознанием.",
     category: "finance",
-    effects: { influence: 5, credibility: -5, reputation: 6, readership: 20 },
+    effects: { influence: 5, credibility: -5, reputation: 6, loyalty: 20 },
   },
   {
     title: "КУРС ВАЛЮТ ЗАВИСИТ ОТ НАСТРОЕНИЯ КАССИРА. ЦБ НЕ КОММЕНТИРУЕТ",
     content:
       "В нескольких отделениях банков курс стал «эмоциональным»: улыбчивый кассир даёт лучший обмен. ЦБ заявил, что «изучает вопрос», но признал, что «так хотя бы честно». Граждане начали ходить в банк с шоколадками.",
     category: "finance",
-    effects: { influence: -2, credibility: -8, reputation: 4, readership: 25 },
+    effects: { influence: -2, credibility: -8, reputation: 4, loyalty: 25 },
   },
 
   // ─── education ────────────────────────────────────────────
@@ -494,7 +494,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Теперь тетради оценивают не только по содержанию, но и по «эстетической завершённости». Учителя прошли курсы каллиграфии. Дети просят родителей писать за них — «у вас почерк красивее».",
     category: "education",
-    effects: { influence: 2, credibility: -4, reputation: -3, readership: 17 },
+    effects: { influence: 2, credibility: -4, reputation: -3, loyalty: 17 },
   },
   {
     title:
@@ -502,7 +502,7 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Программа курса держится в секрете даже от преподавателей. Студенты уверены, что получают «уникальные навыки». Работодатели уже выстроились в очередь — на всякий случай.",
     category: "education",
-    effects: { influence: 4, credibility: -5, reputation: 5, readership: 19 },
+    effects: { influence: 4, credibility: -5, reputation: 5, loyalty: 19 },
   },
 
   // ─── ecology ──────────────────────────────────────────────
@@ -512,14 +512,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Администрация присвоила парку охранный статус, но деревья отказались подписывать документы. Мэрия пообещала «договориться с каждым индивидуально». Белки выступили с встречным требованием — больше орехов.",
     category: "ecology",
-    effects: { influence: 5, credibility: -3, reputation: 6, readership: 21 },
+    effects: { influence: 5, credibility: -3, reputation: 6, loyalty: 21 },
   },
   {
     title: "ОЗЕРО В ЦЕНТРЕ ГОРОДА ОБЪЯВИЛО СЕБЯ НЕЗАВИСИМЫМ",
     content:
       "Водоём отказался подчиняться городским нормам и ввёл собственные правила: «не мусорить, не шуметь, не дышать слишком громко». Мэрия изучает, можно ли подать в суд на воду. Юристы разводят руками.",
     category: "ecology",
-    effects: { influence: -4, credibility: -5, reputation: 7, readership: 23 },
+    effects: { influence: -4, credibility: -5, reputation: 7, loyalty: 23 },
   },
 
   // ─── space ────────────────────────────────────────────────
@@ -528,14 +528,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Аппарат вышел на орбиту и начал круглосуточно передавать сообщения о «стабильности и процветании». Учёные жалуются, что сигнал глушит исследования. Мэрия называет это «космическим просвещением».",
     category: "space",
-    effects: { influence: 3, credibility: -8, reputation: -5, readership: 22 },
+    effects: { influence: 3, credibility: -8, reputation: -5, loyalty: 22 },
   },
   {
     title: "АСТРОНОМЫ ОБНАРУЖИЛИ ПЛАНЕТУ, КОТОРАЯ ОТКАЗЫВАЕТСЯ ВРАЩАТЬСЯ",
     content:
       "Объект заявил, что «устал от цикличности» и хочет просто висеть. Орбита нарушена, но планета считает, что «так даже уютнее». Наблюдения продолжаются — если она передумает.",
     category: "space",
-    effects: { influence: 5, credibility: -4, reputation: 4, readership: 18 },
+    effects: { influence: 5, credibility: -4, reputation: 4, loyalty: 18 },
   },
 
   // ─── cinema ───────────────────────────────────────────────
@@ -545,14 +545,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Двухчасовая картина состоит из случайных кадров и тишины. Жюри назвало её «манифестом новой искренности». Режиссёр отказался давать интервью, сославшись на то, что «и так всё сказано».",
     category: "cinema",
-    effects: { influence: 4, credibility: -5, reputation: 3, readership: 20 },
+    effects: { influence: 4, credibility: -5, reputation: 3, loyalty: 20 },
   },
   {
     title: "ЗРИТЕЛИ ВЫШЛИ ИЗ КИНОТЕАТРА ДО НАЧАЛА ФИЛЬМА. НИКТО НЕ ЗАМЕТИЛ",
     content:
       "Сеанс начался, но зал уже был пуст. Сотрудники утверждают, что так и было задумано. Продюсер назвал это «новым форматом вовлечённости». Билеты, разумеется, не возвращают.",
     category: "cinema",
-    effects: { influence: -2, credibility: -6, reputation: -4, readership: 17 },
+    effects: { influence: -2, credibility: -6, reputation: -4, loyalty: 17 },
   },
 
   // ─── music ────────────────────────────────────────────────
@@ -561,14 +561,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Музыканты три часа молчали на сцене, но публика была в восторге. Дирижёр объяснил, что «тишина — это тоже музыка, просто её надо уметь услышать». Критики согласились, что «так честнее».",
     category: "music",
-    effects: { influence: 5, credibility: -4, reputation: 6, readership: 19 },
+    effects: { influence: 5, credibility: -4, reputation: 6, loyalty: 19 },
   },
   {
     title: "ХИТ-ПАРАД ВОЗГЛАВИЛА ПЕСНЯ БЕЗ СЛОВ, МЕЛОДИИ И РИТМА",
     content:
       "Трек состоит из 4 минут тишины, но стал самым скачиваемым за год. Продюсер утверждает, что «каждый слышит в ней своё». Фанаты требуют продолжения.",
     category: "music",
-    effects: { influence: 3, credibility: -5, reputation: 4, readership: 21 },
+    effects: { influence: 3, credibility: -5, reputation: 4, loyalty: 21 },
   },
 
   // ─── fashion ──────────────────────────────────────────────
@@ -577,14 +577,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Показ состоял из пустого подиума и описания того, что могло бы быть на моделях. Критики назвали коллекцию «смелой». Цены, впрочем, вполне реальные.",
     category: "fashion",
-    effects: { influence: 4, credibility: -6, reputation: 3, readership: 22 },
+    effects: { influence: 4, credibility: -6, reputation: 3, loyalty: 22 },
   },
   {
     title: "ГОРОЖАНЕ НАЧАЛИ НОСИТЬ ОДЕЖДУ НАИЗНАНКУ. МЭРИЯ ПОДДЕРЖАЛА ТРЕНД",
     content:
       "Новый стиль распространился за неделю. Мэрия объявила его «символом открытости». Дизайнеры срочно перешивают коллекции. Никто не понимает, зачем, но все согласны, что «так модно».",
     category: "fashion",
-    effects: { influence: 2, credibility: -3, reputation: 7, readership: 20 },
+    effects: { influence: 2, credibility: -3, reputation: 7, loyalty: 20 },
   },
 
   // ─── food ─────────────────────────────────────────────────
@@ -593,14 +593,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Шеф-повар описал каждое блюдо так убедительно, что гости заказывают всё подряд. Никто не может сказать, что именно принесли, но все хвалят. Кухня работает по вдохновению.",
     category: "food",
-    effects: { influence: 3, credibility: -5, reputation: 6, readership: 21 },
+    effects: { influence: 3, credibility: -5, reputation: 6, loyalty: 21 },
   },
   {
     title: "ГОРОДСКОЙ ХЛЕБОЗАВОД ВЫПЕК БУХАНКУ, КОТОРАЯ НЕ ЗАЧЕРСТВЕЕТ НИКОГДА",
     content:
       "Учёные изучают феномен, но боятся его есть. Буханка хранится в музее и привлекает паломников. Пекари уверяют, что «рецепт простой, но секретный».",
     category: "food",
-    effects: { influence: 6, credibility: -3, reputation: 8, readership: 23 },
+    effects: { influence: 6, credibility: -3, reputation: 8, loyalty: 23 },
   },
 
   // ─── travel ───────────────────────────────────────────────
@@ -609,14 +609,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Путешественники добрались до места, которого нет ни в одном путеводителе, но остались довольны. Мэрия принимает их «на всякий случай». Обратные билеты не продаются — направление неизвестно.",
     category: "travel",
-    effects: { influence: 4, credibility: -5, reputation: 7, readership: 24 },
+    effects: { influence: 4, credibility: -5, reputation: 7, loyalty: 24 },
   },
   {
     title: "ОТКРЫТ ТУРМАРШРУТ ПО МЕСТАМ, ГДЕ НИЧЕГО НЕ ПРОИСХОДИЛО",
     content:
       "Экскурсия проходит по пустырям и дворам с табличками «здесь ничего не случилось». Гид рассказывает, чего именно не было. Группы записываются за месяц.",
     category: "travel",
-    effects: { influence: 3, credibility: -4, reputation: 5, readership: 20 },
+    effects: { influence: 3, credibility: -4, reputation: 5, loyalty: 20 },
   },
 
   // ─── auto ─────────────────────────────────────────────────
@@ -625,14 +625,14 @@ export const NEWS: Omit<NewsItem, "id">[] = [
     content:
       "Машины отказались заводиться, требуя «уважения к своему пробегу». Горожане пересели на самокаты. Пробки исчезли, воздух стал чище — но мэрия обеспокоена «нарушением автомобильного порядка».",
     category: "auto",
-    effects: { influence: -3, credibility: -4, reputation: 9, readership: 25 },
+    effects: { influence: -3, credibility: -4, reputation: 9, loyalty: 25 },
   },
   {
     title: "ИЗОБРЕТЁН АВТОМОБИЛЬ, КОТОРЫЙ ЕЗДИТ ТОЛЬКО ТУДА, КУДА ХОЧЕТ САМ",
     content:
       "Тест-драйв закончился в другом городе. Владелец добирался домой на попутках. Производитель называет это «новым уровнем свободы» и обещает доработать «мелкие неудобства».",
     category: "auto",
-    effects: { influence: 5, credibility: -6, reputation: 4, readership: 22 },
+    effects: { influence: 5, credibility: -6, reputation: 4, loyalty: 22 },
   },
 ];
 
