@@ -69,7 +69,6 @@ export default function TopPanel({
 
       <div className="top-panel-economy">
         <div className="resource-display" id="readers-display">
-          <span className="resource-label">👥 Читатели</span>
           <strong>{formatMoney(readers)}</strong>
           {readerChangePreview !== null && readerChangePreview !== 0 && (
             <span className={readerChangePreview > 0 ? "positive" : "negative"}>
@@ -77,6 +76,7 @@ export default function TopPanel({
               {formatMoney(readerChangePreview)} после выпуска
             </span>
           )}
+          <span className="resource-label">👥 Читатели</span>
         </div>
 
         <div id="metrics-preview">
@@ -88,7 +88,10 @@ export default function TopPanel({
                 // if (value === 0) return null;
                 const icon = STAT_ICONS[key];
                 return (
-                  <span key={key} className={value > 0 ? "positive" : "negative"}>
+                  <span
+                    key={key}
+                    className={value > 0 ? "positive" : "negative"}
+                  >
                     {icon} {value > 0 ? "+" : ""}
                     {value}
                   </span>
@@ -99,16 +102,16 @@ export default function TopPanel({
         </div>
 
         <div className="resource-display" id="money-display">
-          <span className="resource-label">💵 Деньги</span>
-          <strong>${formatMoney(money)}</strong>
+          {/* <span className="resource-label">💵 Деньги</span> */}
+          <strong>💵 ${formatMoney(money)}</strong>
           <span className="resource-flow">
             +${formatMoney(readers * MONEY_PER_READER_PER_TURN)} доход · −$
             {formatMoney(payroll)} зарплата / час
           </span>
           {moneyChangePreview !== null && moneyChangePreview !== 0 && (
             <span className={moneyChangePreview > 0 ? "positive" : "negative"}>
-              {moneyChangePreview > 0 ? "+" : ""}${formatMoney(moneyChangePreview)}{" "}
-              после выпуска
+              {moneyChangePreview > 0 ? "+" : ""}$
+              {formatMoney(moneyChangePreview)} после выпуска
             </span>
           )}
         </div>
