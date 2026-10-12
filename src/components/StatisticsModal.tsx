@@ -3,6 +3,17 @@ import { METRIC_LABELS } from "../constants/stats";
 import { entries } from "../helpers/object";
 import { getNewsCategoryLabel } from "../constants/categories";
 
+const PUBLICATION_DATE_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+  timeZone: "UTC",
+});
+
 interface Props {
   history: PublicationLogEntry[];
   onClose: () => void;
@@ -46,9 +57,13 @@ export default function StatisticsModal({ history, onClose }: Props) {
                 <div className="publication-entry-header">
                   <h3>Выпуск №{publication.turn}</h3>
                   <time
-                    dateTime={new Date(publication.publishedAt).toISOString()}
+                    dateTime={new Date(
+                      publication.gameTime ?? publication.publishedAt,
+                    ).toISOString()}
                   >
-                    {new Date(publication.publishedAt).toLocaleString("ru-RU")}
+                    {PUBLICATION_DATE_FORMATTER.format(
+                      publication.gameTime ?? publication.publishedAt,
+                    )}
                   </time>
                 </div>
 

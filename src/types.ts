@@ -54,6 +54,7 @@ export interface PublicationLogEntry {
   id: string;
   turn: number;
   publishedAt: number;
+  gameTime?: number;
   news: PublishedNewsLogItem[];
   result: Metrics;
 }

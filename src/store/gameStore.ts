@@ -140,6 +140,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   publish: () => {
     const state = get();
     if (!canPublish(state)) return null;
+    const now = Date.now();
+    const publicationGameTime =
+      state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
     const publishedNews = state.placedNews.map((placed) => ({ ...placed }));
     const result = calculatePublicationResult(publishedNews, state.journalists);
     const newsLog: PublishedNewsLogItem[] = publishedNews.flatMap((placed) => {
@@ -165,7 +168,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       {
         id: `${Date.now()}-${state.publicationHistory.length}`,
         turn: state.turn,
-        publishedAt: Date.now(),
+        publishedAt: now,
+        gameTime: publicationGameTime,
         news: newsLog,
         result,
       },
