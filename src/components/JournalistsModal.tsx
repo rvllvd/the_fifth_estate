@@ -5,6 +5,7 @@ import type { Journalist } from "../types";
 interface Props {
   staff: Journalist[]; // нанятые
   available: Journalist[]; // все доступные
+  money: number;
   onHire: (j: Journalist) => void;
   onFire: (id: string) => void;
   onClose: () => void;
@@ -13,6 +14,7 @@ interface Props {
 export default function JournalistsModal({
   staff,
   available,
+  money,
   onHire,
   onFire,
   onClose,
@@ -63,7 +65,7 @@ export default function JournalistsModal({
                     )}
                     <div className="cost-row">
                       <div className="stat-row">
-                        <span className="stat-label">Стоимость</span>
+                        <span className="stat-label">Зарплата / час</span>
                         <span className="stat-value cost">${j.cost}</span>
                       </div>
                     </div>
@@ -121,7 +123,7 @@ export default function JournalistsModal({
                     )}
                     <div className="cost-row">
                       <div className="stat-row">
-                        <span className="stat-label">Стоимость</span>
+                        <span className="stat-label">Зарплата / час</span>
                         <span className="stat-value cost">${j.cost}</span>
                       </div>
                     </div>
@@ -137,8 +139,13 @@ export default function JournalistsModal({
                   </div>
 
                   <div className="journalist-actions">
-                    <button className="hire-btn" onClick={() => onHire(j)}>
-                      Нанять
+                    <button
+                      className="hire-btn"
+                      onClick={() => onHire(j)}
+                      disabled={money < j.cost}
+                      title={money < j.cost ? "Недостаточно денег для найма" : undefined}
+                    >
+                      {money < j.cost ? "Не хватает денег" : "Нанять"}
                     </button>
                   </div>
                 </div>

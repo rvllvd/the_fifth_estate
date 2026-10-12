@@ -21,6 +21,7 @@ import {
   isVictory,
 } from "../utils/game";
 import { playSound } from "../utils/sounds";
+import { settleEconomy } from "../utils/economy";
 
 interface GameStore extends GameState {
   // новости
@@ -33,7 +34,7 @@ interface GameStore extends GameState {
   clearNewspaper: () => void;
 
   // журналисты
-  hireJournalist: (j: Journalist) => void;
+  hireJournalist: (j: Journalist) => boolean;
   fireJournalist: (id: string) => void;
   updateView: () => void;
 
@@ -126,8 +127,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── журналисты ──
-  hireJournalist: (j) =>
-    set((prev) => ({ journalists: [...prev.journalists, j] })),
+  hireJournalist: (j) => {
+    const state = get();
+    if (
+      state.money < j.cost ||
+      state.journalists.some((journalist) => journalist.id === j.id)
+    ) {
+      return false;
+    }
+    set((prev) => ({ journalists: [...prev.journalists, { ...j }] }));
+    return true;
+  },
 
   fireJournalist: (id) =>
     set((prev) => ({
@@ -180,8 +190,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
       state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
     const publicationDuration =
       (50 + Math.floor(Math.random() * 31)) * 60_000;
+    const updatedState = applyPublication(state, result);
+    const economy = settleEconomy(state, result);
     set({
-      ...applyPublication(state, result),
+      ...updatedState,
+      readers: economy.readers,
+      money: economy.money,
+      journalists: economy.journalists,
       gameTime: currentGameTime + publicationDuration,
       gameTimeUpdatedAt: now,
     });
@@ -206,13 +221,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
   reset: () => set(getInitialState),
 
   isGameOver: () => {
-    const { influence, credibility, reputation: reputation, readership } = get();
-    let res = false;
-    [influence, credibility, reputation, readership].forEach((v) => {
-      if (v <= 0) return (res = true); 
-    });
-
-    return res;
+    const {
+      influence,
+      credibility,
+      reputation,
+      readership,
+      readers,
+      money,
+      turn,
+      maxTurns,
+    } = get();
+    return (
+      readers <= 0 ||
+      money <= 0 ||
+      turn > maxTurns ||
+      [influence, credibility, reputation, readership].some((value) => value <= 0)
+    );
   },
 }));
 

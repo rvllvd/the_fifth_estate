@@ -19,6 +19,8 @@ import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
 import { setSoundEffectsSettings } from "./utils/sounds";
+import { getEconomyDefeatDescriptions } from "./constants/economy";
+import { getCurrentPayroll, settleEconomy } from "./utils/economy";
 
 export default function App() {
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
@@ -163,6 +165,10 @@ export default function App() {
     () => calculatePublicationResult(placedNews, journalists, gameState),
     [placedNews, journalists, gameState],
   );
+  const economyPreview = useMemo(
+    () => (canPublishNow ? settleEconomy(gameState, preview) : null),
+    [canPublishNow, gameState, preview],
+  );
 
   const handleNewGame = () => {
     if (window.confirm("Начать новую игру? Текущий прогресс будет потерян.")) {
@@ -275,6 +281,11 @@ export default function App() {
           gameTime={gameTime}
           onNewGame={handleNewGame}
           preview={preview}
+          readers={gameState.readers}
+          money={gameState.money}
+          readerChangePreview={economyPreview?.readerChange ?? null}
+          moneyChangePreview={economyPreview?.moneyChange ?? null}
+          payroll={getCurrentPayroll(journalists)}
           onOpenStatistics={() => setShowStatisticsModal(true)}
           onOpenSettings={openSettings}
         />
@@ -313,6 +324,7 @@ export default function App() {
       {showJournalistsModal && (
         <JournalistsModal
           staff={journalists}
+          money={gameState.money}
           available={AVAILABLE_JOURNALISTS}
           onHire={hireJournalist}
           onFire={fireJournalist}
@@ -355,7 +367,9 @@ export default function App() {
             credibility,
             reputation,
             readership,
-          })}
+          }).concat(
+            getEconomyDefeatDescriptions(gameState.readers, gameState.money),
+          )}
           onClose={() => setShowAlertModal(false)}
           onNewGame={handleNewGame}
         />

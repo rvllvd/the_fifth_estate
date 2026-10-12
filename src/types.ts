@@ -86,6 +86,7 @@ export interface PublicationLogEntry {
 }
 
 export interface GameState extends Stats {
+  economyVersion?: number;
   // Игровой процесс
   turn: number;
   maxTurns: number;

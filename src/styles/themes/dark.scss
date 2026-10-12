@@ -59,6 +59,19 @@
     color: #f0e6d3;
     text-shadow: 0 0 8px rgba(255, 200, 100, 0.3);
   }
+  .resource-display {
+    color: #e8d5b0;
+  }
+  .resource-label,
+  .resource-flow {
+    color: #a89070;
+  }
+  .resource-display .positive {
+    color: #86b86f;
+  }
+  .resource-display .negative {
+    color: #e4785f;
+  }
   .progress-bar {
     background-color: #1a1008;
     border: 1px solid #3d2817;

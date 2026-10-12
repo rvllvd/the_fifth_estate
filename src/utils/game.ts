@@ -186,7 +186,7 @@ export function isVictory(state: GameState): boolean {
 }
 
 export function isGameOver(state: GameState): boolean {
-  return state.turn > state.maxTurns;
+  return state.turn > state.maxTurns || state.readers <= 0 || state.money <= 0;
 }
 
 export function canPublish(state: GameState): boolean {

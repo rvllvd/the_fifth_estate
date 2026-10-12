@@ -14,9 +14,21 @@
     text-shadow: 0 0 9px rgba(0, 240, 255, 0.55);
   }
   .game-clock,
-  .metric-value-container span {
+  .metric-value-container span,
+  .resource-display {
     color: #f5eaff;
     text-shadow: 0 0 8px rgba(255, 43, 214, 0.4);
+  }
+  .resource-label,
+  .resource-flow {
+    color: #86b8ce;
+    text-shadow: none;
+  }
+  .resource-display .positive {
+    color: #54ff9f;
+  }
+  .resource-display .negative {
+    color: #ff587d;
   }
   .progress-bar {
     background: #11182b;

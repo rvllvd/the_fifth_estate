@@ -55,6 +55,56 @@
   flex: 0 0 auto;
 }
 
+.resource-display {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 92px;
+  color: #f5e6b8;
+  font-size: 11px;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.resource-label {
+  color: #bdc3c7;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.resource-display strong {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-flow {
+  color: #bdc3c7;
+  font-size: 9px;
+}
+
+.resource-display .positive {
+  color: #2ecc71;
+  font-weight: 700;
+}
+
+.resource-display .negative {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+.top-panel-economy {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
 .metric {
   display: flex;
   flex-direction: column;
@@ -93,7 +143,6 @@
 .top-panel-actions {
   display: flex;
   gap: 10px;
-  margin-left: auto;
   z-index: 3;
 }
 
@@ -117,10 +166,8 @@
 
 /* Индикатор показателей — по центру панели */
 #metrics-preview {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  position: static;
+  transform: none;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
@@ -131,6 +178,45 @@
   font-size: 14px;
   z-index: 2;
   pointer-events: none;
+}
+
+@media (max-width: 1350px) {
+  #top-panel {
+    gap: 8px;
+    padding-inline: 12px;
+  }
+
+  .metrics {
+    gap: 8px;
+  }
+
+  .metric {
+    min-width: 56px;
+  }
+
+  .progress-bar {
+    width: 35px;
+  }
+
+  .top-panel-economy {
+    gap: 5px;
+  }
+
+  .resource-display {
+    min-width: 76px;
+  }
+
+  .resource-flow {
+    display: none;
+  }
+
+  .top-panel-actions {
+    gap: 5px;
+  }
+
+  .top-panel-actions .right-btn {
+    padding-inline: 7px;
+  }
 }
 
 .metrics-preview-title {

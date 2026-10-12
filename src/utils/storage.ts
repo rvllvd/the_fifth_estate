@@ -3,6 +3,7 @@ import type { GameState, Metrics, PublishedNewsLogItem } from "../types";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import { getNewsById } from "../data/news";
 import { getTierMultiplier } from "./game";
+import { INITIAL_MONEY, INITIAL_READERS } from "../constants/economy";
 
 export const STORAGE_KEY = "the_fifth_estate_save";
 export const START_GAME_TIME = Date.UTC(1600, 0, 30, 9);
@@ -20,8 +21,9 @@ const INITIAL_STATE: GameState = {
   credibility: 50,
   reputation: 50,
   readership: 50,
-  readers: 0,
-  money: 0,
+  readers: INITIAL_READERS,
+  money: INITIAL_MONEY,
+  economyVersion: 1,
   turn: 1,
   maxTurns: 20,
   gameTime: START_GAME_TIME,
@@ -69,6 +71,13 @@ export function loadState(): GameState | null {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as GameState;
+      if (state.economyVersion !== 1) {
+        state.readers = INITIAL_READERS;
+        state.money = INITIAL_MONEY;
+        state.economyVersion = 1;
+      }
+      state.readers ??= INITIAL_READERS;
+      state.money ??= INITIAL_MONEY;
       state.gameTime ??= START_GAME_TIME;
       state.gameTimeUpdatedAt ??= Date.now();
       state.publicationHistory = (state.publicationHistory ?? []).map(

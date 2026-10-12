@@ -1,6 +1,8 @@
 import Metric from "./Metric";
 import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
+import { MONEY_PER_READER_PER_TURN } from "../constants/economy";
+import { formatMoney } from "../utils/economy";
 
 const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
   hour: "2-digit",
@@ -15,6 +17,11 @@ interface Props {
   gameTime: number;
   onNewGame: () => void;
   preview: Metrics;
+  readers: number;
+  money: number;
+  readerChangePreview: number | null;
+  moneyChangePreview: number | null;
+  payroll: number;
   onOpenStatistics: () => void;
   onOpenSettings: () => void;
 }
@@ -24,6 +31,11 @@ export default function TopPanel({
   gameTime,
   onNewGame,
   preview,
+  readers,
+  money,
+  readerChangePreview,
+  moneyChangePreview,
+  payroll,
   onOpenStatistics,
   onOpenSettings,
 }: Props) {
@@ -55,23 +67,51 @@ export default function TopPanel({
         })}
       </div>
 
-      <div id="metrics-preview">
-        {hasPreview && (
-          <div className="preview-line">
-            <span></span>
-            {keys.map((key) => {
-              const value = preview[key];
-              // if (value === 0) return null;
-              const icon = STAT_ICONS[key];
-              return (
-                <span key={key} className={value > 0 ? "positive" : "negative"}>
-                  {icon} {value > 0 ? "+" : ""}
-                  {value}
-                </span>
-              );
-            })}
-          </div>
-        )}
+      <div className="top-panel-economy">
+        <div className="resource-display" id="readers-display">
+          <span className="resource-label">👥 Читатели</span>
+          <strong>{formatMoney(readers)}</strong>
+          {readerChangePreview !== null && readerChangePreview !== 0 && (
+            <span className={readerChangePreview > 0 ? "positive" : "negative"}>
+              {readerChangePreview > 0 ? "+" : ""}
+              {formatMoney(readerChangePreview)} после выпуска
+            </span>
+          )}
+        </div>
+
+        <div id="metrics-preview">
+          {hasPreview && (
+            <div className="preview-line">
+              <span></span>
+              {keys.map((key) => {
+                const value = preview[key];
+                // if (value === 0) return null;
+                const icon = STAT_ICONS[key];
+                return (
+                  <span key={key} className={value > 0 ? "positive" : "negative"}>
+                    {icon} {value > 0 ? "+" : ""}
+                    {value}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="resource-display" id="money-display">
+          <span className="resource-label">💵 Деньги</span>
+          <strong>${formatMoney(money)}</strong>
+          <span className="resource-flow">
+            +${formatMoney(readers * MONEY_PER_READER_PER_TURN)} доход · −$
+            {formatMoney(payroll)} зарплата / час
+          </span>
+          {moneyChangePreview !== null && moneyChangePreview !== 0 && (
+            <span className={moneyChangePreview > 0 ? "positive" : "negative"}>
+              {moneyChangePreview > 0 ? "+" : ""}${formatMoney(moneyChangePreview)}{" "}
+              после выпуска
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="top-panel-actions">
