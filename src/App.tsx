@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./styles/themes/dark.css"; // import dark theme overrides
+import "./styles/themes/cyberpunk.css";
 import "./styles/themes/vanilla.css"; // import vanilla theme (original)
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
@@ -7,7 +8,7 @@ import Newspaper from "./components/Newspaper";
 import MetricsModal from "./components/MetricsModal";
 import JournalistsModal from "./components/JournalistsModal";
 import AlertModal from "./components/AlertModal";
-import type { GameState, Metrics, NewsItem, PlacedNews } from "./types";
+import type { GameState, Metrics, NewsItem, PlacedNews, Theme } from "./types";
 import { playSound } from "./utils/sounds";
 import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
@@ -53,9 +54,9 @@ export default function App() {
     () => localStorage.getItem("animationEnabled") !== "false",
   );
 
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem("theme");
-    return saved === "dark";
+    return saved === "dark" || saved === "cyberpunk" ? saved : "light";
   });
 
   useBackgroundMusic(
@@ -73,21 +74,12 @@ export default function App() {
     localStorage.setItem("soundEffectsVolume", String(soundEffectsVolume));
   }, [soundEffectsEnabled, soundEffectsVolume]);
 
-  // toggle theme handler
-  const toggleTheme = () => {
-    setIsDark((prev) => !prev);
-  };
-
-  // apply theme class to body and save to localStorage
+  // Apply and persist the selected theme.
   useEffect(() => {
-    if (isDark) {
-      document.body.classList.add("dark-theme");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("dark-theme");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDark]);
+    document.body.classList.toggle("dark-theme", theme === "dark");
+    document.body.classList.toggle("cyberpunk-theme", theme === "cyberpunk");
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     document.body.classList.toggle("animations-disabled", !animationEnabled);
@@ -214,14 +206,18 @@ export default function App() {
     setSoundEffectsEnabled(true);
     setSoundEffectsVolume(1);
     setAnimationEnabled(true);
-    setIsDark(false);
+    setTheme("light");
     localStorage.setItem("backgroundMusicEnabled", "true");
     localStorage.setItem("backgroundMusicVolume", "0.75");
     localStorage.setItem("soundEffectsEnabled", "true");
     localStorage.setItem("soundEffectsVolume", "1");
     localStorage.setItem("animationEnabled", "true");
     localStorage.setItem("theme", "light");
-    document.body.classList.remove("animations-disabled", "dark-theme");
+    document.body.classList.remove(
+      "animations-disabled",
+      "dark-theme",
+      "cyberpunk-theme",
+    );
   };
 
   const handleRemovePlaced = (newsId: string) => {
@@ -328,7 +324,8 @@ export default function App() {
         <SettingsModal
           visible={showSettingsModal}
           onClose={closeSettings}
-          onToggleTheme={toggleTheme}
+          theme={theme}
+          onThemeChange={setTheme}
           animationEnabled={animationEnabled}
           onToggleAnimation={toggleAnimation}
           musicEnabled={musicEnabled}

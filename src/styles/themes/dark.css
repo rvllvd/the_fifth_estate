@@ -427,6 +427,21 @@
   color: #a89070;
 }
 
+.dark-theme .settings-theme-control {
+  color: #e8d5b0;
+  font-family: 'Cinzel', serif;
+}
+
+.dark-theme .settings-theme-select {
+  border-color: #5c4033;
+  background: #1a120c;
+  color: #e8d5b0;
+}
+
+.dark-theme .settings-theme-select:focus-visible {
+  outline-color: #c9a227;
+}
+
 .dark-theme .settings-volume-control input {
   accent-color: #c9a227;
 }

@@ -1,7 +1,10 @@
+import type { Theme } from "../types";
+
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onToggleTheme: () => void;
+  theme: Theme;
+  onThemeChange: (theme: Theme) => void;
   animationEnabled: boolean;
   onToggleAnimation: () => void;
   musicEnabled: boolean;
@@ -18,7 +21,8 @@ type Props = {
 export default function SettingsModal({
   visible,
   onClose,
-  onToggleTheme,
+  theme,
+  onThemeChange,
   animationEnabled,
   onToggleAnimation,
   musicEnabled,
@@ -114,14 +118,28 @@ export default function SettingsModal({
             </label>
           </div>
           <div className="settings-option">
-            {/* <span className="settings-option-title">Тема оформления</span> */}
-            <button
-              className="settings-theme-btn right-btn"
-              type="button"
-              onClick={onToggleTheme}
-            >
-              Сменить тему
-            </button>
+            <label className="settings-theme-control" htmlFor="settings-theme">
+              <span>Тема оформления</span>
+              <select
+                id="settings-theme"
+                className="settings-theme-select"
+                value={theme}
+                onChange={(event) => {
+                  const selectedTheme = event.currentTarget.value;
+                  if (
+                    selectedTheme === "light" ||
+                    selectedTheme === "dark" ||
+                    selectedTheme === "cyberpunk"
+                  ) {
+                    onThemeChange(selectedTheme);
+                  }
+                }}
+              >
+                <option value="light">Светлая</option>
+                <option value="dark">Тёмная · Inscryption</option>
+                <option value="cyberpunk">Киберпанк</option>
+              </select>
+            </label>
           </div>
           <div className="settings-option">
             {/* <span className="settings-option-title">Сброс настроек</span> */}

@@ -1,5 +1,6 @@
 export type StatScale = number; // 0..100
 export type Counter = number;  // >= 0
+export type Theme = "light" | "dark" | "cyberpunk";
 
 export interface Metrics {
   influence: StatScale;
