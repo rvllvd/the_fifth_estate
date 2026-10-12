@@ -205,6 +205,12 @@ export const GAME_BALANCE = {
     lastWorkingHour: 18,
   },
   publicationTimeAdvanceMinutes: { min: 50, max: 80 },
+  autoPlay: {
+    actionDelayMs: 550,
+    resultDisplayMs: 700,
+    randomness: 2.5,
+    hireReserveTurns: 5,
+  },
   economySaveVersion: 1,
 };
 

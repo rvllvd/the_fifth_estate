@@ -84,6 +84,11 @@ const CONFIG_LABELS: Record<string, string> = {
   firstWorkingHour: "Первый рабочий час",
   lastWorkingHour: "Последний рабочий час",
   publicationTimeAdvanceMinutes: "Продвижение времени за выпуск",
+  autoPlay: "Автоигрок",
+  actionDelayMs: "Задержка между ходами (мс)",
+  resultDisplayMs: "Показ результата хода (мс)",
+  randomness: "Случайность выбора",
+  hireReserveTurns: "Денежный резерв для найма (ходов)",
   economySaveVersion: "Версия формата сохранения (только чтение)",
 };
 

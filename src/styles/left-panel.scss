@@ -72,6 +72,32 @@
   margin-top: 7px;
 }
 
+.auto-play-btn {
+  margin-top: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(135deg, #626f7c 0%, #46515c 100%);
+}
+
+.auto-play-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #738392 0%, #536170 100%);
+}
+
+.auto-play-btn.is-running {
+  background: linear-gradient(135deg, #b9473b 0%, #8e2f28 100%);
+}
+
+.auto-play-btn.is-running:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d15b4d 0%, #a83a31 100%);
+}
+
+.auto-play-status {
+  margin: 3px 0 9px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
 .metric-preview {
   display: none;
 }

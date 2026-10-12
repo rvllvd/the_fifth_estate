@@ -17,6 +17,10 @@ interface Props {
   gameState: GameState;
   onPublish: () => void;
   onClear: () => void;
+  showDeveloperTools: boolean;
+  autoPlayEnabled: boolean;
+  autoPlayMessage: string;
+  onToggleAutoPlay: () => void;
 }
 
 export default function NewsSection({
@@ -28,6 +32,10 @@ export default function NewsSection({
   gameState,
   onPublish,
   onClear,
+  showDeveloperTools,
+  autoPlayEnabled,
+  autoPlayMessage,
+  onToggleAutoPlay,
 }: Props) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [categoriesExpanded, setCategoriesExpanded] = useState(false);
@@ -136,8 +144,27 @@ export default function NewsSection({
         Опубликовать ({placedCount})
       </button>
       <button className="action-btn" id="clear-btn" onClick={onClear}>
-        Отчистить
+        Очистить
       </button>
+      {showDeveloperTools && (
+        <>
+          <button
+            className={`action-btn auto-play-btn${autoPlayEnabled ? " is-running" : ""}`}
+            id="auto-play-btn"
+            type="button"
+            aria-pressed={autoPlayEnabled}
+            onClick={onToggleAutoPlay}
+          >
+            {autoPlayEnabled ? "Остановить автоигру" : "Запустить автоигру"}
+          </button>
+          {(autoPlayEnabled || autoPlayMessage) && (
+            <p className="auto-play-status" role="status">
+              {autoPlayMessage ||
+                "ИИ выбирает новости и сотрудников, стараясь удержать игру."}
+            </p>
+          )}
+        </>
+      )}
     </div>
   );
 }

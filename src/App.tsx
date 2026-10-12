@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./styles/themes/dark.scss";
 import "./styles/themes/cyberpunk.scss";
 import "./styles/themes/vanilla.scss"; // import vanilla theme (original)
@@ -14,6 +14,7 @@ import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { calculatePublicationResult } from "./utils/game";
+import { chooseAutoTurn } from "./utils/autoPlayer";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
@@ -22,6 +23,7 @@ import GameConfigModal from "./components/GameConfigModal";
 import { setSoundEffectsSettings } from "./utils/sounds";
 import { getEconomyDefeatDescriptions } from "./constants/economy";
 import { getCurrentPayroll, settleEconomy } from "./utils/economy";
+import { GAME_BALANCE } from "./constants/global";
 
 export default function App() {
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
@@ -36,6 +38,9 @@ export default function App() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
   const [showGameConfigModal, setShowGameConfigModal] = useState(false);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
+  const [autoPlayStep, setAutoPlayStep] = useState(0);
+  const [autoPlayMessage, setAutoPlayMessage] = useState("");
   const [musicEnabled, setMusicEnabled] = useState(
     () => localStorage.getItem("backgroundMusicEnabled") !== "false",
   );
@@ -115,7 +120,6 @@ export default function App() {
   const clearNewspaper = useGameStore((s) => s.clearNewspaper);
   const hireJournalist = useGameStore((s) => s.hireJournalist);
   const fireJournalist = useGameStore((s) => s.fireJournalist);
-  const publishStore = useGameStore((s) => s.publish);
   const applyResult = useGameStore((s) => s.applyResult);
   const newGame = useGameStore((s) => s.newGame);
   const tickGameTime = useGameStore((s) => s.tickGameTime);
@@ -176,6 +180,7 @@ export default function App() {
 
   const handleNewGame = () => {
     if (window.confirm("Начать новую игру? Текущий прогресс будет потерян.")) {
+      setAutoPlayEnabled(false);
       newGame();
     }
   };
@@ -240,13 +245,14 @@ export default function App() {
     playSound("/assets/sounds/clear.mp3", 1);
   };
 
-  const handlePublish = () => {
-    const printedNews = placedNews.map((item) => ({ ...item }));
+  const handlePublish = useCallback(() => {
+    const currentState = useGameStore.getState();
+    const printedNews = currentState.placedNews.map((item) => ({ ...item }));
     const printedGameState = {
-      ...gameState,
-      journalists: [...gameState.journalists],
+      ...currentState,
+      journalists: [...currentState.journalists],
     };
-    const result = publishStore();
+    const result = currentState.publish();
     if (!result) return;
     const animationDuration = animationEnabled ? 1200 : 0;
     setPublicationPreview({
@@ -256,7 +262,133 @@ export default function App() {
       animationDuration,
     });
     playSound("/assets/sounds/newspaper.mp3", 1);
+  }, [animationEnabled]);
+
+  const runAutoTurn = useCallback(() => {
+    const initialState = useGameStore.getState();
+    if (initialState.isGameOver()) {
+      setAutoPlayEnabled(false);
+      return;
+    }
+
+    const availableNews = initialState.currentNewsIds
+      .map((id) => getNewsById(id))
+      .filter((item): item is NewsItem => Boolean(item));
+    if (availableNews.length === 0) {
+      initialState.rollCurrentNews();
+      if (useGameStore.getState().currentNewsIds.length === 0) {
+        setAutoPlayMessage("Автоигра остановлена: доступных новостей больше нет.");
+        setAutoPlayEnabled(false);
+        return;
+      }
+      setAutoPlayStep((step) => step + 1);
+      return;
+    }
+
+    let plan = chooseAutoTurn(
+      initialState,
+      availableNews,
+      AVAILABLE_JOURNALISTS,
+    );
+    if (
+      plan.journalistToHire &&
+      !initialState.hireJournalist(plan.journalistToHire)
+    ) {
+      plan = chooseAutoTurn(
+        useGameStore.getState(),
+        availableNews,
+        [],
+      );
+    }
+
+    const originalNewsIds = new Set(
+      initialState.placedNews.map((placed) => placed.newsId),
+    );
+    const store = useGameStore.getState();
+    for (const choice of plan.placements) {
+      if (!store.dropNews(choice.slot, choice.news, choice.journalistId)) {
+        const currentState = useGameStore.getState();
+        for (const placed of currentState.placedNews) {
+          if (!originalNewsIds.has(placed.newsId)) {
+            currentState.removePlaced(placed.newsId);
+          }
+        }
+        setAutoPlayMessage(
+          "ИИ не смог собрать выпуск из доступных новостей и журналистов.",
+        );
+        setAutoPlayEnabled(false);
+        return;
+      }
+    }
+
+    const completedState = useGameStore.getState();
+    if (
+      completedState.placedNews.length >=
+      GAME_BALANCE.articlesPerPublication
+    ) {
+      handlePublish();
+      return;
+    }
+
+    for (const placed of completedState.placedNews) {
+      if (!originalNewsIds.has(placed.newsId)) {
+        completedState.removePlaced(placed.newsId);
+      }
+    }
+    setAutoPlayMessage(
+      "ИИ остановлен: не удалось собрать выпуск. Проверьте новости и состав редакции.",
+    );
+    setAutoPlayEnabled(false);
+  }, [handlePublish]);
+
+  const toggleAutoPlay = () => {
+    setAutoPlayMessage("");
+    setAutoPlayEnabled((enabled) => !enabled);
   };
+
+  useEffect(() => {
+    if (!import.meta.env.DEV || !autoPlayEnabled) return;
+
+    if (modalResult) {
+      const timeoutId = window.setTimeout(() => {
+        applyResult(modalResult);
+        setModalResult(null);
+      }, Math.max(400, GAME_BALANCE.autoPlay.resultDisplayMs));
+      return () => window.clearTimeout(timeoutId);
+    }
+
+    if (publicationPreview) return;
+    if (
+      showJournalistsModal ||
+      showSettingsModal ||
+      showStatisticsModal ||
+      showGameConfigModal
+    ) {
+      return;
+    }
+    if (showAlertModal || useGameStore.getState().isGameOver()) {
+      setAutoPlayEnabled(false);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(
+      runAutoTurn,
+      Math.max(300, GAME_BALANCE.autoPlay.actionDelayMs),
+    );
+    return () => window.clearTimeout(timeoutId);
+  }, [
+    autoPlayEnabled,
+    autoPlayStep,
+    applyResult,
+    modalResult,
+    publicationPreview,
+    runAutoTurn,
+    showAlertModal,
+    showGameConfigModal,
+    showJournalistsModal,
+    showSettingsModal,
+    showStatisticsModal,
+  ]);
 
   const handleModalClose = () => {
     if (!modalResult) return;
@@ -306,6 +438,10 @@ export default function App() {
             staff={journalists}
             gameState={gameState}
             onOpenJournalists={() => setShowJournalistsModal(true)}
+            showDeveloperTools={import.meta.env.DEV}
+            autoPlayEnabled={autoPlayEnabled}
+            autoPlayMessage={autoPlayMessage}
+            onToggleAutoPlay={toggleAutoPlay}
           />
           <Newspaper
             placedNews={publicationPreview?.placedNews ?? placedNews}

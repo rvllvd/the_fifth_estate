@@ -15,6 +15,10 @@ interface Props {
   staff: Journalist[];
   gameState: GameState;
   onOpenJournalists: () => void;
+  showDeveloperTools: boolean;
+  autoPlayEnabled: boolean;
+  autoPlayMessage: string;
+  onToggleAutoPlay: () => void;
 }
 
 export default function LeftPanel({
@@ -27,6 +31,10 @@ export default function LeftPanel({
   staff,
   gameState,
   onOpenJournalists,
+  showDeveloperTools,
+  autoPlayEnabled,
+  autoPlayMessage,
+  onToggleAutoPlay,
 }: Props) {
   return (
     <div id="left-panel">
@@ -41,6 +49,10 @@ export default function LeftPanel({
         placedCount={placedCount}
         onPublish={onPublish}
         onClear={onClear}
+        showDeveloperTools={showDeveloperTools}
+        autoPlayEnabled={autoPlayEnabled}
+        autoPlayMessage={autoPlayMessage}
+        onToggleAutoPlay={onToggleAutoPlay}
       />
 
       {/* <div className="panel-section" id="log-section" >

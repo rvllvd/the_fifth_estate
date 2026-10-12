@@ -36,7 +36,7 @@ interface GameStore extends GameState {
   rollCurrentNews: () => void;
 
   // размещение
-  dropNews: (key: string, news: NewsItem) => boolean;
+  dropNews: (key: string, news: NewsItem, journalistId?: string) => boolean;
   clickNews: (news: NewsItem) => void;
   removePlaced: (newsId: string) => void;
   clearNewspaper: () => void;
@@ -88,10 +88,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── размещение ──
-  dropNews: (key, news) => {
+  dropNews: (key, news, journalistId) => {
     const { placedNews, journalists } = get();
     const freeJournalist = journalists.find(
-      (j) => j.spec == news.category && !j.newsId,
+      (j) =>
+        j.spec == news.category &&
+        !j.newsId &&
+        (!journalistId || j.id === journalistId),
     );
     if (isSlotTaken(placedNews, key, news.id) || !freeJournalist) return false;
 

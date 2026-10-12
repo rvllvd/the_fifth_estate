@@ -407,6 +407,19 @@
     background: linear-gradient(180deg, #5c4033 0%, #3d2817 100%);
     border-color: #c9a227;
   }
+  .auto-play-btn {
+    border-color: #5c4033;
+    background: linear-gradient(135deg, #4a3525 0%, #2d1f15 100%);
+  }
+  .auto-play-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5c4033 0%, #3d2817 100%);
+  }
+  .auto-play-btn.is-running {
+    background: linear-gradient(135deg, #8b2500 0%, #5c1800 100%);
+  }
+  .auto-play-status {
+    color: #a89070;
+  }
   .publication-entry {
     border-color: #5c4033;
     background: rgba(26, 18, 12, 0.45);
