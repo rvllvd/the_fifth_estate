@@ -27,7 +27,13 @@ export default function StaffSection({ staff, onOpenJournalists }: Props) {
           {staff.length === 0 ? (
             <div className="staff-empty">Нет сотрудников</div>
           ) : (
-            staff.map((s) => <StaffCard key={s.id} journalist={s} />)
+            staff.map((s, index) => (
+              <StaffCard
+                key={s.id}
+                journalist={s}
+                style={{ "--index": index } as React.CSSProperties}
+              />
+            ))
           )}
         </div>
       )}

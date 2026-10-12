@@ -29,7 +29,7 @@ export default function NewsSection({
       <div className="news-list" id="news-list">
         {news
           .filter((n) => coveredCategories.has(n.category))
-          .map((n) => (
+          .map((n, index) => (
             <NewsCard
               key={n.id}
               news={n}
@@ -38,6 +38,7 @@ export default function NewsSection({
                 journalists.filter((j) => j.spec == n.category && !j.newsId)
                   .length > 0
               }
+              style={{ "--index": index } as React.CSSProperties}
             />
           ))}
       </div>

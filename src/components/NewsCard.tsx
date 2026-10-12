@@ -9,10 +9,11 @@ interface Props {
   news: NewsItem;
   placed: boolean;
   active: boolean;
+  style?: React.CSSProperties;
   // onClickNews?: (news: NewsItem) => void;
 }
 
-export default function NewsCard({ news, placed, active = true }: Props) {
+export default function NewsCard({ news, placed, active = true, style }: Props) {
   const handleDragStart = (e: React.DragEvent) => {
     if (placed) {
       e.preventDefault();
@@ -39,6 +40,7 @@ export default function NewsCard({ news, placed, active = true }: Props) {
       draggable={!placed}
       onDragStart={handleDragStart}
       onClick={() => clickNews(news)}
+      style={style}
       //   style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
     >
       <div className="news-header">

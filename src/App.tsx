@@ -140,6 +140,19 @@ export default function App() {
 
   return (
     <>
+      <div className="particles" id="particles">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={i}
+            className="particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 10}s`,
+              animationDuration: `${10 + Math.random() * 10}s`,
+            }}
+          />
+        ))}
+      </div>
       <div id="app">
         <TopPanel
           metrics={{ influence, credibility, reputation: reputation, readership }}

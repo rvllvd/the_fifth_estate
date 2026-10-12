@@ -3,13 +3,17 @@ import type { Journalist } from "../types";
 
 interface Props {
   journalist: Journalist;
+  style?: React.CSSProperties;
 }
 
-export default function StaffCard({ journalist }: Props) {
+export default function StaffCard({ journalist, style }: Props) {
   const { bonus, desc } = journalist;
 
   return (
-    <div className={`staff-card ${journalist.newsId ? "active" : ""}`}>
+    <div
+      className={`staff-card ${journalist.newsId ? "active" : ""}`}
+      style={style}
+    >
       <div className="staff-info">
         <span className="staff-name">{journalist.name}</span>
         <span className="staff-role">{journalist.role}</span>
