@@ -361,14 +361,9 @@
   box-shadow: 0 0 15px rgba(201, 162, 39, 0.4);
 }
 
-.dark-theme .categories-dropdown {
-  background: linear-gradient(135deg, #2d1f15 0%, #1a120c 100%);
-  border: 2px solid #5c4033;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-}
-
 .dark-theme .toggle-categories-btn {
   color: #c9a227;
+  border-color: #5c4033;
 }
 
 .dark-theme .toggle-categories-btn:hover {

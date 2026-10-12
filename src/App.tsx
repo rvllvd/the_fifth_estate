@@ -35,8 +35,6 @@ export default function App() {
     const saved = localStorage.getItem("theme");
     return saved === "dark";
   });
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-
   // toggle theme handler
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -109,14 +107,6 @@ export default function App() {
     [currentNewsIds],
   );
 
-  const filteredNews = useMemo(
-    () =>
-      activeCategory === "all"
-        ? currentNews
-        : currentNews.filter((n) => n.category === activeCategory),
-    [currentNews, activeCategory],
-  );
-
   const placedNewsIds = useMemo(
     () => new Set(placedNews.map((p) => p.newsId)),
     [placedNews],
@@ -127,10 +117,7 @@ export default function App() {
     [placedNews, journalists],
   );
 
-  const handleNewGame = () => {
-    newGame();
-    setActiveCategory("all");
-  };
+  const handleNewGame = () => newGame();
 
   const handleRemovePlaced = (newsId: string) => {
     removePlaced(newsId);
@@ -179,7 +166,7 @@ export default function App() {
         />
         <div id="main-content">
           <LeftPanel
-            news={filteredNews}
+            news={currentNews}
             placedNewsIds={placedNewsIds}
             canPublish={canPublishNow}
             placedCount={placedNews.length}
