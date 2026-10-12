@@ -1,26 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
-import './styles/themes/dark.css'; // import dark theme overrides
-import './styles/themes/vanilla.css'; // import vanilla theme (original)
+import "./styles/themes/dark.css"; // import dark theme overrides
+import "./styles/themes/vanilla.css"; // import vanilla theme (original)
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
 import Newspaper from "./components/Newspaper";
 import MetricsModal from "./components/MetricsModal";
 import JournalistsModal from "./components/JournalistsModal";
-import type { Metrics, NewsItem } from "./types";
+import AlertModal from "./components/AlertModal";
+import type { Metrics, NewsItem, PlacedNews } from "./types";
 import { playSound } from "./utils/sounds";
 import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { calculatePublicationResult } from "./utils/game";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
-import AlertModal from "./components/AlertModal";
+import SettingsModal from "./components/SettingsModal";
 
 export default function App() {
   useBackgroundMusic("/assets/sounds/city-noise.mp3", 0.75);
 
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
-  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  const openSettings = () => {
+    // alert('Settings opened');
+    console.log("openSettings called");
+    setShowSettingsModal(true);
+  };
+  const closeSettings = () => setShowSettingsModal(false);
   const [isDark, setIsDark] = useState<boolean>(() => {
     const saved = localStorage.getItem("theme");
     return saved === "dark";
@@ -155,11 +163,16 @@ export default function App() {
       </div>
       <div id="app">
         <TopPanel
-          metrics={{ influence, credibility, reputation: reputation, readership }}
-          onNewGame={handleNewGame}
-          preview={preview}
-          onToggleTheme={toggleTheme}
-        />
+                  metrics={{
+                    influence,
+                    credibility,
+                    reputation: reputation,
+                    readership,
+                  }}
+                  onNewGame={handleNewGame}
+                  preview={preview}
+                  onOpenSettings={openSettings}
+                />
         <div id="main-content">
           <LeftPanel
             news={filteredNews}
@@ -193,12 +206,8 @@ export default function App() {
         />
       )}
 
-      {showAlertModal && (
-        <AlertModal
-          text={"Вы проиграли"}
-          onClose={() => setShowAlertModal(false)}
-          onNewGame={handleNewGame}
-        />
+      {showSettingsModal && (
+        <SettingsModal visible={showSettingsModal} onClose={closeSettings} onToggleTheme={toggleTheme} />
       )}
     </>
   );

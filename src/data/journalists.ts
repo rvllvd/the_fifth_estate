@@ -33,7 +33,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
           };
         }
       });
-      console.log(result);
+      // console.log(result);
       return result;
     },
     // bonus: (placed_news) => {

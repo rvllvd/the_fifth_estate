@@ -28,6 +28,7 @@ export interface PlacedNews {
   newsId: string;
   tier: number;
   slot: number;
+  metrics?: Metrics;
 }
 
 export interface Journalist {

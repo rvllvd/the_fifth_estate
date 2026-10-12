@@ -6,10 +6,10 @@ interface Props {
   metrics: Metrics;
   onNewGame: () => void;
   preview: Metrics;
-  onToggleTheme: () => void;
+  onOpenSettings: () => void;
 }
 
-export default function TopPanel({ metrics, onNewGame, preview, onToggleTheme }: Props) {
+export default function TopPanel({ metrics, onNewGame, preview, onOpenSettings }: Props) {
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
   const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
 
@@ -57,11 +57,15 @@ export default function TopPanel({ metrics, onNewGame, preview, onToggleTheme }:
         <button className="right-btn" id="stat-btn">
           Статистика
         </button>
+        <button
+          className="right-btn"
+          id="settings-btn"
+          onClick={onOpenSettings}
+        >
+          Настройки
+        </button>
         <button className="right-btn" id="new-game-btn" onClick={onNewGame}>
           Новая игра
-        </button>
-        <button className="right-btn" id="theme-toggle-btn" onClick={onToggleTheme}>
-          Сменить тему
         </button>
       </div>
     </div>
