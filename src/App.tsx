@@ -15,7 +15,11 @@ import { AVAILABLE_JOURNALISTS } from "./data/journalists";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { calculatePublicationResult } from "./utils/game";
 import { chooseAutoTurn } from "./utils/autoPlayer";
-import { useGameStore, selectCanPublish } from "./store/gameStore";
+import {
+  useGameStore,
+  selectCanPublish,
+  selectIsVictory,
+} from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
@@ -110,6 +114,7 @@ export default function App() {
   const journalists = useGameStore((s) => s.journalists);
   const publicationHistory = useGameStore((s) => s.publicationHistory);
   const canPublishNow = useGameStore(selectCanPublish);
+  const gameWon = useGameStore(selectIsVictory);
   const gameState = useGameStore((state) => state);
 
   // экшены
@@ -513,15 +518,24 @@ export default function App() {
 
       {showAlertModal && (
         <AlertModal
-          text="Вы проиграли"
-          descriptions={getDefeatDescriptions({
-            influence,
-            credibility,
-            reputation,
-            loyalty: loyalty,
-          }).concat(
-            getEconomyDefeatDescriptions(gameState.readers, gameState.money),
-          )}
+          text={gameWon ? "Газета победила!" : "Вы проиграли"}
+          descriptions={
+            gameWon
+              ? [
+                  `Редакция достигла цели — $${new Intl.NumberFormat("ru-RU").format(gameState.money)}. Вы построили успешное издание!`,
+                ]
+              : getDefeatDescriptions({
+                  influence,
+                  credibility,
+                  reputation,
+                  loyalty,
+                }).concat(
+                  getEconomyDefeatDescriptions(
+                    gameState.readers,
+                    gameState.money,
+                  ),
+                )
+          }
           onClose={() => setShowAlertModal(false)}
           onNewGame={handleNewGame}
         />

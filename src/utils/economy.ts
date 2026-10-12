@@ -24,21 +24,35 @@ export interface EconomySettlement {
 export function calculateReaderChange(
   currentMetrics: Metrics,
   result: Metrics,
+  currentReaders: number,
 ): number {
-  return calculateGlobalAudienceChange(currentMetrics, result);
+  return calculateGlobalAudienceChange(currentMetrics, result, currentReaders);
+}
+
+export function getIncomePerReader(readers: number): number {
+  const growth = GAME_BALANCE.readerIncomeGrowth;
+  const milestones = Math.floor(readers / growth.readersPerMilestone);
+  return (
+    GAME_BALANCE.moneyPerReaderPerHour +
+    milestones * growth.incomePerReaderPerMilestone
+  );
 }
 
 export function settleEconomy(
   state: GameState,
   result: Metrics,
 ): EconomySettlement {
-  const projectedReaderChange = calculateReaderChange(state, result);
+  const projectedReaderChange = calculateReaderChange(
+    state,
+    result,
+    state.readers,
+  );
   const readers = Math.max(
     GAME_BALANCE.minimumReaders,
     state.readers + projectedReaderChange,
   );
   const readerChange = readers - state.readers;
-  const income = readers * GAME_BALANCE.moneyPerReaderPerHour;
+  const income = readers * getIncomePerReader(readers);
   const workingJournalists = [...state.journalists];
   let payroll = workingJournalists.reduce(
     (total, journalist) => total + journalist.cost,

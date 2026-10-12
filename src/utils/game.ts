@@ -201,14 +201,12 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
 
 // TODO: ПОМЕНЯТЬ УСЛОВИЯ ПОБЕДЫ И ПОРАЖЕНИЯ
 export function isVictory(state: GameState): boolean {
-  return (
-    state.influence >= GAME_BALANCE.victoryThresholds.influence &&
-    state.credibility >= GAME_BALANCE.victoryThresholds.credibility
-  );
+  return state.money >= GAME_BALANCE.victoryThresholds.money;
 }
 
 export function isGameOver(state: GameState): boolean {
   return (
+    isVictory(state) ||
     state.turn > state.maxTurns ||
     state.readers <= GAME_BALANCE.minimumReaders ||
     state.money <= GAME_BALANCE.minimumMoney ||

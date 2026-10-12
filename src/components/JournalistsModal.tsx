@@ -1,6 +1,7 @@
 // // // // import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { getNewsCategoryLabel } from "../constants/categories";
 import type { Journalist } from "../types";
+import { GAME_BALANCE } from "../constants/global";
 
 interface Props {
   staff: Journalist[]; // нанятые
@@ -21,6 +22,7 @@ export default function JournalistsModal({
 }: Props) {
   const staffIds = new Set(staff.map((s) => s.id));
   const hireable = available.filter((j) => !staffIds.has(j.id));
+  const staffLimitReached = staff.length >= GAME_BALANCE.maximumJournalists;
 
   return (
     <div className="journalists modal show" onClick={onClose}>
@@ -37,7 +39,9 @@ export default function JournalistsModal({
 
         {/* ===== В штате ===== */}
         <div className="journalists-section">
-          <h3>В штате ({staff.length})</h3>
+          <h3>
+            В штате ({staff.length}/{GAME_BALANCE.maximumJournalists})
+          </h3>
           {staff.length === 0 ? (
             <div className="empty-staff">Пока никого нет</div>
           ) : (
@@ -95,10 +99,15 @@ export default function JournalistsModal({
 
         {/* ===== Доступные для найма ===== */}
         <div className="journalists-section">
-          <h3>Доступные для найма ({hireable.length})</h3>
-          {hireable.length === 0 ? (
+          <h3>Доступные для найма ({staffLimitReached ? 0 : hireable.length})</h3>
+          {staffLimitReached && (
+            <div className="empty-staff">
+              Достигнут лимит штата. Увольте сотрудника, чтобы нанять нового.
+            </div>
+          )}
+          {!staffLimitReached && hireable.length === 0 ? (
             <div className="empty-staff">Все уже наняты</div>
-          ) : (
+          ) : !staffLimitReached && hireable.length > 0 ? (
             <div className="journalists-list">
               {hireable.map((j) => (
                 <div key={j.id} className="journalist-card">
@@ -142,16 +151,26 @@ export default function JournalistsModal({
                     <button
                       className="hire-btn"
                       onClick={() => onHire(j)}
-                      disabled={money < j.cost}
-                      title={money < j.cost ? "Недостаточно денег для найма" : undefined}
+                      disabled={money < j.cost || staffLimitReached}
+                      title={
+                        staffLimitReached
+                          ? "Достигнут максимум сотрудников"
+                          : money < j.cost
+                            ? "Недостаточно денег для найма"
+                            : undefined
+                      }
                     >
-                      {money < j.cost ? "Не хватает денег" : "Нанять"}
+                      {staffLimitReached
+                        ? "Штат заполнен"
+                        : money < j.cost
+                          ? "Не хватает денег"
+                          : "Нанять"}
                     </button>
                   </div>
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

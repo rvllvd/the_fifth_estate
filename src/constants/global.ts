@@ -40,11 +40,16 @@ function mergeKnownConfig(target: ConfigRecord, source: unknown): void {
 export interface GlobalConfigSnapshot {
   metrics: typeof METRIC_DEFINITIONS;
   game: typeof GAME_BALANCE;
+  news: typeof NEWS_EFFECT_BALANCE;
 }
 
 export function getGlobalConfigSnapshot(): GlobalConfigSnapshot {
   return JSON.parse(
-    JSON.stringify({ metrics: METRIC_DEFINITIONS, game: GAME_BALANCE }),
+    JSON.stringify({
+      metrics: METRIC_DEFINITIONS,
+      game: GAME_BALANCE,
+      news: NEWS_EFFECT_BALANCE,
+    }),
   ) as GlobalConfigSnapshot;
 }
 
@@ -100,10 +105,11 @@ export const ZERO_METRICS: Metrics = {
 };
 
 export const GAME_BALANCE = {
-  maxTurns: 20,
+  maxTurns: 40,
   articlesPerPublication: 3,
   newsPerRoll: 30,
   initialJournalists: 3,
+  maximumJournalists: 6,
   columns: {
     1: { title: "Главная полоса", slots: 1, multiplier: 2 },
     2: { title: "Вторая полоса", slots: 2, multiplier: 1 },
@@ -113,36 +119,54 @@ export const GAME_BALANCE = {
   initialMoney: 3000,
   minimumReaders: 0,
   minimumMoney: 0,
+  // Keep early income modest; readership milestones make long-term growth pay off.
   moneyPerReaderPerHour: 2,
+  readerIncomeGrowth: {
+    readersPerMilestone: 400,
+    incomePerReaderPerMilestone: 1,
+  },
   journalistHourlyWages: {
-    ivan_petrov: 50,
-    maria_sidorova: 40,
-    alexey_kozlov: 60,
-    elena_smirnova: 40,
-    dmitry_volkov: 30,
-    anna_kuznetsova: 50,
-    sergey_morozov: 70,
-    olga_fedorova: 20,
-    pavel_ivanov: 80,
-    natalia_popova: 30,
-    victor_sokolov: 40,
-    ekaterina_nikolaeva: 50,
-    andrey_romanov: 60,
-    marina_alexeeva: 40,
-    igor_lebedev: 30,
-    tatyana_vasilieva: 30,
-    maxim_golubev: 20,
-    yulia_semenova: 50,
-    konstantin_borisov: 40,
-    veronika_mikhailova: 30,
+    ivan_petrov: 55,
+    maria_sidorova: 55,
+    alexey_kozlov: 70,
+    elena_smirnova: 60,
+    dmitry_volkov: 60,
+    anna_kuznetsova: 35,
+    sergey_morozov: 80,
+    olga_fedorova: 70,
+    pavel_ivanov: 90,
+    natalia_popova: 70,
+    victor_sokolov: 45,
+    ekaterina_nikolaeva: 75,
+    andrey_romanov: 65,
+    marina_alexeeva: 60,
+    igor_lebedev: 85,
+    tatyana_vasilieva: 65,
+    maxim_golubev: 80,
+    yulia_semenova: 40,
+    konstantin_borisov: 55,
+    veronika_mikhailova: 45,
+    lidia_smirnova: 105,
+    boris_sokolov: 115,
+    vera_orlova: 100,
+    roman_zhukov: 110,
+    sofia_belova: 125,
+    oleg_kravtsov: 95,
+    polina_lebedeva: 105,
+    artem_volkov: 135,
+    kirill_melnikov: 75,
+    mila_grigorieva: 85,
+    vlad_smirnov: 90,
+    irina_kiseleva: 100,
+    timur_safiullin: 125,
   },
   journalistBonuses: {
-    sameCategorySynergy: { metricScale: 1 },
-    morningEdition: { startHour: 9, endHour: 12, credibility: 5 },
+    sameCategorySynergy: { metricScale: 0.5 },
+    morningEdition: { startHour: 9, endHour: 12, credibility: 3 },
     eveningSports: {
       startHour: 16,
       endHour: 18,
-      loyalty: 7,
+      loyalty: 5,
       credibility: -1,
     },
     weekendPremiere: {
@@ -157,12 +181,12 @@ export const GAME_BALANCE = {
       reputation: -2,
       loyalty: 5,
     },
-    publicTrust: { minimumCredibility: 50, credibility: 4 },
+    publicTrust: { minimumCredibility: 50, credibility: 2 },
     diverseNewsroom: { minimumCategories: 3, influence: 5 },
-    editorialTeamwork: { credibilityPerColleague: 2 },
+    editorialTeamwork: { credibilityPerColleague: 1 },
     carefulSourcing: {
       categories: ["science", "education", "health"] as string[],
-      credibility: 6,
+      credibility: 4,
       loyalty: 1,
     },
     audienceRecovery: {
@@ -180,7 +204,7 @@ export const GAME_BALANCE = {
   },
   // These weights combine article results with the quality/health of the whole newsroom.
   audienceChange: {
-    loyaltyEffect: 0.55,
+    loyaltyEffect: 1.4,
     influenceEffect: 0.12,
     credibilityEffect: 0.2,
     reputationEffect: 0.13,
@@ -192,10 +216,10 @@ export const GAME_BALANCE = {
     influenceQuality: 0.2,
     credibilityQuality: 0.45,
     reputationQuality: 0.35,
+    readershipGrowthEffect: 0.23,
   },
   victoryThresholds: {
-    influence: 70,
-    credibility: 70,
+    money: 100_000,
   },
   gameStart: {
     year: 1600,
@@ -214,6 +238,32 @@ export const GAME_BALANCE = {
   economySaveVersion: 1,
 };
 
+// Compress article effects into small, trade-off-driven changes. Journalist
+// bonuses then reward specialization without letting every metric climb unchecked.
+export const NEWS_EFFECT_BALANCE: Record<
+  keyof Metrics,
+  { min: number; max: number; scale: number; offset: number }
+> = {
+  influence: { min: -3, max: 4, scale: 0.55, offset: -0.25 },
+  credibility: { min: -3, max: 3, scale: 0.35, offset: 0.3 },
+  reputation: { min: -3, max: 4, scale: 0.45, offset: -0.3 },
+  loyalty: { min: -1, max: 4, scale: 0.15, offset: -0.7 },
+};
+
+export function normalizeNewsEffects(effects: Metrics): Metrics {
+  return METRIC_KEYS.reduce(
+    (balanced, key) => {
+      const { min, max, scale, offset } = NEWS_EFFECT_BALANCE[key];
+      balanced[key] = Math.max(
+        min,
+        Math.min(max, Math.round(effects[key] * scale + offset)),
+      );
+      return balanced;
+    },
+    { ...ZERO_METRICS },
+  );
+}
+
 function loadSavedGlobalConfig(): void {
   try {
     const saved = localStorage.getItem(GLOBAL_CONFIG_STORAGE_KEY);
@@ -227,6 +277,7 @@ function loadSavedGlobalConfig(): void {
       config.metrics,
     );
     mergeKnownConfig(GAME_BALANCE as ConfigRecord, config.game);
+    mergeKnownConfig(NEWS_EFFECT_BALANCE as ConfigRecord, config.news);
   } catch (error) {
     console.error("Не удалось загрузить dev-конфигурацию игры:", error);
   }
@@ -270,6 +321,7 @@ export function getTierMultiplier(tier: number): number {
 export function calculateAudienceChange(
   currentMetrics: Metrics,
   result: Metrics,
+  currentReaders = GAME_BALANCE.initialReaders,
 ): number {
   const finalMetrics = {
     influence: clampMetric(
@@ -299,7 +351,7 @@ export function calculateAudienceChange(
     normalizeMetric("reputation", finalMetrics.reputation) *
       weights.reputationQuality;
 
-  return Math.round(
+  const metricDrivenChange =
     result.loyalty * weights.loyaltyEffect +
       result.influence * weights.influenceEffect +
       result.credibility * weights.credibilityEffect +
@@ -309,8 +361,16 @@ export function calculateAudienceChange(
       (normalizeMetric("loyalty", finalMetrics.loyalty) -
         weights.loyaltyBaseline) *
         weights.loyaltyLevelScale *
-        weights.loyaltyLevelEffect,
-  );
+        weights.loyaltyLevelEffect;
+  const readershipMultiplier =
+    // Stronger loyalty campaigns compound with the size of the existing audience.
+    1 +
+    Math.log2(
+      1 + Math.max(0, currentReaders) / GAME_BALANCE.initialReaders,
+    ) *
+      weights.readershipGrowthEffect;
+
+  return Math.round(metricDrivenChange * readershipMultiplier);
 }
 
 export function createInitialGameTime(): number {

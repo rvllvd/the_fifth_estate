@@ -1,7 +1,7 @@
 import Metric from "./Metric";
 import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
-import { formatMoney } from "../utils/economy";
+import { formatMoney, getIncomePerReader } from "../utils/economy";
 import { GAME_BALANCE } from "../constants/global";
 
 const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
@@ -109,9 +109,12 @@ export default function TopPanel({
         <div className="resource-display" id="money-display">
           {/* <span className="resource-label">💵 Деньги</span> */}
           <strong>💵 ${formatMoney(money)}</strong>
+          <span className="resource-goal">
+            Цель: ${formatMoney(GAME_BALANCE.victoryThresholds.money)}
+          </span>
           <span className="resource-flow">
             <span className="resource-income">
-              +${formatMoney(readers * GAME_BALANCE.moneyPerReaderPerHour)} доход/час
+              +${formatMoney(readers * getIncomePerReader(readers))} доход/час
             </span>
             <span className="resource-payroll">
               {" "}

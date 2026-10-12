@@ -6,7 +6,7 @@ import {
 import { ALL_SLOTS } from "../constants/game";
 import type { GameState, Journalist, Metrics, NewsItem, PlacedNews } from "../types";
 import { calculatePublicationResult, isSlotTaken } from "./game";
-import { getCurrentPayroll, settleEconomy } from "./economy";
+import { getCurrentPayroll, getIncomePerReader, settleEconomy } from "./economy";
 
 export interface AutoTurnPlan {
   journalistToHire: Journalist | null;
@@ -46,7 +46,11 @@ function evaluatePublication(
     score += ((projected - current) / (definition.max - definition.min)) * 0.4;
   }
 
-  const audienceChange = calculateAudienceChange(state, result);
+  const audienceChange = calculateAudienceChange(
+    state,
+    result,
+    state.readers,
+  );
   const economy = settleEconomy(state, result);
   score += audienceChange * 0.75;
   score += Math.log1p(Math.max(0, economy.money)) * 0.12;
@@ -63,8 +67,9 @@ function chooseJournalistToHire(
   const coveredCategories = new Set(
     state.journalists.map((journalist) => journalist.spec),
   );
+  if (state.journalists.length >= GAME_BALANCE.maximumJournalists) return null;
   const payroll = getCurrentPayroll(state.journalists);
-  const income = state.readers * GAME_BALANCE.moneyPerReaderPerHour;
+  const income = state.readers * getIncomePerReader(state.readers);
   const expectedPayrollLimit = Math.max(income * 1.5, 35);
   const reserve = Math.max(
     GAME_BALANCE.autoPlay.hireReserveTurns * Math.max(payroll, income),

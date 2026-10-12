@@ -194,7 +194,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     if (
       state.money < j.cost ||
-      state.journalists.some((journalist) => journalist.id === j.id)
+      state.journalists.some((journalist) => journalist.id === j.id) ||
+      state.journalists.length >= GAME_BALANCE.maximumJournalists
     ) {
       return false;
     }
@@ -277,7 +278,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const init = getInitialState();
     init.journalists = AVAILABLE_JOURNALISTS.slice(
       0,
-      GAME_BALANCE.initialJournalists,
+      Math.min(
+        GAME_BALANCE.initialJournalists,
+        GAME_BALANCE.maximumJournalists,
+      ),
     );
     set(init);
     clearNewspaper();

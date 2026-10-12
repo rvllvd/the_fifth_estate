@@ -52,7 +52,10 @@ export function createInitialState(): GameState {
   const init = getInitialState();
   init.journalists = AVAILABLE_JOURNALISTS.slice(
     0,
-    GAME_BALANCE.initialJournalists,
+    Math.min(
+      GAME_BALANCE.initialJournalists,
+      GAME_BALANCE.maximumJournalists,
+    ),
   );
   return init;
 }

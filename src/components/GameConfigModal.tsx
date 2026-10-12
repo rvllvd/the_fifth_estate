@@ -12,11 +12,16 @@ type ConfigValue =
   | ConfigValue[]
   | { [key: string]: ConfigValue };
 type ConfigRecord = { [key: string]: ConfigValue };
-type ConfigDraft = { metrics: ConfigRecord; game: ConfigRecord };
+type ConfigDraft = {
+  metrics: ConfigRecord;
+  game: ConfigRecord;
+  news: ConfigRecord;
+};
 
 const CONFIG_LABELS: Record<string, string> = {
   metrics: "Основные метрики",
   game: "Игровой баланс",
+  news: "Баланс новостей",
   influence: "Влияние",
   credibility: "Доверие",
   reputation: "Репутация",
@@ -30,6 +35,8 @@ const CONFIG_LABELS: Record<string, string> = {
   articlesPerPublication: "Новостей на выпуск",
   newsPerRoll: "Новостей при обновлении",
   initialJournalists: "Журналистов в начале",
+  maximumJournalists: "Максимум сотрудников",
+  money: "Деньги для победы",
   columns: "Колонки газеты",
   title: "Название",
   slots: "Количество мест",
@@ -39,6 +46,9 @@ const CONFIG_LABELS: Record<string, string> = {
   minimumReaders: "Минимум читателей",
   minimumMoney: "Минимум денег",
   moneyPerReaderPerHour: "Доход с читателя за час",
+  readerIncomeGrowth: "Рост дохода с аудиторией",
+  readersPerMilestone: "Читателей на ступень дохода",
+  incomePerReaderPerMilestone: "Добавка к доходу за читателя",
   journalistHourlyWages: "Почасовые ставки журналистов",
   journalistBonuses: "Параметры бонусов журналистов",
   sameCategorySynergy: "Синергия одной категории",
@@ -76,6 +86,11 @@ const CONFIG_LABELS: Record<string, string> = {
   influenceQuality: "Вес влияния в качестве",
   credibilityQuality: "Вес доверия в качестве",
   reputationQuality: "Вес репутации в качестве",
+  readershipGrowthEffect: "Ускорение роста аудитории",
+  NEWS_EFFECT_BALANCE: "Баланс влияния новостей",
+  newsEffectBalance: "Баланс влияния новостей",
+  scale: "Масштаб исходного эффекта",
+  offset: "Смещение эффекта",
   victoryThresholds: "Условия победы",
   gameStart: "Начало игрового времени",
   year: "Год",
@@ -257,7 +272,9 @@ export default function GameConfigModal({ onClose }: { onClose: () => void }) {
 
   const updateConfig = (path: string[], value: ConfigValue) => {
     const [section, ...fieldPath] = path;
-    if (section !== "metrics" && section !== "game") return;
+    if (section !== "metrics" && section !== "game" && section !== "news") {
+      return;
+    }
     setDraft((current) => ({
       ...current,
       [section]: updateAtPath(current[section], fieldPath, value),
@@ -333,6 +350,14 @@ export default function GameConfigModal({ onClose }: { onClose: () => void }) {
             <ConfigFields
               value={draft.game}
               path={["game"]}
+              onChange={updateConfig}
+            />
+          </fieldset>
+          <fieldset className="game-config-group">
+            <legend>Баланс новостей</legend>
+            <ConfigFields
+              value={draft.news}
+              path={["news"]}
               onChange={updateConfig}
             />
           </fieldset>
