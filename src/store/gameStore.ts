@@ -15,8 +15,8 @@ import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import {
   applyPublication,
   calculatePublicationResult,
+  calculateNewsContributions,
   canPublish,
-  getTierMultiplier,
   isGameOver,
   isSlotTaken,
   isVictory,
@@ -145,22 +145,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
       state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
     const publishedNews = state.placedNews.map((placed) => ({ ...placed }));
     const result = calculatePublicationResult(publishedNews, state.journalists);
-    const newsLog: PublishedNewsLogItem[] = publishedNews.flatMap((placed) => {
+    const contributions = calculateNewsContributions(
+      publishedNews,
+      state.journalists,
+    );
+    const newsLog: PublishedNewsLogItem[] = publishedNews.flatMap((placed, index) => {
       const news = getNewsById(placed.newsId);
-      if (!news || !placed.metrics) return [];
-      const multiplier = getTierMultiplier(placed.tier);
+      const metrics = contributions[index];
+      if (!news || !metrics) return [];
 
       return [{
         newsId: news.id,
         title: news.title,
         category: news.category,
         tier: placed.tier,
-        metrics: {
-          influence: Math.round(placed.metrics.influence * multiplier),
-          credibility: Math.round(placed.metrics.credibility * multiplier),
-          reputation: Math.round(placed.metrics.reputation * multiplier),
-          readership: Math.round(placed.metrics.readership * multiplier),
-        },
+        metrics,
       }];
     });
     const publicationHistory = [

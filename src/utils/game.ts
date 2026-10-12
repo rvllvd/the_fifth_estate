@@ -39,52 +39,58 @@ export function calculatePublicationResult(
   placedNews: PlacedNews[],
   journalists: Journalist[],
 ): Metrics {
-  let result: Metrics = {
-    influence: 0,
-    credibility: 0,
-    reputation: 0,
-    readership: 0,
-  };
+  return calculateNewsContributions(placedNews, journalists).reduce(
+    (result, contribution) => ({
+      influence: result.influence + contribution.influence,
+      credibility: result.credibility + contribution.credibility,
+      reputation: result.reputation + contribution.reputation,
+      readership: result.readership + contribution.readership,
+    }),
+    { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+  );
+}
 
-  journalists.forEach((j) => {
-    placedNews.map((n) => {
-      if (!n.metrics) n.metrics = getNewsById(n.newsId)?.effects;
-      if (typeof j.bonus === "function")
-        n.metrics = j.bonus(
-          n,
-          placedNews.filter((n2) => n.newsId !== n2.newsId),
-        );
-      return n;
-    });
-  });
+export function calculateNewsContributions(
+  placedNews: PlacedNews[],
+  journalists: Journalist[],
+): Metrics[] {
+  const newsItems = placedNews.map((placed) => getNewsById(placed.newsId));
 
-  for (const placed of placedNews) {
-    const m = getTierMultiplier(placed.tier);
-
-    if (placed.metrics) {
-      result.influence += Math.round(placed.metrics.influence * m);
-      result.credibility += Math.round(placed.metrics.credibility * m);
-      result.reputation += Math.round(placed.metrics.reputation * m);
-      result.readership += Math.round(placed.metrics.readership * m);
-    } else {
-      const news = getNewsById(placed.newsId);
-      if (!news) continue;
-
-      result.influence += Math.round(news.effects.influence * m);
-      result.credibility += Math.round(news.effects.credibility * m);
-      result.reputation += Math.round(news.effects.reputation * m);
-      result.readership += Math.round(news.effects.readership * m);
+  return placedNews.map((placed, index) => {
+    const news = newsItems[index];
+    if (!news) {
+      return { influence: 0, credibility: 0, reputation: 0, readership: 0 };
     }
-  }
 
-  // result = {
-  //   influence: result.influence + bonus.influence,
-  //   credibility: result.credibility + bonus.credibility,
-  //   reputation: result.reputation + bonus.reputation,
-  //   readership: result.readership + bonus.readership,
-  // };
+    const journalist = journalists.find((member) => member.newsId === placed.newsId);
+    let metrics = { ...news.effects };
 
-  return result;
+    if (journalist?.bonus) {
+      if (typeof journalist.bonus === "function") {
+        const relatedNews = placedNews.flatMap((other, otherIndex) => {
+          if (other.newsId === placed.newsId) return [];
+          const related = newsItems[otherIndex];
+          return related?.category === news.category ? [{ ...related.effects }] : [];
+        });
+        metrics = journalist.bonus(metrics, relatedNews);
+      } else {
+        metrics = {
+          influence: metrics.influence + journalist.bonus.influence,
+          credibility: metrics.credibility + journalist.bonus.credibility,
+          reputation: metrics.reputation + journalist.bonus.reputation,
+          readership: metrics.readership + journalist.bonus.readership,
+        };
+      }
+    }
+
+    const multiplier = getTierMultiplier(placed.tier);
+    return {
+      influence: Math.round(metrics.influence * multiplier),
+      credibility: Math.round(metrics.credibility * multiplier),
+      reputation: Math.round(metrics.reputation * multiplier),
+      readership: Math.round(metrics.readership * multiplier),
+    };
+  });
 }
 
 export function clampMetric(value: number): number {

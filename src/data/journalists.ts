@@ -1,5 +1,5 @@
-import type { Journalist, Metrics } from "../types";
-import { getNewsById } from "./news";
+import type { Journalist } from "../types";
+import { JOURNALIST_BONUSES } from "../constants/journalistBonuses";
 
 export const AVAILABLE_JOURNALISTS: Journalist[] = [
   {
@@ -8,34 +8,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Политический обозреватель",
     spec: "politics",
     desc: "Новости с одинаковыми темами переменожаются между собой",
-    bonus: (current, placedNews) => {
-      let result: Metrics = current.metrics || {
-        influence: 0,
-        credibility: 0,
-        readership: 0,
-        reputation: 0,
-      };
-      placedNews.forEach((n) => {
-        const news = getNewsById(current.newsId);
-        const news2 = getNewsById(n.newsId);
-
-        if (
-          current.metrics &&
-          n.metrics &&
-          news2 &&
-          news?.category == news2?.category
-        ) {
-          result = {
-            influence: news?.effects.influence * news2?.effects.influence,
-            credibility: news?.effects.credibility * news2?.effects.credibility,
-            readership: news?.effects.readership * news2?.effects.readership,
-            reputation: news?.effects.reputation * news2?.effects.reputation,
-          };
-        }
-      });
-      // console.log(result);
-      return result;
-    },
+    bonus: JOURNALIST_BONUSES.ivan_petrov,
     // bonus: (placed_news) => {
     //   let collect = new Set<PlacedNews[]>();
     //   placed_news.forEach(n => {

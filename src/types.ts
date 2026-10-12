@@ -28,14 +28,18 @@ export interface PlacedNews {
   newsId: string;
   tier: number;
   slot: number;
-  metrics?: Metrics;
 }
+
+export type JournalistBonus = (
+  current: Metrics,
+  relatedNews: Metrics[],
+) => Metrics;
 
 export interface Journalist {
   id: string;
   name: string;
   role: string;
-  bonus?: Metrics | ((current: PlacedNews, placedNews: PlacedNews[]) => Metrics);
+  bonus?: Metrics | JournalistBonus;
   cost: number;
   spec?: string;
   newsId?: string;
