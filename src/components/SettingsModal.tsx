@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 type Props = {
   visible: boolean;
@@ -7,18 +7,15 @@ type Props = {
 };
 
 export default function SettingsModal({ visible, onClose, onToggleTheme }: Props) {
-  const [enabled, setEnabled] = useState<boolean>(true);
-
-  // Initialize from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem('animationEnabled');
-    setEnabled(stored !== 'false');
-  }, []);
+  const [enabled, setEnabled] = useState(
+    () => localStorage.getItem('animationEnabled') !== 'false',
+  );
 
   const toggle = () => {
     const newVal = !enabled;
     setEnabled(newVal);
     localStorage.setItem('animationEnabled', newVal ? 'true' : 'false');
+    document.body.classList.toggle('animations-disabled', !newVal);
   };
 
   if (!visible) return null;

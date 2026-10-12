@@ -4,13 +4,12 @@ interface Props {
 }
 
 export default function DancingText({ text, className = '' }: Props) {
-  const animationEnabled = localStorage.getItem('animationEnabled') !== 'false';
   return (
-    <span className={`dancing-text ${className}`}> 
+    <span className={`dancing-text ${className}`}>
       {text.split('').map((char, index) => (
         <span
           key={index}
-          className={`dancing-char${animationEnabled ? '' : ' disabled'}`}
+          className="dancing-char"
           style={{
             animationDelay: `${index * 0.1}s`,
           }}

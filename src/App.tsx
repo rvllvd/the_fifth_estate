@@ -52,6 +52,13 @@ export default function App() {
     }
   }, [isDark]);
 
+  useEffect(() => {
+    document.body.classList.toggle(
+      "animations-disabled",
+      localStorage.getItem("animationEnabled") === "false",
+    );
+  }, []);
+
   // читаем
   //   // const turn = useGameStore((s) => s.turn);
   const influence = useGameStore((s) => s.influence);

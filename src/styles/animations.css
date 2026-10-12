@@ -300,6 +300,12 @@
   transform: scale(1.2);
 }
 
+.animations-disabled .dancing-char,
+.animations-disabled .dancing-char:hover {
+  animation: none;
+  transform: none;
+}
+
 /* Анимация для кнопки переключения темы - убрал, чтобы не мерцало */
 /* #theme-toggle-btn {
   animation: glow 3s ease-in-out infinite;
