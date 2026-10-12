@@ -32,6 +32,28 @@
   }
 }
 
+@keyframes waitingPulse {
+  0%, 100% {
+    border-color: #ddd;
+    box-shadow: inset 0 0 0 rgba(52, 152, 219, 0);
+  }
+  50% {
+    border-color: rgba(52, 152, 219, 0.55);
+    box-shadow: inset 0 0 12px rgba(52, 152, 219, 0.12);
+  }
+}
+
+@keyframes waitingPulseDark {
+  0%, 100% {
+    border-color: #5c4033;
+    box-shadow: inset 0 0 0 rgba(201, 162, 39, 0);
+  }
+  50% {
+    border-color: rgba(201, 162, 39, 0.7);
+    box-shadow: inset 0 0 12px rgba(201, 162, 39, 0.12);
+  }
+}
+
 /* Лёгкое покачивание карточек */
 @keyframes float {
   0%, 100% {
@@ -211,8 +233,21 @@
 
 /* Убираем анимацию при наведении на пустой слот */
 .empty-slot:hover {
-  animation: none;
   opacity: 1;
+}
+
+.empty-slot:not(.filled) {
+  animation: waitingPulse 2.8s ease-in-out infinite;
+}
+
+.dark-theme .empty-slot:not(.filled) {
+  animation-name: waitingPulseDark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-slot:not(.filled) {
+    animation: none;
+  }
 }
 
 /* Фоновая анимация частиц для светлой темы */
