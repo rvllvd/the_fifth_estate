@@ -43,7 +43,19 @@ export function saveState(state: GameState): void {
 export function loadState(): GameState | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved) as GameState;
+    if (saved) {
+      const state = JSON.parse(saved) as GameState;
+      state.journalists = state.journalists.map((savedJournalist) => {
+        const journalist = AVAILABLE_JOURNALISTS.find(
+          (available) => available.id === savedJournalist.id,
+        );
+
+        return journalist
+          ? { ...journalist, newsId: savedJournalist.newsId }
+          : savedJournalist;
+      });
+      return state;
+    }
   } catch (e) {
     console.error("Ошибка загрузки:", e);
   }
