@@ -275,12 +275,8 @@ export default function App() {
       .map((id) => getNewsById(id))
       .filter((item): item is NewsItem => Boolean(item));
     if (availableNews.length === 0) {
-      initialState.rollCurrentNews();
-      if (useGameStore.getState().currentNewsIds.length === 0) {
-        setAutoPlayMessage("Автоигра остановлена: доступных новостей больше нет.");
-        setAutoPlayEnabled(false);
-        return;
-      }
+      initialState.rollCurrentNews(true);
+      setAutoPlayMessage("ИИ подбирает новую подборку новостей.");
       setAutoPlayStep((step) => step + 1);
       return;
     }
@@ -306,17 +302,24 @@ export default function App() {
     );
     const store = useGameStore.getState();
     for (const choice of plan.placements) {
-      if (!store.dropNews(choice.slot, choice.news, choice.journalistId)) {
+      const hasAssignedJournalist = Boolean(choice.journalistId);
+      if (
+        !store.dropNews(
+          choice.slot,
+          choice.news,
+          hasAssignedJournalist ? choice.journalistId : undefined,
+          !hasAssignedJournalist,
+        )
+      ) {
         const currentState = useGameStore.getState();
         for (const placed of currentState.placedNews) {
           if (!originalNewsIds.has(placed.newsId)) {
             currentState.removePlaced(placed.newsId);
           }
         }
-        setAutoPlayMessage(
-          "ИИ не смог собрать выпуск из доступных новостей и журналистов.",
-        );
-        setAutoPlayEnabled(false);
+        currentState.discardCurrentNews();
+        setAutoPlayMessage("ИИ пробует другую подборку новостей.");
+        setAutoPlayStep((step) => step + 1);
         return;
       }
     }
@@ -330,15 +333,18 @@ export default function App() {
       return;
     }
 
-    for (const placed of completedState.placedNews) {
-      if (!originalNewsIds.has(placed.newsId)) {
-        completedState.removePlaced(placed.newsId);
-      }
+    if (completedState.placedNews.length > 0) {
+      setAutoPlayMessage(
+        `ИИ добирает новости: ${completedState.placedNews.length} из ${GAME_BALANCE.articlesPerPublication}.`,
+      );
+      completedState.discardCurrentNews();
+      setAutoPlayStep((step) => step + 1);
+      return;
     }
-    setAutoPlayMessage(
-      "ИИ остановлен: не удалось собрать выпуск. Проверьте новости и состав редакции.",
-    );
-    setAutoPlayEnabled(false);
+
+    completedState.discardCurrentNews();
+    setAutoPlayMessage("ИИ пробует другую подборку новостей.");
+    setAutoPlayStep((step) => step + 1);
   }, [handlePublish]);
 
   const toggleAutoPlay = () => {

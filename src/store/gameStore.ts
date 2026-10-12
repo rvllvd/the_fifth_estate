@@ -33,13 +33,19 @@ import {
 
 interface GameStore extends GameState {
   // новости
-  rollCurrentNews: () => void;
+  rollCurrentNews: (allowUsedNews?: boolean) => void;
 
   // размещение
-  dropNews: (key: string, news: NewsItem, journalistId?: string) => boolean;
+  dropNews: (
+    key: string,
+    news: NewsItem,
+    journalistId?: string,
+    allowUnstaffed?: boolean,
+  ) => boolean;
   clickNews: (news: NewsItem) => void;
   removePlaced: (newsId: string) => void;
   clearNewspaper: () => void;
+  discardCurrentNews: () => void;
 
   // журналисты
   hireJournalist: (j: Journalist) => boolean;
@@ -61,24 +67,33 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   updateView: () => {
     const { journalists, placedNews } = get();
-
-    journalists.map((j) => (j.newsId = undefined));
-    // news.map((j) => (j.newsId = undefined));
-    placedNews.forEach(({ newsId }) => {
-      const news = NEWS_DATA.find((n) => n.id == newsId);
-
-      const journalist = journalists.find((j) => j.spec == news?.category);
-      if (journalist) journalist.newsId = newsId;
-      if (news && journalist) news.journalistId = journalist.id;
+    const assignments = new Map<string, string>();
+    for (const { newsId } of placedNews) {
+      const news = NEWS_DATA.find((item) => item.id === newsId);
+      if (!news) continue;
+      const journalist = journalists.find(
+        (member) =>
+          member.spec === news.category && !assignments.has(member.id),
+      );
+      if (journalist) assignments.set(journalist.id, newsId);
+    }
+    set({
+      journalists: journalists.map((journalist) => ({
+        ...journalist,
+        newsId: assignments.get(journalist.id),
+      })),
     });
   },
 
   // ── новости ──
-  rollCurrentNews: () => {
+  rollCurrentNews: (allowUsedNews = false) => {
     const { currentNewsIds, usedNewsIds } = get();
     if (currentNewsIds.length > 0) return;
 
-    const randomNews = getRandomNews(GAME_BALANCE.newsPerRoll, usedNewsIds);
+    let randomNews = getRandomNews(GAME_BALANCE.newsPerRoll, usedNewsIds);
+    if (randomNews.length === 0 && allowUsedNews) {
+      randomNews = getRandomNews(GAME_BALANCE.newsPerRoll);
+    }
     if (randomNews.length === 0) return;
 
     set({
@@ -88,7 +103,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── размещение ──
-  dropNews: (key, news, journalistId) => {
+  dropNews: (key, news, journalistId, allowUnstaffed = false) => {
     const { placedNews, journalists } = get();
     const freeJournalist = journalists.find(
       (j) =>
@@ -96,14 +111,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
         !j.newsId &&
         (!journalistId || j.id === journalistId),
     );
-    if (isSlotTaken(placedNews, key, news.id) || !freeJournalist) return false;
-
-    freeJournalist.newsId = news.id;
-    const news_source = NEWS_DATA.find((n) => n.id == news.id);
-    if (news_source) news_source.journalistId = freeJournalist.id;
+    if (
+      isSlotTaken(placedNews, key, news.id) ||
+      (!freeJournalist && !allowUnstaffed)
+    ) {
+      return false;
+    }
 
     const [tier, slot] = key.split("-").map(Number);
     set({
+      journalists: freeJournalist
+        ? journalists.map((journalist) =>
+            journalist.id === freeJournalist.id
+              ? { ...journalist, newsId: news.id }
+              : journalist,
+          )
+        : journalists,
       placedNews: [
         ...placedNews.filter((p) => p.newsId !== news.id),
         { newsId: news.id, tier, slot },
@@ -123,18 +146,47 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   removePlaced: (newsId) => {
-    const { updateView } = get();
-
-    set((prev) => ({
-      placedNews: prev.placedNews.filter((p) => p.newsId !== newsId),
-    }));
-    updateView();
+    const state = get();
+    const placedNews = state.placedNews.filter(
+      (placed) => placed.newsId !== newsId,
+    );
+    const assignments = new Map<string, string>();
+    for (const placed of placedNews) {
+      const news = NEWS_DATA.find((item) => item.id === placed.newsId);
+      if (!news) continue;
+      const journalist = state.journalists.find(
+        (member) =>
+          member.spec === news.category && !assignments.has(member.id),
+      );
+      if (journalist) assignments.set(journalist.id, placed.newsId);
+    }
+    set({
+      placedNews,
+      journalists: state.journalists.map((journalist) => ({
+        ...journalist,
+        newsId: assignments.get(journalist.id),
+      })),
+    });
   },
 
   clearNewspaper: () => {
-    set({ placedNews: [] });
-    const { updateView } = get();
-    updateView();
+    const { journalists } = get();
+    set({
+      placedNews: [],
+      journalists: journalists.map((journalist) => ({
+        ...journalist,
+        newsId: undefined,
+      })),
+    });
+  },
+
+  discardCurrentNews: () => {
+    const { currentNewsIds, usedNewsIds } = get();
+    set({
+      usedNewsIds: [...new Set([...usedNewsIds, ...currentNewsIds])],
+      currentNewsIds: [],
+      currentCategories: [],
+    });
   },
 
   // ── журналисты ──

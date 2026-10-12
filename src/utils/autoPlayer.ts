@@ -10,7 +10,7 @@ import { getCurrentPayroll, settleEconomy } from "./economy";
 
 export interface AutoTurnPlan {
   journalistToHire: Journalist | null;
-  placements: Array<{ news: NewsItem; slot: string; journalistId: string }>;
+  placements: Array<{ news: NewsItem; slot: string; journalistId?: string }>;
 }
 
 function evaluatePublication(
@@ -141,22 +141,39 @@ export function chooseAutoTurn(
           score: number;
         }
       | undefined;
+    let bestUnstaffedChoice:
+      | {
+          news: NewsItem;
+          slot: string;
+          score: number;
+        }
+      | undefined;
 
     for (const item of availableNews) {
       if (selected.some((choice) => choice.news.id === item.id)) continue;
       const matchingJournalists = journalists.filter(
         (member) => member.spec === item.category && !member.newsId,
       );
-      if (matchingJournalists.length === 0) continue;
 
-      for (const journalist of matchingJournalists) {
-        for (const slot of ALL_SLOTS) {
-          if (isSlotTaken(placements, slot, item.id)) continue;
-          const [tier, position] = slot.split("-").map(Number);
-          const hypotheticalPlacements = [
-            ...placements,
-            { newsId: item.id, tier, slot: position },
-          ];
+      for (const slot of ALL_SLOTS) {
+        if (isSlotTaken(placements, slot, item.id)) continue;
+        const [tier, position] = slot.split("-").map(Number);
+        const hypotheticalPlacements = [
+          ...placements,
+          { newsId: item.id, tier, slot: position },
+        ];
+
+        if (matchingJournalists.length === 0) {
+          const score =
+            evaluatePublication(state, hypotheticalPlacements, journalists) +
+            (Math.random() - 0.5) * GAME_BALANCE.autoPlay.randomness;
+          if (!bestUnstaffedChoice || score > bestUnstaffedChoice.score) {
+            bestUnstaffedChoice = { news: item, slot, score };
+          }
+          continue;
+        }
+
+        for (const journalist of matchingJournalists) {
           const hypotheticalJournalists = journalists.map((member) =>
             member.id === journalist.id
               ? { ...member, newsId: item.id }
@@ -182,23 +199,28 @@ export function chooseAutoTurn(
       }
     }
 
-    if (!bestChoice) break;
-    const [tier, position] = bestChoice.slot.split("-").map(Number);
+    const choice = bestChoice ?? bestUnstaffedChoice;
+    if (!choice) break;
+    const [tier, position] = choice.slot.split("-").map(Number);
     placements.push({
-      newsId: bestChoice.news.id,
+      newsId: choice.news.id,
       tier,
       slot: position,
     });
-    alreadySelected.add(bestChoice.news.id);
-    selected.push({
-      news: bestChoice.news,
-      slot: bestChoice.slot,
-      journalistId: bestChoice.journalistId,
-    });
-    const assigned = journalists.find(
-      (member) => member.id === bestChoice.journalistId,
-    );
-    if (assigned) assigned.newsId = bestChoice.news.id;
+    alreadySelected.add(choice.news.id);
+    if (bestChoice) {
+      selected.push({
+        news: choice.news,
+        slot: choice.slot,
+        journalistId: bestChoice.journalistId,
+      });
+      const assigned = journalists.find(
+        (member) => member.id === bestChoice.journalistId,
+      );
+      if (assigned) assigned.newsId = choice.news.id;
+    } else {
+      selected.push({ news: choice.news, slot: choice.slot });
+    }
   }
 
   return { journalistToHire, placements: selected };
