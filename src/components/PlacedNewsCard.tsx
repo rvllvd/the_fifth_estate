@@ -38,7 +38,6 @@ export default function PlacedNewsCard({
           ×
         </button>
       </div>
-      <div className="placed-news-content">{news.content}</div>
       <div className="placed-news-effects">
         {effects.map((e, i) => (
           <span key={i} className="effect">
@@ -53,6 +52,7 @@ export default function PlacedNewsCard({
       {contribution && (
         <NewsMetricBreakdown contribution={contribution} compact />
       )}
+      <div className="placed-news-content">{news.content}</div>
     </div>
   );
 }
