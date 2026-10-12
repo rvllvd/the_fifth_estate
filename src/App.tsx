@@ -7,7 +7,7 @@ import Newspaper from "./components/Newspaper";
 import MetricsModal from "./components/MetricsModal";
 import JournalistsModal from "./components/JournalistsModal";
 import AlertModal from "./components/AlertModal";
-import type { Metrics, NewsItem, PlacedNews } from "./types";
+import type { Metrics, NewsItem } from "./types";
 import { playSound } from "./utils/sounds";
 import { getNewsById } from "./data/news";
 import { AVAILABLE_JOURNALISTS } from "./data/journalists";
@@ -21,6 +21,7 @@ export default function App() {
 
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [showJournalistsModal, setShowJournalistsModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const openSettings = () => {
@@ -163,16 +164,11 @@ export default function App() {
       </div>
       <div id="app">
         <TopPanel
-                  metrics={{
-                    influence,
-                    credibility,
-                    reputation: reputation,
-                    readership,
-                  }}
-                  onNewGame={handleNewGame}
-                  preview={preview}
-                  onOpenSettings={openSettings}
-                />
+          metrics={{ influence, credibility, reputation, readership }}
+          onNewGame={handleNewGame}
+          preview={preview}
+          onOpenSettings={openSettings}
+        />
         <div id="main-content">
           <LeftPanel
             news={filteredNews}
@@ -208,6 +204,14 @@ export default function App() {
 
       {showSettingsModal && (
         <SettingsModal visible={showSettingsModal} onClose={closeSettings} onToggleTheme={toggleTheme} />
+      )}
+
+      {showAlertModal && (
+        <AlertModal
+          text="Вы проиграли"
+          onClose={() => setShowAlertModal(false)}
+          onNewGame={handleNewGame}
+        />
       )}
     </>
   );

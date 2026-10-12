@@ -35,7 +35,7 @@ export interface Journalist {
   id: string;
   name: string;
   role: string;
-  bonus?: Metrics;
+  bonus?: Metrics | ((current: PlacedNews, placedNews: PlacedNews[]) => Metrics);
   cost: number;
   spec?: string;
   newsId?: string;
