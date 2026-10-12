@@ -24,21 +24,42 @@ export default function SettingsModal({ visible, onClose, onToggleTheme }: Props
   if (!visible) return null;
 
   return (
-    <div className="modal show">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2>Настройки</h2>
-          <button className="close-modal-btn" onClick={onClose}>×</button>
+    <div className="settings-modal modal show">
+      <div
+        className="settings-modal-content modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+      >
+        <div className="settings-modal-header modal-header">
+          <h2 id="settings-modal-title">Настройки</h2>
+          <button
+            className="close-modal-btn"
+            type="button"
+            onClick={onClose}
+            aria-label="Закрыть настройки"
+          >
+            ×
+          </button>
         </div>
-        <div className="modal-section">
-          <label style={{ cursor: 'pointer' }}>
-            <input type="checkbox" checked={enabled} onChange={toggle} />
-            {' '}Анимация танцующих букв
-          </label>
-        </div>
-        <div className="modal-section">
-          <button className="right-btn" onClick={onToggleTheme}>Сменить тему</button>
-        </div>
+        <section className="settings-options" aria-label="Параметры">
+          <div className="settings-option">
+            <label className="settings-animation-control">
+              <span>Анимация танцующих букв</span>
+              <input type="checkbox" checked={enabled} onChange={toggle} />
+            </label>
+          </div>
+          <div className="settings-option">
+            <span className="settings-option-title">Тема оформления</span>
+            <button
+              className="settings-theme-btn right-btn"
+              type="button"
+              onClick={onToggleTheme}
+            >
+              Сменить тему
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

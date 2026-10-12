@@ -409,6 +409,20 @@
   border-bottom-color: #5c4033;
 }
 
+.dark-theme .settings-option + .settings-option {
+  border-top-color: rgba(201, 162, 39, 0.28);
+}
+
+.dark-theme .settings-option-title,
+.dark-theme .settings-animation-control span {
+  color: #e8d5b0;
+  font-family: 'Cinzel', serif;
+}
+
+.dark-theme .settings-animation-control input {
+  accent-color: #c9a227;
+}
+
 .dark-theme .modal-header h2 {
   color: #c9a227;
   font-family: 'Cinzel', serif;
@@ -648,4 +662,3 @@
 .dark-theme .glow-effect {
   animation: candle-flicker 3s ease-in-out infinite;
 }
-

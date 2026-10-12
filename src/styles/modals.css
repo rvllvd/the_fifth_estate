@@ -142,6 +142,74 @@
   transform: scale(1);
 }
 
+.settings-modal-content {
+  max-width: 460px;
+}
+
+.settings-modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 56px;
+}
+
+.settings-modal-header .close-modal-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.settings-modal-header .close-modal-btn:hover {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.settings-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 22px 12px;
+  text-align: center;
+}
+
+.settings-option + .settings-option {
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.settings-animation-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.settings-option-title,
+.settings-animation-control span {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.settings-animation-control input {
+  width: 20px;
+  height: 20px;
+  accent-color: #c0392b;
+  cursor: pointer;
+}
+
+.settings-theme-btn {
+  min-width: 190px;
+}
+
 .modal-header {
 
   justify-content: space-between;
