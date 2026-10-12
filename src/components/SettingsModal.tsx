@@ -106,9 +106,7 @@ export default function SettingsModal({
                 step="0.01"
                 value={soundEffectsVolume}
                 onChange={(event) =>
-                  onSoundEffectsVolumeChange(
-                    Number(event.currentTarget.value),
-                  )
+                  onSoundEffectsVolumeChange(Number(event.currentTarget.value))
                 }
                 disabled={!soundEffectsEnabled}
                 aria-label="Громкость звуковых эффектов"
@@ -116,7 +114,7 @@ export default function SettingsModal({
             </label>
           </div>
           <div className="settings-option">
-            <span className="settings-option-title">Тема оформления</span>
+            {/* <span className="settings-option-title">Тема оформления</span> */}
             <button
               className="settings-theme-btn right-btn"
               type="button"
@@ -126,7 +124,7 @@ export default function SettingsModal({
             </button>
           </div>
           <div className="settings-option">
-            <span className="settings-option-title">Сброс настроек</span>
+            {/* <span className="settings-option-title">Сброс настроек</span> */}
             <button
               className="settings-reset-btn right-btn"
               type="button"
