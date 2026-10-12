@@ -180,9 +180,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const now = Date.now();
     const currentGameTime =
       state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
+    const publicationDuration =
+      (50 + Math.floor(Math.random() * 31)) * 60_000;
     set({
       ...applyPublication(state, result),
-      gameTime: currentGameTime + 3_600_000,
+      gameTime: currentGameTime + publicationDuration,
       gameTimeUpdatedAt: now,
     });
   },

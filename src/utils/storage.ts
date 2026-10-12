@@ -3,7 +3,9 @@ import type { GameState } from "../types";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 
 export const STORAGE_KEY = "the_fifth_estate_save";
-export const START_GAME_TIME = Date.UTC(1600, 0, 30, 12, 46, 22, 0); // 30 января 1600 года
+export const START_GAME_TIME = Date.UTC(1600, 0, 30, 9);
+const START_WORKING_SECOND = 9 * 60 * 60;
+const END_WORKING_SECOND = 18 * 60 * 60;
 
 const INITIAL_STATE: GameState = {
   influence: 50,
@@ -25,7 +27,17 @@ const INITIAL_STATE: GameState = {
 };
 
 export function getInitialState(): GameState {
-  return { ...INITIAL_STATE, gameTimeUpdatedAt: Date.now() };
+  const secondsAfterMidnight =
+    START_WORKING_SECOND +
+    Math.floor(Math.random() * (END_WORKING_SECOND - START_WORKING_SECOND + 1));
+
+  return {
+    ...INITIAL_STATE,
+    gameTime:
+      START_GAME_TIME +
+      (secondsAfterMidnight - START_WORKING_SECOND) * 1000,
+    gameTimeUpdatedAt: Date.now(),
+  };
 }
 
 export function createInitialState(): GameState {

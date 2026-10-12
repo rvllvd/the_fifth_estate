@@ -3,9 +3,6 @@ import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
 
 const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
   second: "2-digit",
