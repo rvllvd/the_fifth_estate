@@ -59,7 +59,13 @@
   padding: 12px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.metric-change.is-scoring {
+  background-color: rgba(255, 215, 0, 0.16);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.18);
+  transform: translateX(4px);
 }
 
 .metric-icon {
@@ -91,6 +97,10 @@
   transform: scale(1.2);
 }
 
+.metric-change.is-scoring .metric-value {
+  animation: tallyPulse 0.42s ease-out both;
+}
+
 .metric-change.animate .metric-value {
   animation: valueChange 0.5s ease;
 }
@@ -107,6 +117,16 @@
   border-top: 1px solid rgba(255, 255, 255, 0.14);
   color: #fff;
   font-size: 12px;
+  animation: contributionDeal 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.metrics-news-contribution.is-active {
+  padding-left: 10px;
+  border-top-color: #ffd700;
+  border-left: 3px solid #ffd700;
+  background: rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.12);
 }
 
 .metrics-news-contribution > strong {
@@ -129,6 +149,35 @@
   0% { transform: scale(1); }
   50% { transform: scale(1.3); }
   100% { transform: scale(1); }
+}
+
+@keyframes contributionDeal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tallyPulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.35); text-shadow: 0 0 14px currentColor; }
+  100% { transform: scale(1.2); text-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-change,
+  .metrics-news-contribution {
+    transition: none;
+    animation: none;
+  }
+
+  .metric-change.is-scoring .metric-value {
+    animation: none;
+  }
 }
 
 /* Модальное окно менеджмента сотрудников */
