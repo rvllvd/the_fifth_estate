@@ -4,6 +4,7 @@ import { useGameStore } from "../store/gameStore";
 // import { useNewsStore } from "../store";
 import type { NewsItem } from "../types";
 // import PlacedNewsCard from "./PlacedNewsCard";
+import DancingText from "./DancingText";
 
 interface Props {
   news: NewsItem;
@@ -44,7 +45,9 @@ export default function NewsCard({ news, placed, active = true, style }: Props) 
       //   style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
     >
       <div className="news-header">
-        <span className="news-title">{news.title}</span>
+        <span className="news-title">
+          <DancingText text={news.title} />
+        </span>
         <span className="news-tag">{news.category}</span>
       </div>
       <div className="news-content">{news.content}</div>

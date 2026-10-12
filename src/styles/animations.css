@@ -260,6 +260,46 @@
   background: rgba(201, 162, 39, 0.3);
 }
 
+/* Танцующие буквы */
+@keyframes dance {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+}
+
+@keyframes waveLetter {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.dancing-text {
+  display: inline-block;
+}
+
+.dancing-char {
+  display: inline-block;
+  animation: waveLetter 1.5s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.dancing-char:hover {
+  animation: dance 0.5s ease-in-out infinite;
+  transform: scale(1.2);
+}
+
 /* Анимация для кнопки переключения темы - убрал, чтобы не мерцало */
 /* #theme-toggle-btn {
   animation: glow 3s ease-in-out infinite;

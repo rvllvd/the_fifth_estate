@@ -2,6 +2,7 @@ import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import { getJournalistById } from "../data/journalists";
 import type { NewsItem } from "../types";
 import { getTierMultiplier } from "../utils/game";
+import DancingText from "./DancingText";
 
 interface Props {
   news: NewsItem;
@@ -24,7 +25,9 @@ export default function PlacedNewsCard({ news, tier, onRemove }: Props) {
   return (
     <div className="placed-news" data-news-id={news.id} data-tier={tier}>
       <div className="placed-news-header">
-        <span className="placed-news-title">{news.title}</span>
+        <span className="placed-news-title">
+          <DancingText text={news.title} />
+        </span>
         <button className="remove-news-btn" onClick={onRemove}>
           ×
         </button>

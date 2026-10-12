@@ -1,5 +1,6 @@
 // // import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import type { Journalist } from "../types";
+import DancingText from "./DancingText";
 
 interface Props {
   journalist: Journalist;
@@ -15,7 +16,9 @@ export default function StaffCard({ journalist, style }: Props) {
       style={style}
     >
       <div className="staff-info">
-        <span className="staff-name">{journalist.name}</span>
+        <span className="staff-name">
+          <DancingText text={journalist.name} />
+        </span>
         <span className="staff-role">{journalist.role}</span>
       </div>
       <div className="staff-stats">
