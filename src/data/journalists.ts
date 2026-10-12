@@ -7,24 +7,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Иван Петров",
     role: "Политический обозреватель",
     spec: "politics",
-    desc: "Новости с одинаковыми темами переменожаются между собой",
+    desc: "Усиливает новости материалами той же категории",
     bonus: JOURNALIST_BONUSES.sameCategorySynergy,
-    // bonus: (placed_news) => {
-    //   let collect = new Set<PlacedNews[]>();
-    //   placed_news.forEach(n => {
-    //     const news = getNewsById(n.newsId)
-
-    //     if (!news) throw new Error(`Не найден айдишник у news ${n}`);
-    //     const news_filtred = placed_news.filter(n2 => {
-    //       const news2 = getNewsById(n2.newsId)
-    //       if (!news2) throw new Error(`Не найден айдишник у news ${n2}`);
-    //       return news2.id !== news.id && news2.category == news.category
-
-    //     });
-    //     if (news_filtred.length > 0) collect.add(news_filtred.sort())
-    //   })
-    //   collect.map
-    // },
     cost: 50,
   },
   {
@@ -32,7 +16,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Мария Сидорова",
     role: "Спортивный журналист",
     spec: "sport",
-    // bonus: { influence: 6, credibility: 0, reputation: -4, readership: 0 },
+    desc: "В вечернем выпуске спортивные новости привлекают аудиторию",
+    bonus: JOURNALIST_BONUSES.eveningSports,
     cost: 40,
   },
   {
@@ -40,7 +25,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Алексей Козлов",
     role: "Технологический обозреватель",
     spec: "technology",
-    // bonus: { influence: 7, credibility: 0, reputation: -6, readership: 0 },
+    desc: "Коллеги по выпуску помогают укрепить доверие",
+    bonus: JOURNALIST_BONUSES.editorialTeamwork,
     cost: 60,
   },
   {
@@ -48,7 +34,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Елена Смирнова",
     role: "Культурный критик",
     spec: "culture",
-    // bonus: { influence: 5, credibility: 3, reputation: -4, readership: 2 },
+    desc: "Культурные новости помогают вернуть аудиторию при низком числе читателей",
+    bonus: JOURNALIST_BONUSES.audienceRecovery,
     cost: 40,
   },
   {
@@ -56,7 +43,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Дмитрий Волков",
     role: "Экономический аналитик",
     spec: "economy",
-    // bonus: { influence: 4, credibility: 5, reputation: -3, readership: 1 },
+    desc: "Поддерживает доверие, пока оно не упало слишком низко",
+    bonus: JOURNALIST_BONUSES.publicTrust,
     cost: 30,
   },
   {
@@ -64,7 +52,6 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Анна Кузнецова",
     role: "Социальный обозреватель",
     spec: "society",
-    // bonus: { influence: 6, credibility: 2, reputation: -5, readership: 3 },
     cost: 50,
   },
   {
@@ -72,7 +59,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Сергей Морозов",
     role: "Криминальный репортёр",
     spec: "incident",
-    // bonus: { influence: 10, credibility: -2, reputation: -7, readership: 5 },
+    desc: "Громкие происшествия увеличивают влияние и читательский интерес",
+    bonus: JOURNALIST_BONUSES.sensationalIncident,
     cost: 70,
   },
   {
@@ -80,7 +68,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Ольга Фёдорова",
     role: "Образовательный журналист",
     spec: "education",
-    // bonus: { influence: 3, credibility: 8, reputation: -2, readership: 0 },
+    desc: "Тщательная проверка научных и образовательных материалов укрепляет доверие",
+    bonus: JOURNALIST_BONUSES.carefulSourcing,
     cost: 20,
   },
   {
@@ -88,7 +77,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Павел Иванов",
     role: "Международный корреспондент",
     spec: "world",
-    // bonus: { influence: 9, credibility: 4, reputation: -8, readership: 2 },
+    desc: "Разнообразие тем выпуска усиливает влияние международных новостей",
+    bonus: JOURNALIST_BONUSES.diverseNewsroom,
     cost: 80,
   },
   {
@@ -96,7 +86,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Наталья Попова",
     role: "Медицинский обозреватель",
     spec: "health",
-    // bonus: { influence: 4, credibility: 6, reputation: -3, readership: 1 },
+    desc: "Тщательная проверка медицинских материалов укрепляет доверие",
+    bonus: JOURNALIST_BONUSES.carefulSourcing,
     cost: 30,
   },
   {
@@ -104,7 +95,6 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Виктор Соколов",
     role: "Спортивный комментатор",
     spec: "sport",
-    // bonus: { influence: 5, credibility: 1, reputation: -4, readership: 4 },
     cost: 40,
   },
   {
@@ -112,7 +102,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Екатерина Николаева",
     role: "Технологический блогер",
     spec: "technology",
-    // bonus: { influence: 7, credibility: 2, reputation: -5, readership: 3 },
+    desc: "Коллеги по выпуску помогают укрепить доверие",
+    bonus: JOURNALIST_BONUSES.editorialTeamwork,
     cost: 50,
   },
   {
@@ -120,7 +111,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Андрей Романов",
     role: "Политический аналитик",
     spec: "politics",
-    // bonus: { influence: 9, credibility: 3, reputation: -6, readership: 1 },
+    desc: "Утренний выпуск получает дополнительное доверие читателей",
+    bonus: JOURNALIST_BONUSES.morningEdition,
     cost: 60,
   },
   {
@@ -128,7 +120,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Марина Алексеева",
     role: "Экологический журналист",
     spec: "ecology",
-    // bonus: { influence: 6, credibility: 5, reputation: -4, readership: 2 },
+    desc: "Поддерживает доверие, пока оно не упало слишком низко",
+    bonus: JOURNALIST_BONUSES.publicTrust,
     cost: 40,
   },
   {
@@ -136,7 +129,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Игорь Лебедев",
     role: "Финансовый обозреватель",
     spec: "finance",
-    // bonus: { influence: 5, credibility: 7, reputation: -3, readership: 0 },
+    desc: "Сильное влияние редакции укрепляет финансовые материалы",
+    bonus: JOURNALIST_BONUSES.marketAuthority,
     cost: 30,
   },
   {
@@ -144,7 +138,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Татьяна Васильева",
     role: "Развлекательный журналист",
     spec: "cinema",
-    // bonus: { influence: 4, credibility: 0, reputation: -3, readership: 6 },
+    desc: "Кинопремьеры выходного дня привлекают читателей",
+    bonus: JOURNALIST_BONUSES.weekendPremiere,
     cost: 30,
   },
   {
@@ -152,7 +147,8 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Максим Голубев",
     role: "Научный обозреватель",
     spec: "science",
-    // bonus: { influence: 3, credibility: 9, reputation: -2, readership: 0 },
+    desc: "Тщательная проверка научных материалов укрепляет доверие",
+    bonus: JOURNALIST_BONUSES.carefulSourcing,
     cost: 20,
   },
   {
@@ -160,7 +156,6 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Юлия Семёнова",
     role: "Общественный деятель",
     spec: "society",
-    // bonus: { influence: 7, credibility: 4, reputation: -5, readership: 2 },
     cost: 50,
   },
   {
@@ -168,7 +163,6 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Константин Борисов",
     role: "Бизнес-журналист",
     spec: "business",
-    // bonus: { influence: 6, credibility: 6, reputation: -4, readership: 1 },
     cost: 40,
   },
   {
@@ -176,7 +170,6 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     name: "Вероника Михайлова",
     role: "Лайфстайл редактор",
     spec: "fashion",
-    // bonus: { influence: 5, credibility: 2, reputation: -3, readership: 5 },
     cost: 30,
   },
 ];

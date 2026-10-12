@@ -87,6 +87,9 @@ export function calculateNewsContributions(
           journalist,
           news,
           relatedNews,
+          placedNewsItems: newsItems.filter(
+            (item): item is NewsItem => Boolean(item),
+          ),
           placedNews,
           journalists,
           game: { ...game, placedNews, journalists },

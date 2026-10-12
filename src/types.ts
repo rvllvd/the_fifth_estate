@@ -34,6 +34,7 @@ export interface JournalistBonusContext {
   journalist: Journalist;
   news: NewsItem;
   relatedNews: NewsItem[];
+  placedNewsItems: NewsItem[];
   placedNews: PlacedNews[];
   journalists: Journalist[];
   game: GameState;
