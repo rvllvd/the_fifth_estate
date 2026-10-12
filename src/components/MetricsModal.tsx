@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Metrics } from "../types";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { entries } from "../helpers/object";
@@ -16,6 +16,8 @@ export default function MetricsModal({
   autoCloseMs = 2000,
 }: Props) {
   const [visible, setVisible] = useState(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [displayed, setDisplayed] = useState<Metrics>(() =>
     metricKeys().reduce((acc, key) => {
       acc[key] = 0;
@@ -60,9 +62,9 @@ export default function MetricsModal({
   // Автозакрытие
   useEffect(() => {
     if (!autoCloseMs) return;
-    const t = setTimeout(onClose, autoCloseMs);
+    const t = setTimeout(() => onCloseRef.current(), autoCloseMs);
     return () => clearTimeout(t);
-  }, [autoCloseMs, onClose]);
+  }, [autoCloseMs]);
 
   return (
     <div className={`metrics-modal ${visible ? "show" : ""}`}>
