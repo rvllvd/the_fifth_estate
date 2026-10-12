@@ -1,4 +1,5 @@
 // // // // import { METRIC_LABELS, metricKeys } from "../constants/stats";
+import { getNewsCategoryLabel } from "../constants/categories";
 import type { Journalist } from "../types";
 
 interface Props {
@@ -70,7 +71,9 @@ export default function JournalistsModal({
                     <div className="spec-row">
                       <div className="stat-row">
                         <span className="stat-label">Специализация</span>
-                        <span className="stat-value">{j.spec || "-"}</span>
+                        <span className="stat-value">
+                          {j.spec ? getNewsCategoryLabel(j.spec) : "-"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -126,7 +129,9 @@ export default function JournalistsModal({
                     <div className="spec-row">
                       <div className="stat-row">
                         <span className="stat-label">Специализация</span>
-                        <span className="stat-value">{j.spec || "-"}</span>
+                        <span className="stat-value">
+                          {j.spec ? getNewsCategoryLabel(j.spec) : "-"}
+                        </span>
                       </div>
                     </div>
                   </div>
