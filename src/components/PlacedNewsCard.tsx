@@ -23,7 +23,8 @@ export default function PlacedNewsCard({
     const icon = STAT_ICONS[key];
     const label = STAT_LABELS[key];
     return {
-      label: `${icon} ${label}`,
+      // label: `${icon} ${label}`,
+      label: icon,
       value: Math.round(news.effects[key] * m),
     };
   });
@@ -41,7 +42,8 @@ export default function PlacedNewsCard({
       <div className="placed-news-effects">
         {effects.map((e, i) => (
           <span key={i} className="effect">
-            {e.label}: {e.value}
+            {e.label} {e.value > 0 ? "+" : ""}
+            {e.value}
           </span>
         ))}
         <span className="placed-news-author">

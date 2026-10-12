@@ -3,7 +3,11 @@ import type { GameState, NewsItem, PlacedNews } from "../types";
 // import { playSound } from "../utils/sounds.ts";
 import PlacedNewsCard from "./PlacedNewsCard";
 import { calculateNewsContributions } from "../utils/game";
-import { getTierMultiplier } from "../constants/global";
+import {
+  GAME_BALANCE,
+  getColumns,
+  getTierMultiplier,
+} from "../constants/global";
 
 interface Props {
   tier: number;
@@ -86,8 +90,8 @@ export default function NewspaperColumn({
                 />
               ) : (
                 <div className="slot-placeholder">
-                  <p>Перетащите новость сюда</p>
-                  <p>Колонка {["первая", "вторая", "третья"][tier - 1]}</p>
+                  <p>Место для новости</p>
+                  <p>{getColumns(tier).title}</p>
                   {getTierMultiplier(tier) !== 1 ? (
                     <p>Множетель {getTierMultiplier(tier)}X</p>
                   ) : (

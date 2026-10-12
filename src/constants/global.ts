@@ -104,6 +104,9 @@ export const ZERO_METRICS: Metrics = {
   loyalty: 0,
 };
 
+export const getColumns = (tier: number) =>
+  GAME_BALANCE.columns[tier as keyof typeof GAME_BALANCE.columns];
+
 export const GAME_BALANCE = {
   maxTurns: 40,
   articlesPerPublication: 3,
@@ -111,9 +114,9 @@ export const GAME_BALANCE = {
   initialJournalists: 3,
   maximumJournalists: 6,
   columns: {
-    1: { title: "Главная полоса", slots: 1, multiplier: 2 },
+    1: { title: "Главная полоса", slots: 2, multiplier: 2 },
     2: { title: "Вторая полоса", slots: 2, multiplier: 1 },
-    3: { title: "Третья полоса", slots: 3, multiplier: 0.5 },
+    3: { title: "Третья полоса", slots: 2, multiplier: 0.5 },
   },
   initialReaders: 13,
   initialMoney: 3000,
@@ -272,10 +275,7 @@ function loadSavedGlobalConfig(): void {
     const config: unknown = JSON.parse(saved);
     if (!isConfigRecord(config)) return;
 
-    mergeKnownConfig(
-      METRIC_DEFINITIONS as ConfigRecord,
-      config.metrics,
-    );
+    mergeKnownConfig(METRIC_DEFINITIONS as ConfigRecord, config.metrics);
     mergeKnownConfig(GAME_BALANCE as ConfigRecord, config.game);
     mergeKnownConfig(NEWS_EFFECT_BALANCE as ConfigRecord, config.news);
   } catch (error) {
@@ -312,10 +312,7 @@ export function clampMetric(value: number, key?: keyof Metrics): number {
 }
 
 export function getTierMultiplier(tier: number): number {
-  return (
-    GAME_BALANCE.columns[tier as keyof typeof GAME_BALANCE.columns]
-      ?.multiplier ?? GAME_BALANCE.columns[3].multiplier
-  );
+  return getColumns(tier)?.multiplier ?? GAME_BALANCE.columns[3].multiplier;
 }
 
 export function calculateAudienceChange(
@@ -353,21 +350,19 @@ export function calculateAudienceChange(
 
   const metricDrivenChange =
     result.loyalty * weights.loyaltyEffect +
-      result.influence * weights.influenceEffect +
-      result.credibility * weights.credibilityEffect +
-      result.reputation * weights.reputationEffect +
-      (editorialQuality - weights.editorialQualityBaseline) *
-        weights.qualityEffect +
-      (normalizeMetric("loyalty", finalMetrics.loyalty) -
-        weights.loyaltyBaseline) *
-        weights.loyaltyLevelScale *
-        weights.loyaltyLevelEffect;
+    result.influence * weights.influenceEffect +
+    result.credibility * weights.credibilityEffect +
+    result.reputation * weights.reputationEffect +
+    (editorialQuality - weights.editorialQualityBaseline) *
+      weights.qualityEffect +
+    (normalizeMetric("loyalty", finalMetrics.loyalty) -
+      weights.loyaltyBaseline) *
+      weights.loyaltyLevelScale *
+      weights.loyaltyLevelEffect;
   const readershipMultiplier =
     // Stronger loyalty campaigns compound with the size of the existing audience.
     1 +
-    Math.log2(
-      1 + Math.max(0, currentReaders) / GAME_BALANCE.initialReaders,
-    ) *
+    Math.log2(1 + Math.max(0, currentReaders) / GAME_BALANCE.initialReaders) *
       weights.readershipGrowthEffect;
 
   return Math.round(metricDrivenChange * readershipMultiplier);

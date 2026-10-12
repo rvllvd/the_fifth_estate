@@ -142,10 +142,9 @@
 }
 
 /* Активные сотрудники - используем box-shadow через CSS вместо анимации */
-.staff-card.active {
-  /* animation: none; */
-  box-shadow: 0 0 15px rgba(201, 162, 39, 0.5), inset 0 0 10px rgba(201, 162, 39, 0.2);
-}
+// .staff-card.active {
+//   animation: none; 
+// }
 
 /* Анимация прогресс-баров при изменении */
 .progress-fill {
