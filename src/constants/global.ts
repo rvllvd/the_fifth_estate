@@ -1,5 +1,61 @@
 import type { Metrics } from "../types";
 
+export const GLOBAL_CONFIG_STORAGE_KEY = "the_fifth_estate_dev_config";
+
+type ConfigRecord = Record<string, unknown>;
+
+function isConfigRecord(value: unknown): value is ConfigRecord {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function mergeKnownConfig(target: ConfigRecord, source: unknown): void {
+  if (!isConfigRecord(source)) return;
+
+  for (const [key, value] of Object.entries(source)) {
+    if (!Object.prototype.hasOwnProperty.call(target, key)) continue;
+
+    const current = target[key];
+    if (isConfigRecord(current)) {
+      mergeKnownConfig(current, value);
+    } else if (Array.isArray(current) && Array.isArray(value)) {
+      const expectedType = typeof current[0];
+      if (
+        value.every(
+          (item) =>
+            typeof item === expectedType &&
+            (typeof item !== "number" || Number.isFinite(item)),
+        )
+      ) {
+        target[key] = value;
+      }
+    } else if (
+      typeof current === typeof value &&
+      (typeof value !== "number" || Number.isFinite(value))
+    ) {
+      target[key] = value;
+    }
+  }
+}
+
+export interface GlobalConfigSnapshot {
+  metrics: typeof METRIC_DEFINITIONS;
+  game: typeof GAME_BALANCE;
+}
+
+export function getGlobalConfigSnapshot(): GlobalConfigSnapshot {
+  return JSON.parse(
+    JSON.stringify({ metrics: METRIC_DEFINITIONS, game: GAME_BALANCE }),
+  ) as GlobalConfigSnapshot;
+}
+
+export function saveGlobalConfig(config: unknown): void {
+  localStorage.setItem(GLOBAL_CONFIG_STORAGE_KEY, JSON.stringify(config));
+}
+
+export function resetGlobalConfig(): void {
+  localStorage.removeItem(GLOBAL_CONFIG_STORAGE_KEY);
+}
+
 export const METRIC_DEFINITIONS = {
   influence: {
     label: "Влияние",
@@ -29,19 +85,12 @@ export const METRIC_DEFINITIONS = {
     min: 0,
     max: 100,
   },
-} as const satisfies Record<
+} satisfies Record<
   keyof Metrics,
   { label: string; icon: string; initial: number; min: number; max: number }
 >;
 
 export const METRIC_KEYS = Object.keys(METRIC_DEFINITIONS) as (keyof Metrics)[];
-
-export const INITIAL_METRICS: Metrics = {
-  influence: METRIC_DEFINITIONS.influence.initial,
-  credibility: METRIC_DEFINITIONS.credibility.initial,
-  reputation: METRIC_DEFINITIONS.reputation.initial,
-  loyalty: METRIC_DEFINITIONS.loyalty.initial,
-};
 
 export const ZERO_METRICS: Metrics = {
   influence: 0,
@@ -49,9 +98,6 @@ export const ZERO_METRICS: Metrics = {
   reputation: 0,
   loyalty: 0,
 };
-
-export const MIN_VALUE_STAT = METRIC_DEFINITIONS.influence.min;
-export const MAX_VALUE_STAT = METRIC_DEFINITIONS.influence.max;
 
 export const GAME_BALANCE = {
   maxTurns: 20,
@@ -160,7 +206,37 @@ export const GAME_BALANCE = {
   },
   publicationTimeAdvanceMinutes: { min: 50, max: 80 },
   economySaveVersion: 1,
-} as const;
+};
+
+function loadSavedGlobalConfig(): void {
+  try {
+    const saved = localStorage.getItem(GLOBAL_CONFIG_STORAGE_KEY);
+    if (!saved) return;
+
+    const config: unknown = JSON.parse(saved);
+    if (!isConfigRecord(config)) return;
+
+    mergeKnownConfig(
+      METRIC_DEFINITIONS as ConfigRecord,
+      config.metrics,
+    );
+    mergeKnownConfig(GAME_BALANCE as ConfigRecord, config.game);
+  } catch (error) {
+    console.error("Не удалось загрузить dev-конфигурацию игры:", error);
+  }
+}
+
+loadSavedGlobalConfig();
+
+export const INITIAL_METRICS: Metrics = {
+  influence: METRIC_DEFINITIONS.influence.initial,
+  credibility: METRIC_DEFINITIONS.credibility.initial,
+  reputation: METRIC_DEFINITIONS.reputation.initial,
+  loyalty: METRIC_DEFINITIONS.loyalty.initial,
+};
+
+export const MIN_VALUE_STAT = METRIC_DEFINITIONS.influence.min;
+export const MAX_VALUE_STAT = METRIC_DEFINITIONS.influence.max;
 
 export const INITIAL_READERS = GAME_BALANCE.initialReaders;
 export const INITIAL_MONEY = GAME_BALANCE.initialMoney;

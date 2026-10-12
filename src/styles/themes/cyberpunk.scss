@@ -146,6 +146,28 @@
     color: #00f0ff;
     text-shadow: 0 0 10px rgba(0, 240, 255, 0.45);
   }
+  .game-config-group {
+    border-color: rgba(0, 240, 255, 0.28);
+  }
+  .game-config-group legend {
+    color: #00f0ff;
+  }
+  .game-config-field,
+  .game-config-readonly,
+  .game-config-notice {
+    color: #d8faff;
+  }
+  .game-config-field input {
+    border-color: #34546b;
+    background: #0b1020;
+    color: #e8faff;
+  }
+  .game-config-field input:focus-visible {
+    outline-color: #ff2bd6;
+  }
+  .game-config-error {
+    color: #ff587d;
+  }
   .settings-option-title,
   .settings-animation-control span,
   .settings-theme-control {

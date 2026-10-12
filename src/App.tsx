@@ -18,6 +18,7 @@ import { useGameStore, selectCanPublish } from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
+import GameConfigModal from "./components/GameConfigModal";
 import { setSoundEffectsSettings } from "./utils/sounds";
 import { getEconomyDefeatDescriptions } from "./constants/economy";
 import { getCurrentPayroll, settleEconomy } from "./utils/economy";
@@ -34,6 +35,7 @@ export default function App() {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
+  const [showGameConfigModal, setShowGameConfigModal] = useState(false);
   const [musicEnabled, setMusicEnabled] = useState(
     () => localStorage.getItem("backgroundMusicEnabled") !== "false",
   );
@@ -288,6 +290,8 @@ export default function App() {
           readerChangePreview={economyPreview?.readerChange ?? null}
           moneyChangePreview={economyPreview?.moneyChange ?? null}
           payroll={getCurrentPayroll(journalists)}
+          showDeveloperTools={import.meta.env.DEV}
+          onOpenGameConfig={() => setShowGameConfigModal(true)}
           onOpenStatistics={() => setShowStatisticsModal(true)}
           onOpenSettings={openSettings}
         />
@@ -359,6 +363,10 @@ export default function App() {
           history={publicationHistory}
           onClose={() => setShowStatisticsModal(false)}
         />
+      )}
+
+      {import.meta.env.DEV && showGameConfigModal && (
+        <GameConfigModal onClose={() => setShowGameConfigModal(false)} />
       )}
 
       {showAlertModal && (

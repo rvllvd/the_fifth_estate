@@ -22,6 +22,8 @@ interface Props {
   readerChangePreview: number | null;
   moneyChangePreview: number | null;
   payroll: number;
+  showDeveloperTools: boolean;
+  onOpenGameConfig: () => void;
   onOpenStatistics: () => void;
   onOpenSettings: () => void;
 }
@@ -36,6 +38,8 @@ export default function TopPanel({
   readerChangePreview,
   moneyChangePreview,
   payroll,
+  showDeveloperTools,
+  onOpenGameConfig,
   onOpenStatistics,
   onOpenSettings,
 }: Props) {
@@ -127,6 +131,15 @@ export default function TopPanel({
         {/* <button className="right-btn" id="upgrade-btn">
           Улучшения
         </button> */}
+        {showDeveloperTools && (
+          <button
+            className="right-btn"
+            id="game-config-btn"
+            onClick={onOpenGameConfig}
+          >
+            Настройка игры
+          </button>
+        )}
         <button className="right-btn" id="stat-btn" onClick={onOpenStatistics}>
           Статистика
         </button>

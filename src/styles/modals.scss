@@ -362,6 +362,149 @@
   width: min(900px, 92vw);
 }
 
+.game-config-modal {
+  z-index: 1100;
+}
+
+.game-config-modal-content {
+  width: min(1100px, 94vw);
+  max-width: 1100px;
+}
+
+.game-config-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 56px;
+}
+
+.game-config-header .close-modal-btn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.game-config-header .close-modal-btn:hover {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.game-config-notice {
+  margin: 0 0 18px;
+  color: #bdc3c7;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.game-config-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 390px), 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.game-config-group {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+}
+
+.game-config-group legend {
+  padding: 0 8px;
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.game-config-group .game-config-group {
+  margin-top: 10px;
+  padding: 10px;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.game-config-group .game-config-group legend {
+  color: #e5c76b;
+  font-size: 13px;
+}
+
+.game-config-field,
+.game-config-readonly {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(110px, 0.8fr);
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.game-config-field + .game-config-field,
+.game-config-field + .game-config-readonly,
+.game-config-readonly + .game-config-field {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.game-config-field input {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  font: inherit;
+}
+
+.game-config-field input:focus-visible {
+  outline: 2px solid #ffd700;
+  outline-offset: 1px;
+}
+
+.game-config-readonly strong {
+  text-align: right;
+}
+
+.game-config-error {
+  margin: 16px 0 0;
+  color: #ff7b72;
+  text-align: center;
+}
+
+.game-config-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.game-config-actions .right-btn {
+  min-width: 180px;
+}
+
+.game-config-reset {
+  background: linear-gradient(135deg, #7f8c8d 0%, #566573 100%);
+}
+
+@media (max-width: 560px) {
+  .game-config-modal-content {
+    width: 96vw;
+    padding: 18px;
+  }
+
+  .game-config-field,
+  .game-config-readonly {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .game-config-readonly strong {
+    text-align: left;
+  }
+}
+
 .statistics-modal-header {
   position: relative;
   display: flex;
