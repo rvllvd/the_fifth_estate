@@ -42,6 +42,7 @@ interface GameStore extends GameState {
   // игровой цикл
   publish: () => Metrics | null; // возвращает результат для модалки
   applyResult: (result: Metrics) => void;
+  tickGameTime: () => void;
   newGame: () => void;
   reset: () => void;
 
@@ -176,7 +177,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   applyResult: (result) => {
     const state = get();
-    set(applyPublication(state, result));
+    const now = Date.now();
+    const currentGameTime =
+      state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
+    const nextHour =
+      Math.floor(currentGameTime / 3_600_000 + 1) * 3_600_000;
+    set({
+      ...applyPublication(state, result),
+      gameTime: nextHour,
+      gameTimeUpdatedAt: now,
+    });
+  },
+
+  tickGameTime: () => {
+    const now = Date.now();
+    set((state) => ({
+      gameTime: state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt),
+      gameTimeUpdatedAt: now,
+    }));
   },
 
   newGame: () => {

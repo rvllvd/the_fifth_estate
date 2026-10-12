@@ -20,6 +20,34 @@
   margin-right: 20px;
 }
 
+.game-clock {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 2px;
+  min-width: 178px;
+  color: #f5e6b8;
+  font-family: 'Cormorant Garamond', serif;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.game-clock-label {
+  display: none;
+  color: #bdc3c7;
+  font-family: 'Roboto', sans-serif;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.game-clock time {
+  font-size: 16px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
 /* Показатели */
 .metrics {
   display: flex;

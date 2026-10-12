@@ -63,6 +63,7 @@ export default function App() {
   // читаем
   //   // const turn = useGameStore((s) => s.turn);
   const influence = useGameStore((s) => s.influence);
+  const gameTime = useGameStore((s) => s.gameTime);
   const credibility = useGameStore((s) => s.credibility);
   const reputation = useGameStore((s) => s.reputation);
   const readership = useGameStore((s) => s.readership);
@@ -84,6 +85,13 @@ export default function App() {
   const publishStore = useGameStore((s) => s.publish);
   const applyResult = useGameStore((s) => s.applyResult);
   const newGame = useGameStore((s) => s.newGame);
+  const tickGameTime = useGameStore((s) => s.tickGameTime);
+
+  useEffect(() => {
+    tickGameTime();
+    const intervalId = window.setInterval(tickGameTime, 1000);
+    return () => window.clearInterval(intervalId);
+  }, [tickGameTime]);
 
   // подкачка новостей
   useEffect(() => {
@@ -163,6 +171,7 @@ export default function App() {
       <div id="app">
         <TopPanel
           metrics={{ influence, credibility, reputation, readership }}
+          gameTime={gameTime}
           onNewGame={handleNewGame}
           preview={preview}
           onOpenStatistics={() => setShowStatisticsModal(true)}

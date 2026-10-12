@@ -2,8 +2,20 @@ import Metric from "./Metric";
 import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
 
+const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+  timeZone: "UTC",
+});
+
 interface Props {
   metrics: Metrics;
+  gameTime: number;
   onNewGame: () => void;
   preview: Metrics;
   onOpenStatistics: () => void;
@@ -12,6 +24,7 @@ interface Props {
 
 export default function TopPanel({
   metrics,
+  gameTime,
   onNewGame,
   preview,
   onOpenStatistics,
@@ -19,9 +32,16 @@ export default function TopPanel({
 }: Props) {
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
   const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
+  const formattedGameTime = GAME_TIME_FORMATTER.format(gameTime);
 
   return (
     <div id="top-panel">
+      <div className="game-clock" aria-label="Игровое время">
+        <span className="game-clock-label">Время</span>
+        <time dateTime={new Date(gameTime).toISOString()}>
+          {formattedGameTime}
+        </time>
+      </div>
       <div className="metrics">
         {keys.map((key) => {
           const icon = STAT_ICONS[key];

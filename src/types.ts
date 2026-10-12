@@ -62,6 +62,8 @@ export interface GameState extends Stats {
   // Игровой процесс
   turn: number;
   maxTurns: number;
+  gameTime: number;
+  gameTimeUpdatedAt: number;
 
   // Размещённые новости
   placedNews: PlacedNews[];
