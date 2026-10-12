@@ -1,11 +1,19 @@
 // utils/storage.ts
-import type { GameState } from "../types";
+import type { GameState, Metrics, PublishedNewsLogItem } from "../types";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
+import { getNewsById } from "../data/news";
+import { getTierMultiplier } from "./game";
 
 export const STORAGE_KEY = "the_fifth_estate_save";
 export const START_GAME_TIME = Date.UTC(1600, 0, 30, 9);
 const START_WORKING_SECOND = 9 * 60 * 60;
 const END_WORKING_SECOND = 18 * 60 * 60;
+const ZERO_METRICS: Metrics = {
+  influence: 0,
+  credibility: 0,
+  reputation: 0,
+  readership: 0,
+};
 
 const INITIAL_STATE: GameState = {
   influence: 50,
@@ -63,7 +71,42 @@ export function loadState(): GameState | null {
       const state = JSON.parse(saved) as GameState;
       state.gameTime ??= START_GAME_TIME;
       state.gameTimeUpdatedAt ??= Date.now();
-      state.publicationHistory ??= [];
+      state.publicationHistory = (state.publicationHistory ?? []).map(
+        (publication) => ({
+          ...publication,
+          news: (publication.news as Array<
+            PublishedNewsLogItem & { metrics?: Metrics }
+          >).map((savedNews) => {
+            if (
+              savedNews.base &&
+              savedNews.bonus &&
+              savedNews.final &&
+              typeof savedNews.multiplier === "number"
+            ) {
+              return savedNews;
+            }
+
+            const final = savedNews.metrics ?? ZERO_METRICS;
+            const multiplier = getTierMultiplier(savedNews.tier);
+            const base = getNewsById(savedNews.newsId)?.effects ?? final;
+            const bonus = (Object.keys(final) as (keyof Metrics)[]).reduce(
+              (result, key) => {
+                result[key] = final[key] / multiplier - base[key];
+                return result;
+              },
+              { ...ZERO_METRICS },
+            );
+
+            return {
+              ...savedNews,
+              base,
+              bonus,
+              multiplier,
+              final,
+            };
+          }),
+        }),
+      );
       state.journalists = state.journalists.map((savedJournalist) => {
         const journalist = AVAILABLE_JOURNALISTS.find(
           (available) => available.id === savedJournalist.id,

@@ -3,15 +3,17 @@ import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import { getNewsCategoryLabel } from "../constants/categories";
 import { useGameStore } from "../store/gameStore";
 // import { useNewsStore } from "../store";
-import type { NewsItem } from "../types";
+import type { NewsContribution, NewsItem } from "../types";
 // import PlacedNewsCard from "./PlacedNewsCard";
 import DancingText from "./DancingText";
+import NewsMetricBreakdown from "./NewsMetricBreakdown";
 
 interface Props {
   news: NewsItem;
   placed: boolean;
   active: boolean;
   style?: React.CSSProperties;
+  bonusPreview?: NewsContribution | null;
   // onClickNews?: (news: NewsItem) => void;
 }
 
@@ -20,6 +22,7 @@ export default function NewsCard({
   placed,
   active = true,
   style,
+  bonusPreview,
 }: Props) {
   const handleDragStart = (e: React.DragEvent) => {
     if (placed) {
@@ -65,6 +68,9 @@ export default function NewsCard({
           </span>
         ))}
       </div>
+      {bonusPreview && (
+        <NewsMetricBreakdown contribution={bonusPreview} compact />
+      )}
     </div>
   );
 }

@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import type { Metrics } from "../types";
 import { METRIC_LABELS, metricKeys } from "../constants/stats";
 import { entries } from "../helpers/object";
+import type { NewsContribution } from "../types";
+import NewsMetricBreakdown from "./NewsMetricBreakdown";
 
 interface Props {
   result: Metrics;
+  contributions: NewsContribution[];
   onClose: () => void;
   /** Через сколько мс автозакрыть (0 — не закрывать) */
   autoCloseMs?: number;
@@ -12,6 +15,7 @@ interface Props {
 
 export default function MetricsModal({
   result,
+  contributions,
   onClose,
   autoCloseMs = 2000,
 }: Props) {
@@ -91,6 +95,16 @@ export default function MetricsModal({
               </div>
             );
           })}
+        </div>
+        <div className="metrics-news-contributions">
+          {contributions.map((contribution) => (
+            <div className="metrics-news-contribution" key={contribution.newsId}>
+              <strong>
+                {contribution.title} · полоса {contribution.tier}
+              </strong>
+              <NewsMetricBreakdown contribution={contribution} alwaysShow />
+            </div>
+          ))}
         </div>
       </div>
     </div>

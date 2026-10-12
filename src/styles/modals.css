@@ -28,6 +28,8 @@
   min-width: 400px;
   transform: scale(0.8);
   transition: transform 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .metrics-modal.show .metrics-modal-content {
@@ -91,6 +93,25 @@
 
 .metric-change.animate .metric-value {
   animation: valueChange 0.5s ease;
+}
+
+.metrics-news-contributions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.metrics-news-contribution {
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 12px;
+}
+
+.metrics-news-contribution > strong {
+  display: block;
+  margin-bottom: 6px;
 }
 
 @keyframes valueChange {
@@ -330,7 +351,9 @@
 }
 
 .publication-news {
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
 }
 
 .publication-news-title {
@@ -340,6 +363,10 @@
   min-width: 0;
   color: #fff;
   font-size: 13px;
+}
+
+.publication-news-category {
+  flex: 0 0 auto;
 }
 
 .publication-contributions {

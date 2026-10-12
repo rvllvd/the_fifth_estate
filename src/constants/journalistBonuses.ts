@@ -1,16 +1,27 @@
 import type { JournalistBonus } from "../types";
 
 export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
-  // Adds the product of each same-category news pair to the assigned article's base metrics.
-  sameCategorySynergy: (current, relatedNews) =>
-    relatedNews.reduce(
-      (result, related) => ({
-        influence: result.influence + current.influence * related.influence,
+  // Adds each same-category article's metric products to this article's base metrics.
+  sameCategorySynergy: ({ news, relatedNews }) => ({
+    metrics: relatedNews.reduce(
+      (bonus, related) => ({
+        influence:
+          bonus.influence +
+          news.effects.influence * related.effects.influence,
         credibility:
-          result.credibility + current.credibility * related.credibility,
-        reputation: result.reputation + current.reputation * related.reputation,
-        readership: result.readership + current.readership * related.readership,
+          bonus.credibility +
+          news.effects.credibility * related.effects.credibility,
+        reputation:
+          bonus.reputation +
+          news.effects.reputation * related.effects.reputation,
+        readership:
+          bonus.readership +
+          news.effects.readership * related.effects.readership,
       }),
-      { ...current },
+      { influence: 0, credibility: 0, reputation: 0, readership: 0 },
     ),
+    explanation: relatedNews.length
+      ? `Синергия с ${relatedNews.length} новостями той же категории.`
+      : "",
+  }),
 };

@@ -2,6 +2,7 @@ import type { PublicationLogEntry } from "../types";
 import { METRIC_LABELS } from "../constants/stats";
 import { entries } from "../helpers/object";
 import { getNewsCategoryLabel } from "../constants/categories";
+import NewsMetricBreakdown from "./NewsMetricBreakdown";
 
 const PUBLICATION_DATE_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
   day: "2-digit",
@@ -77,22 +78,10 @@ export default function StatisticsModal({ history, onClose }: Props) {
                           {news.tier}
                         </span>
                       </div>
-                      <div className="publication-contributions">
-                        {entries(METRIC_LABELS).map(([key, [icon]]) => (
-                          <span
-                            className={
-                              news.metrics[key] > 0
-                                ? "positive"
-                                : news.metrics[key] < 0
-                                  ? "negative"
-                                  : ""
-                            }
-                            key={key}
-                          >
-                            {icon} {formatChange(news.metrics[key])}
-                          </span>
-                        ))}
-                      </div>
+                      <NewsMetricBreakdown
+                        contribution={news}
+                        alwaysShow
+                      />
                     </li>
                   ))}
                 </ul>

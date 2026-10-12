@@ -101,6 +101,7 @@ export default function App() {
   const journalists = useGameStore((s) => s.journalists);
   const publicationHistory = useGameStore((s) => s.publicationHistory);
   const canPublishNow = useGameStore(selectCanPublish);
+  const gameState = useGameStore((state) => state);
 
   // экшены
   const rollCurrentNews = useGameStore((s) => s.rollCurrentNews);
@@ -152,8 +153,8 @@ export default function App() {
   );
 
   const preview = useMemo(
-    () => calculatePublicationResult(placedNews, journalists),
-    [placedNews, journalists],
+    () => calculatePublicationResult(placedNews, journalists, gameState),
+    [placedNews, journalists, gameState],
   );
 
   const handleNewGame = () => {
@@ -264,10 +265,12 @@ export default function App() {
             onPublish={handlePublish}
             onClear={handleClearNewspaper}
             staff={journalists}
+            gameState={gameState}
             onOpenJournalists={() => setShowJournalistsModal(true)}
           />
           <Newspaper
             placedNews={placedNews}
+            gameState={gameState}
             onDropNews={dropNews}
             onRemove={handleRemovePlaced}
           />
@@ -275,7 +278,13 @@ export default function App() {
       </div>
 
       {modalResult && (
-        <MetricsModal result={modalResult} onClose={handleModalClose} />
+        <MetricsModal
+          result={modalResult}
+          contributions={
+            publicationHistory[publicationHistory.length - 1]?.news ?? []
+          }
+          onClose={handleModalClose}
+        />
       )}
 
       {showJournalistsModal && (

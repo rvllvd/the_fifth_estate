@@ -1,8 +1,9 @@
 import NewspaperColumn from './NewspaperColumn';
-import type { NewsItem, PlacedNews } from '../types';
+import type { GameState, NewsItem, PlacedNews } from '../types';
 
 interface Props {
   placedNews: PlacedNews[];
+  gameState: GameState;
   onDropNews: (key: string, news: NewsItem) => void;
   onRemove: (newsId: string) => void;
 }
@@ -13,7 +14,7 @@ const COLUMNS = [
   { tier: 3, title: 'Третья полоса (x0.5)',  slots: 3, multiplier: 0.5 },
 ];
 
-export default function Newspaper({ placedNews, onDropNews, onRemove }: Props) {
+export default function Newspaper({ placedNews, gameState, onDropNews, onRemove }: Props) {
   return (
     <div id="newspaper">
       <div className="newspaper-page">
@@ -30,6 +31,7 @@ export default function Newspaper({ placedNews, onDropNews, onRemove }: Props) {
               slotsCount={col.slots}
               multiplier={col.multiplier}
               placedNews={placedNews}
+              gameState={gameState}
               onDropNews={onDropNews}
               onRemove={onRemove}
             />

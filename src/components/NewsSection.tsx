@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import NewsCard from "./NewsCard";
-import type { Journalist, NewsItem } from "../types";
+import type { GameState, Journalist, NewsItem } from "../types";
 import { getNewsCategoryLabel } from "../constants/categories";
+import { ALL_SLOTS } from "../constants/game";
+import {
+  calculateProspectiveNewsContribution,
+  isSlotTaken,
+} from "../utils/game";
 
 interface Props {
   news: NewsItem[];
@@ -9,6 +14,7 @@ interface Props {
   canPublish: boolean;
   placedCount: number;
   journalists: Journalist[];
+  gameState: GameState;
   onPublish: () => void;
   onClear: () => void;
 }
@@ -19,6 +25,7 @@ export default function NewsSection({
   canPublish,
   placedCount,
   journalists,
+  gameState,
   onPublish,
   onClear,
 }: Props) {
@@ -40,6 +47,21 @@ export default function NewsSection({
       setActiveCategory("all");
     }
   }, [activeCategory, categoryKey]);
+
+  const getBonusPreview = (item: NewsItem) => {
+    const freeSlot = ALL_SLOTS.find((slot) =>
+      !isSlotTaken(gameState.placedNews, slot),
+    );
+    if (!freeSlot) return null;
+    const [tier, slot] = freeSlot.split("-").map(Number);
+
+    return calculateProspectiveNewsContribution(
+      item,
+      { newsId: item.id, tier, slot },
+      journalists,
+      gameState,
+    );
+  };
 
   return (
     <div className="panel-section" id="news-section">
@@ -99,6 +121,7 @@ export default function NewsSection({
                 journalists.filter((j) => j.spec == n.category && !j.newsId)
                   .length > 0
               }
+              bonusPreview={getBonusPreview(n)}
               style={{ "--index": index } as React.CSSProperties}
             />
           ))}

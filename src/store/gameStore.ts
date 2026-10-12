@@ -14,7 +14,6 @@ import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import {
   applyPublication,
-  calculatePublicationResult,
   calculateNewsContributions,
   canPublish,
   isGameOver,
@@ -22,7 +21,6 @@ import {
   isVictory,
 } from "../utils/game";
 import { playSound } from "../utils/sounds";
-import { getNewsById } from "../data/news";
 
 interface GameStore extends GameState {
   // новости
@@ -144,24 +142,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const publicationGameTime =
       state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
     const publishedNews = state.placedNews.map((placed) => ({ ...placed }));
-    const result = calculatePublicationResult(publishedNews, state.journalists);
     const contributions = calculateNewsContributions(
       publishedNews,
       state.journalists,
+      state,
     );
-    const newsLog: PublishedNewsLogItem[] = publishedNews.flatMap((placed, index) => {
-      const news = getNewsById(placed.newsId);
-      const metrics = contributions[index];
-      if (!news || !metrics) return [];
-
-      return [{
-        newsId: news.id,
-        title: news.title,
-        category: news.category,
-        tier: placed.tier,
-        metrics,
-      }];
-    });
+    const result = contributions.reduce(
+      (total, contribution) => ({
+        influence: total.influence + contribution.final.influence,
+        credibility: total.credibility + contribution.final.credibility,
+        reputation: total.reputation + contribution.final.reputation,
+        readership: total.readership + contribution.final.readership,
+      }),
+      { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+    );
+    const newsLog: PublishedNewsLogItem[] = contributions;
     const publicationHistory = [
       ...state.publicationHistory,
       {

@@ -1,7 +1,8 @@
 import { getNewsById } from "../data/news";
-import type { NewsItem, PlacedNews } from "../types";
+import type { GameState, NewsItem, PlacedNews } from "../types";
 // import { playSound } from "../utils/sounds.ts";
 import PlacedNewsCard from "./PlacedNewsCard";
+import { calculateNewsContributions } from "../utils/game";
 
 interface Props {
   tier: number;
@@ -9,6 +10,7 @@ interface Props {
   slotsCount: number;
   multiplier: number;
   placedNews: PlacedNews[];
+  gameState: GameState;
   onDropNews: (key: string, news: NewsItem) => void;
   onRemove: (newsId: string) => void;
 }
@@ -19,6 +21,7 @@ export default function NewspaperColumn({
   slotsCount,
   multiplier,
   placedNews,
+  gameState,
   onDropNews,
   onRemove,
 }: Props) {
@@ -30,6 +33,13 @@ export default function NewspaperColumn({
         : "newspaper-column third-tier";
 
   const placedBySlot: Record<number, NewsItem> = {};
+  const contributionByNewsId = new Map(
+    calculateNewsContributions(
+      placedNews,
+      gameState.journalists,
+      gameState,
+    ).map((contribution) => [contribution.newsId, contribution]),
+  );
   for (const p of placedNews.filter((x) => x.tier === tier)) {
     const news = getNewsById(p.newsId);
     if (news) placedBySlot[p.slot] = news;
@@ -70,6 +80,7 @@ export default function NewspaperColumn({
                 <PlacedNewsCard
                   news={news}
                   tier={tier}
+                  contribution={contributionByNewsId.get(news.id)}
                   onRemove={() => onRemove(news.id)}
                 />
               ) : (

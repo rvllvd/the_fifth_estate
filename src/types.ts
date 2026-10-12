@@ -30,10 +30,23 @@ export interface PlacedNews {
   slot: number;
 }
 
+export interface JournalistBonusContext {
+  journalist: Journalist;
+  news: NewsItem;
+  relatedNews: NewsItem[];
+  placedNews: PlacedNews[];
+  journalists: Journalist[];
+  game: GameState;
+}
+
+export interface JournalistBonusResult {
+  metrics: Metrics;
+  explanation: string;
+}
+
 export type JournalistBonus = (
-  current: Metrics,
-  relatedNews: Metrics[],
-) => Metrics;
+  context: JournalistBonusContext,
+) => JournalistBonusResult;
 
 export interface Journalist {
   id: string;
@@ -51,8 +64,15 @@ export interface PublishedNewsLogItem {
   title: string;
   category: string;
   tier: number;
-  metrics: Metrics;
+  journalistName?: string;
+  base: Metrics;
+  bonus: Metrics;
+  multiplier: number;
+  final: Metrics;
+  bonusDescription?: string;
 }
+
+export type NewsContribution = PublishedNewsLogItem;
 
 export interface PublicationLogEntry {
   id: string;

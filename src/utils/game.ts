@@ -1,4 +1,11 @@
-import type { GameState, PlacedNews, Journalist, Metrics } from "../types";
+import type {
+  GameState,
+  PlacedNews,
+  Journalist,
+  Metrics,
+  NewsItem,
+  NewsContribution,
+} from "../types";
 import { getNewsById } from "../data/news";
 // import { Parameters } from "./storage";
 import { MAX_VALUE_STAT } from "../constants/stats";
@@ -38,13 +45,14 @@ export function isSlotTaken(
 export function calculatePublicationResult(
   placedNews: PlacedNews[],
   journalists: Journalist[],
+  game: GameState,
 ): Metrics {
-  return calculateNewsContributions(placedNews, journalists).reduce(
+  return calculateNewsContributions(placedNews, journalists, game).reduce(
     (result, contribution) => ({
-      influence: result.influence + contribution.influence,
-      credibility: result.credibility + contribution.credibility,
-      reputation: result.reputation + contribution.reputation,
-      readership: result.readership + contribution.readership,
+      influence: result.influence + contribution.final.influence,
+      credibility: result.credibility + contribution.final.credibility,
+      reputation: result.reputation + contribution.final.reputation,
+      readership: result.readership + contribution.final.readership,
     }),
     { influence: 0, credibility: 0, reputation: 0, readership: 0 },
   );
@@ -53,44 +61,96 @@ export function calculatePublicationResult(
 export function calculateNewsContributions(
   placedNews: PlacedNews[],
   journalists: Journalist[],
-): Metrics[] {
+  game: GameState,
+): NewsContribution[] {
   const newsItems = placedNews.map((placed) => getNewsById(placed.newsId));
 
-  return placedNews.map((placed, index) => {
+  return placedNews.flatMap((placed, index) => {
     const news = newsItems[index];
     if (!news) {
-      return { influence: 0, credibility: 0, reputation: 0, readership: 0 };
+      return [];
     }
 
     const journalist = journalists.find((member) => member.newsId === placed.newsId);
-    let metrics = { ...news.effects };
+    const base = { ...news.effects };
+    let bonus: Metrics = { influence: 0, credibility: 0, reputation: 0, readership: 0 };
+    let bonusDescription: string | undefined;
 
     if (journalist?.bonus) {
       if (typeof journalist.bonus === "function") {
         const relatedNews = placedNews.flatMap((other, otherIndex) => {
           if (other.newsId === placed.newsId) return [];
           const related = newsItems[otherIndex];
-          return related?.category === news.category ? [{ ...related.effects }] : [];
+          return related?.category === news.category ? [related] : [];
         });
-        metrics = journalist.bonus(metrics, relatedNews);
+        const result = journalist.bonus({
+          journalist,
+          news,
+          relatedNews,
+          placedNews,
+          journalists,
+          game: { ...game, placedNews, journalists },
+        });
+        bonus = result.metrics;
+        bonusDescription = result.explanation;
       } else {
-        metrics = {
-          influence: metrics.influence + journalist.bonus.influence,
-          credibility: metrics.credibility + journalist.bonus.credibility,
-          reputation: metrics.reputation + journalist.bonus.reputation,
-          readership: metrics.readership + journalist.bonus.readership,
-        };
+        bonus = journalist.bonus;
+        bonusDescription = journalist.desc;
       }
     }
 
     const multiplier = getTierMultiplier(placed.tier);
-    return {
-      influence: Math.round(metrics.influence * multiplier),
-      credibility: Math.round(metrics.credibility * multiplier),
-      reputation: Math.round(metrics.reputation * multiplier),
-      readership: Math.round(metrics.readership * multiplier),
-    };
+    const final = (Object.keys(base) as (keyof Metrics)[]).reduce(
+      (metrics, key) => {
+        metrics[key] = Math.round((base[key] + bonus[key]) * multiplier);
+        return metrics;
+      },
+      { influence: 0, credibility: 0, reputation: 0, readership: 0 },
+    );
+
+    return [{
+      newsId: news.id,
+      title: news.title,
+      category: news.category,
+      tier: placed.tier,
+      journalistName: journalist?.name,
+      base,
+      bonus,
+      multiplier,
+      final,
+      bonusDescription,
+    }];
   });
+}
+
+export function calculateProspectiveNewsContribution(
+  news: NewsItem,
+  placement: PlacedNews,
+  journalists: Journalist[],
+  game: GameState,
+): NewsContribution | null {
+  const assignedJournalist = journalists.find(
+    (journalist) => journalist.spec === news.category && !journalist.newsId,
+  );
+  if (!assignedJournalist) return null;
+
+  const prospectiveJournalists = journalists.map((journalist) =>
+    journalist.id === assignedJournalist.id
+      ? { ...journalist, newsId: news.id }
+      : journalist,
+  );
+  const prospectivePlacedNews = [...game.placedNews, placement];
+  const [contribution] = calculateNewsContributions(
+    prospectivePlacedNews,
+    prospectiveJournalists,
+    {
+      ...game,
+      placedNews: prospectivePlacedNews,
+      journalists: prospectiveJournalists,
+    },
+  ).slice(-1);
+
+  return contribution ?? null;
 }
 
 export function clampMetric(value: number): number {

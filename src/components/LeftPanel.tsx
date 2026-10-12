@@ -1,6 +1,6 @@
 import StaffSection from "./StaffSection";
 import NewsSection from "./NewsSection";
-import type { Journalist, NewsItem } from "../types";
+import type { GameState, Journalist, NewsItem } from "../types";
 
 interface Props {
   // Новости
@@ -13,6 +13,7 @@ interface Props {
 
   // Сотрудники
   staff: Journalist[];
+  gameState: GameState;
   onOpenJournalists: () => void;
 }
 
@@ -24,6 +25,7 @@ export default function LeftPanel({
   onPublish,
   onClear,
   staff,
+  gameState,
   onOpenJournalists,
 }: Props) {
   return (
@@ -34,6 +36,7 @@ export default function LeftPanel({
         news={news}
         placedNewsIds={placedNewsIds}
         journalists={staff}
+        gameState={gameState}
         canPublish={canPublish}
         placedCount={placedCount}
         onPublish={onPublish}

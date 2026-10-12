@@ -1,16 +1,23 @@
 import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import { getJournalistById } from "../data/journalists";
-import type { NewsItem } from "../types";
+import type { NewsContribution, NewsItem } from "../types";
 import { getTierMultiplier } from "../utils/game";
 import DancingText from "./DancingText";
+import NewsMetricBreakdown from "./NewsMetricBreakdown";
 
 interface Props {
   news: NewsItem;
   tier: number;
+  contribution?: NewsContribution;
   onRemove: () => void;
 }
 
-export default function PlacedNewsCard({ news, tier, onRemove }: Props) {
+export default function PlacedNewsCard({
+  news,
+  tier,
+  contribution,
+  onRemove,
+}: Props) {
   const m = getTierMultiplier(tier);
   const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
   const effects = keys.map((key) => {
@@ -44,6 +51,9 @@ export default function PlacedNewsCard({ news, tier, onRemove }: Props) {
             `👤 Автор: ${getJournalistById(news.journalistId)?.name}`}
         </span>
       </div>
+      {contribution && (
+        <NewsMetricBreakdown contribution={contribution} compact />
+      )}
     </div>
   );
 }

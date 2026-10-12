@@ -555,6 +555,21 @@
   color: #d4c4a8;
 }
 
+.dark-theme .news-metric-breakdown {
+  border-left-color: #c9a227;
+  background: rgba(201, 162, 39, 0.08);
+  color: #d4c4a8;
+}
+
+.dark-theme .news-breakdown-heading,
+.dark-theme .news-breakdown-lines strong {
+  color: #c9a227;
+}
+
+.dark-theme .news-breakdown-explanation {
+  color: #a89070;
+}
+
 .dark-theme .metric-value {
   color: #e8d5b0;
 }
