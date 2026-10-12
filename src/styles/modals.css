@@ -120,6 +120,20 @@
   text-align: center;
 }
 
+.alert.modal-content {
+  max-width: 540px;
+}
+
+.alert-description {
+  margin: 0 0 24px;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.alert-description p + p {
+  margin-top: 12px;
+}
+
 .modal.show {
   opacity: 1;
   visibility: visible;

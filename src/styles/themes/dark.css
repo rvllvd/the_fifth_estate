@@ -409,6 +409,10 @@
   border-bottom-color: #5c4033;
 }
 
+.dark-theme .alert-description {
+  color: #d4c4a8;
+}
+
 .dark-theme .settings-option + .settings-option {
   border-top-color: rgba(201, 162, 39, 0.28);
 }

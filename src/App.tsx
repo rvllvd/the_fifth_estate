@@ -15,6 +15,7 @@ import { useBackgroundMusic } from "./hooks/useBackgroundMusic";
 import { calculatePublicationResult } from "./utils/game";
 import { useGameStore, selectCanPublish } from "./store/gameStore";
 import SettingsModal from "./components/SettingsModal";
+import { getDefeatDescriptions } from "./constants/stats";
 
 export default function App() {
   useBackgroundMusic("/assets/sounds/city-noise.mp3", 0.75);
@@ -216,6 +217,12 @@ export default function App() {
       {showAlertModal && (
         <AlertModal
           text="Вы проиграли"
+          descriptions={getDefeatDescriptions({
+            influence,
+            credibility,
+            reputation,
+            readership,
+          })}
           onClose={() => setShowAlertModal(false)}
           onNewGame={handleNewGame}
         />
