@@ -8,7 +8,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     role: "Политический обозреватель",
     spec: "politics",
     desc: "Новости с одинаковыми темами переменожаются между собой",
-    bonus: JOURNALIST_BONUSES.ivan_petrov,
+    bonus: JOURNALIST_BONUSES.sameCategorySynergy,
     // bonus: (placed_news) => {
     //   let collect = new Set<PlacedNews[]>();
     //   placed_news.forEach(n => {
