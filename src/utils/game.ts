@@ -8,14 +8,15 @@ import type {
 } from "../types";
 import { getNewsById } from "../data/news";
 // import { Parameters } from "./storage";
-import { MAX_VALUE_STAT } from "../constants/stats";
-import { Parameters } from "../constants/game";
+import {
+  GAME_BALANCE,
+  METRIC_DEFINITIONS,
+  METRIC_KEYS,
+  clampMetric as clampGlobalMetric,
+  getTierMultiplier,
+} from "../constants/global";
 
-export function getTierMultiplier(tier: number): number {
-  if (tier === 1) return 2;
-  if (tier === 2) return 1;
-  return 0.5;
-}
+export { getTierMultiplier };
 
 export function isSlotTaken(
   placedNews: PlacedNews[],
@@ -156,8 +157,8 @@ export function calculateProspectiveNewsContribution(
   return contribution ?? null;
 }
 
-export function clampMetric(value: number): number {
-  return Math.max(0, Math.min(MAX_VALUE_STAT, value));
+export function clampMetric(value: number, key?: keyof Metrics): number {
+  return clampGlobalMetric(value, key);
 }
 
 export function applyPublication(state: GameState, result: Metrics): GameState {
@@ -168,10 +169,10 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
 
   return {
     ...state,
-    influence: clampMetric(state.influence + result.influence),
-    credibility: clampMetric(state.credibility + result.credibility),
-    reputation: clampMetric(state.reputation + result.reputation),
-    readership: clampMetric(state.readership + result.readership),
+    influence: clampGlobalMetric(state.influence + result.influence, "influence"),
+    credibility: clampGlobalMetric(state.credibility + result.credibility, "credibility"),
+    reputation: clampGlobalMetric(state.reputation + result.reputation, "reputation"),
+    readership: clampGlobalMetric(state.readership + result.readership, "readership"),
     turn: state.turn + 1,
     placedNews: [],
     usedNewsIds,
@@ -182,13 +183,23 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
 
 // TODO: ПОМЕНЯТЬ УСЛОВИЯ ПОБЕДЫ И ПОРАЖЕНИЯ
 export function isVictory(state: GameState): boolean {
-  return state.influence >= 70 && state.credibility >= 70;
+  return (
+    state.influence >= GAME_BALANCE.victoryThresholds.influence &&
+    state.credibility >= GAME_BALANCE.victoryThresholds.credibility
+  );
 }
 
 export function isGameOver(state: GameState): boolean {
-  return state.turn > state.maxTurns || state.readers <= 0 || state.money <= 0;
+  return (
+    state.turn > state.maxTurns ||
+    state.readers <= GAME_BALANCE.minimumReaders ||
+    state.money <= GAME_BALANCE.minimumMoney ||
+    METRIC_KEYS.some(
+      (key) => state[key] <= METRIC_DEFINITIONS[key].min,
+    )
+  );
 }
 
 export function canPublish(state: GameState): boolean {
-  return state.placedNews.length >= Parameters.countNews;
+  return state.placedNews.length >= GAME_BALANCE.articlesPerPublication;
 }

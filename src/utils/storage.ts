@@ -3,29 +3,31 @@ import type { GameState, Metrics, PublishedNewsLogItem } from "../types";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import { getNewsById } from "../data/news";
 import { getTierMultiplier } from "./game";
-import { INITIAL_MONEY, INITIAL_READERS } from "../constants/economy";
+import {
+  createInitialGameTime,
+  ECONOMY_SAVE_VERSION,
+  GAME_BALANCE,
+  INITIAL_METRICS,
+  INITIAL_MONEY,
+  INITIAL_READERS,
+  ZERO_METRICS,
+} from "../constants/global";
 
 export const STORAGE_KEY = "the_fifth_estate_save";
-export const START_GAME_TIME = Date.UTC(1600, 0, 30, 9);
-const START_WORKING_SECOND = 9 * 60 * 60;
-const END_WORKING_SECOND = 18 * 60 * 60;
-const ZERO_METRICS: Metrics = {
-  influence: 0,
-  credibility: 0,
-  reputation: 0,
-  readership: 0,
-};
+export const START_GAME_TIME = Date.UTC(
+  GAME_BALANCE.gameStart.year,
+  GAME_BALANCE.gameStart.month,
+  GAME_BALANCE.gameStart.day,
+  GAME_BALANCE.gameStart.firstWorkingHour,
+);
 
 const INITIAL_STATE: GameState = {
-  influence: 50,
-  credibility: 50,
-  reputation: 50,
-  readership: 50,
+  ...INITIAL_METRICS,
   readers: INITIAL_READERS,
   money: INITIAL_MONEY,
-  economyVersion: 1,
+  economyVersion: ECONOMY_SAVE_VERSION,
   turn: 1,
-  maxTurns: 20,
+  maxTurns: GAME_BALANCE.maxTurns,
   gameTime: START_GAME_TIME,
   gameTimeUpdatedAt: Date.now(),
   placedNews: [],
@@ -37,15 +39,9 @@ const INITIAL_STATE: GameState = {
 };
 
 export function getInitialState(): GameState {
-  const secondsAfterMidnight =
-    START_WORKING_SECOND +
-    Math.floor(Math.random() * (END_WORKING_SECOND - START_WORKING_SECOND + 1));
-
   return {
     ...INITIAL_STATE,
-    gameTime:
-      START_GAME_TIME +
-      (secondsAfterMidnight - START_WORKING_SECOND) * 1000,
+    gameTime: createInitialGameTime(),
     gameTimeUpdatedAt: Date.now(),
   };
 }
@@ -54,7 +50,10 @@ export function createInitialState(): GameState {
   const saved = loadState();
   if (saved) return saved;
   const init = getInitialState();
-  init.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
+  init.journalists = AVAILABLE_JOURNALISTS.slice(
+    0,
+    GAME_BALANCE.initialJournalists,
+  );
   return init;
 }
 
@@ -71,13 +70,14 @@ export function loadState(): GameState | null {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as GameState;
-      if (state.economyVersion !== 1) {
+      if (state.economyVersion !== ECONOMY_SAVE_VERSION) {
         state.readers = INITIAL_READERS;
         state.money = INITIAL_MONEY;
-        state.economyVersion = 1;
+        state.economyVersion = ECONOMY_SAVE_VERSION;
       }
       state.readers ??= INITIAL_READERS;
       state.money ??= INITIAL_MONEY;
+      state.maxTurns = GAME_BALANCE.maxTurns;
       state.gameTime ??= START_GAME_TIME;
       state.gameTimeUpdatedAt ??= Date.now();
       state.publicationHistory = (state.publicationHistory ?? []).map(

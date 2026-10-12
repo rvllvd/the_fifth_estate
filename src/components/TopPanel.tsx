@@ -1,8 +1,8 @@
 import Metric from "./Metric";
 import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
-import { MONEY_PER_READER_PER_TURN } from "../constants/economy";
 import { formatMoney } from "../utils/economy";
+import { GAME_BALANCE } from "../constants/global";
 
 const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
   hour: "2-digit",
@@ -58,6 +58,7 @@ export default function TopPanel({
           return (
             <Metric
               key={key}
+              metricKey={key}
               icon={icon}
               label={label}
               value={metrics[key]}
@@ -69,7 +70,7 @@ export default function TopPanel({
 
       <div className="top-panel-economy">
         <div className="resource-display" id="readers-display">
-          {/* <span className="resource-label">👥 Аудитория</span> */}
+          {/*           <span className="resource-label">👥 Читатели</span> */}
           <strong>{formatMoney(readers)} читателей</strong>
           {readerChangePreview !== null && readerChangePreview !== 0 && (
             <span className={readerChangePreview > 0 ? "positive" : "negative"}>
@@ -106,7 +107,7 @@ export default function TopPanel({
           <strong>💵 ${formatMoney(money)}</strong>
           <span className="resource-flow">
             <span className="resource-income">
-              +${formatMoney(readers * MONEY_PER_READER_PER_TURN)} доход/час
+              +${formatMoney(readers * GAME_BALANCE.moneyPerReaderPerHour)} доход/час
             </span>
             <span className="resource-payroll">
               {" "}

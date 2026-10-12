@@ -1,6 +1,8 @@
-import { AUDIENCE_CHANGE_WEIGHTS, MONEY_PER_READER_PER_TURN } from "../constants/economy";
+import {
+  calculateAudienceChange as calculateGlobalAudienceChange,
+  GAME_BALANCE,
+} from "../constants/global";
 import type { GameState, Journalist, Metrics } from "../types";
-import { clampMetric } from "./game";
 
 export function formatMoney(value: number): string {
   return new Intl.NumberFormat("ru-RU", {
@@ -23,28 +25,7 @@ export function calculateReaderChange(
   currentMetrics: Metrics,
   result: Metrics,
 ): number {
-  const finalMetrics = {
-    influence: clampMetric(currentMetrics.influence + result.influence),
-    credibility: clampMetric(currentMetrics.credibility + result.credibility),
-    reputation: clampMetric(currentMetrics.reputation + result.reputation),
-    readership: clampMetric(currentMetrics.readership + result.readership),
-  };
-  const weights = AUDIENCE_CHANGE_WEIGHTS;
-  const editorialQuality =
-    (finalMetrics.influence * weights.influenceQuality +
-      finalMetrics.credibility * weights.credibilityQuality +
-      finalMetrics.reputation * weights.reputationQuality) /
-    100;
-  // Strong readership helps most, but weak editorial credibility can still cause audience loss.
-  const change =
-    result.readership * weights.readershipEffect +
-    result.influence * weights.influenceEffect +
-    result.credibility * weights.credibilityEffect +
-    result.reputation * weights.reputationEffect +
-    (editorialQuality - 0.5) * weights.qualityEffect +
-    (finalMetrics.readership - 50) * weights.readershipLevelEffect;
-
-  return Math.round(change);
+  return calculateGlobalAudienceChange(currentMetrics, result);
 }
 
 export function settleEconomy(
@@ -52,9 +33,12 @@ export function settleEconomy(
   result: Metrics,
 ): EconomySettlement {
   const projectedReaderChange = calculateReaderChange(state, result);
-  const readers = Math.max(0, state.readers + projectedReaderChange);
+  const readers = Math.max(
+    GAME_BALANCE.minimumReaders,
+    state.readers + projectedReaderChange,
+  );
   const readerChange = readers - state.readers;
-  const income = readers * MONEY_PER_READER_PER_TURN;
+  const income = readers * GAME_BALANCE.moneyPerReaderPerHour;
   const workingJournalists = [...state.journalists];
   let payroll = workingJournalists.reduce(
     (total, journalist) => total + journalist.cost,
@@ -78,7 +62,7 @@ export function settleEconomy(
 
   return {
     readers,
-    money: Math.max(0, state.money + moneyChange),
+    money: Math.max(GAME_BALANCE.minimumMoney, state.money + moneyChange),
     readerChange,
     moneyChange,
     income,

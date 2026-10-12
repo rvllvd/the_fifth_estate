@@ -1,5 +1,6 @@
 import NewspaperColumn from './NewspaperColumn';
 import type { GameState, NewsItem, PlacedNews } from '../types';
+import { GAME_BALANCE, getTierMultiplier } from '../constants/global';
 
 interface Props {
   placedNews: PlacedNews[];
@@ -9,11 +10,19 @@ interface Props {
   onRemove: (newsId: string) => void;
 }
 
-const COLUMNS = [
-  { tier: 1, title: 'Главная полоса (x2)',  slots: 1, multiplier: 2 },
-  { tier: 2, title: 'Вторая полоса',         slots: 2, multiplier: 1 },
-  { tier: 3, title: 'Третья полоса (x0.5)',  slots: 3, multiplier: 0.5 },
-];
+const COLUMNS = Object.entries(GAME_BALANCE.columns).map(
+  ([tierValue, column]) => {
+    const tier = Number(tierValue);
+    const { slots } = column;
+    const multiplier = getTierMultiplier(tier);
+    const title =
+      multiplier === 1
+        ? column.title
+        : `${column.title} (x${multiplier})`;
+
+    return { tier, title, slots, multiplier };
+  },
+);
 
 export default function Newspaper({
   placedNews,

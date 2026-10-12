@@ -22,6 +22,10 @@ import {
 } from "../utils/game";
 import { playSound } from "../utils/sounds";
 import { settleEconomy } from "../utils/economy";
+import {
+  GAME_BALANCE,
+  getRandomPublicationTimeAdvance,
+} from "../constants/global";
 
 interface GameStore extends GameState {
   // новости
@@ -70,7 +74,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { currentNewsIds, usedNewsIds } = get();
     if (currentNewsIds.length > 0) return;
 
-    const randomNews = getRandomNews(30, usedNewsIds);
+    const randomNews = getRandomNews(GAME_BALANCE.newsPerRoll, usedNewsIds);
     if (randomNews.length === 0) return;
 
     set({
@@ -188,8 +192,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const now = Date.now();
     const currentGameTime =
       state.gameTime + Math.max(0, now - state.gameTimeUpdatedAt);
-    const publicationDuration =
-      (50 + Math.floor(Math.random() * 31)) * 60_000;
+    const publicationDuration = getRandomPublicationTimeAdvance();
     const updatedState = applyPublication(state, result);
     const economy = settleEconomy(state, result);
     set({
@@ -213,7 +216,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
   newGame: () => {
     const { clearNewspaper } = get();
     const init = getInitialState();
-    init.journalists = AVAILABLE_JOURNALISTS.slice(0, 3);
+    init.journalists = AVAILABLE_JOURNALISTS.slice(
+      0,
+      GAME_BALANCE.initialJournalists,
+    );
     set(init);
     clearNewspaper();
   },
@@ -221,22 +227,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   reset: () => set(getInitialState),
 
   isGameOver: () => {
-    const {
-      influence,
-      credibility,
-      reputation,
-      readership,
-      readers,
-      money,
-      turn,
-      maxTurns,
-    } = get();
-    return (
-      readers <= 0 ||
-      money <= 0 ||
-      turn > maxTurns ||
-      [influence, credibility, reputation, readership].some((value) => value <= 0)
-    );
+    return isGameOver(get());
   },
 }));
 

@@ -1,20 +1,18 @@
 import type { Metrics } from "../types";
+import {
+  METRIC_DEFINITIONS,
+  METRIC_KEYS,
+} from "./global";
 
-export const MAX_VALUE_STAT = 100;
+export { MAX_VALUE_STAT } from "./global";
 
-export const STAT_ICONS: Record<keyof Metrics, string> = {
-  influence: "📈",
-  credibility: "🎯",
-  reputation: "💰",
-  readership: "👥",
-};
+export const STAT_ICONS: Record<keyof Metrics, string> = Object.fromEntries(
+  METRIC_KEYS.map((key) => [key, METRIC_DEFINITIONS[key].icon]),
+) as Record<keyof Metrics, string>;
 
-export const STAT_LABELS: Record<keyof Metrics, string> = {
-  influence: "Влияние",
-  credibility: "Доверие",
-  reputation: "Репутация",
-  readership: "Лояность",
-};
+export const STAT_LABELS: Record<keyof Metrics, string> = Object.fromEntries(
+  METRIC_KEYS.map((key) => [key, METRIC_DEFINITIONS[key].label]),
+) as Record<keyof Metrics, string>;
 
 const DEFEAT_DESCRIPTIONS: Record<keyof Metrics, string> = {
   influence:
@@ -28,8 +26,8 @@ const DEFEAT_DESCRIPTIONS: Record<keyof Metrics, string> = {
 };
 
 export function getDefeatDescriptions(metrics: Metrics): string[] {
-  return (Object.keys(STAT_LABELS) as (keyof Metrics)[])
-    .filter((key) => metrics[key] <= 0)
+  return METRIC_KEYS
+    .filter((key) => metrics[key] <= METRIC_DEFINITIONS[key].min)
     .map((key) => DEFEAT_DESCRIPTIONS[key]);
 }
 
@@ -42,5 +40,5 @@ export const METRIC_LABELS: Record<keyof Metrics, [string, string]> =
   ) as Record<keyof Metrics, [string, string]>;
 
 export function metricKeys(): (keyof Metrics)[] {
-  return Object.keys(STAT_LABELS) as (keyof Metrics)[];
+  return METRIC_KEYS;
 }

@@ -1,5 +1,6 @@
 import type { Journalist } from "../types";
 import { JOURNALIST_BONUSES } from "../constants/journalistBonuses";
+import { GAME_BALANCE } from "../constants/global";
 
 export const AVAILABLE_JOURNALISTS: Journalist[] = [
   {
@@ -9,7 +10,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "politics",
     desc: "Усиливает новости материалами той же категории",
     bonus: JOURNALIST_BONUSES.sameCategorySynergy,
-    cost: 50,
+    cost: GAME_BALANCE.journalistHourlyWages.ivan_petrov,
   },
   {
     id: "maria_sidorova",
@@ -18,7 +19,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "sport",
     desc: "В вечернем выпуске спортивные новости привлекают аудиторию",
     bonus: JOURNALIST_BONUSES.eveningSports,
-    cost: 40,
+    cost: GAME_BALANCE.journalistHourlyWages.maria_sidorova,
   },
   {
     id: "alexey_kozlov",
@@ -27,7 +28,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "technology",
     desc: "Коллеги по выпуску помогают укрепить доверие",
     bonus: JOURNALIST_BONUSES.editorialTeamwork,
-    cost: 60,
+    cost: GAME_BALANCE.journalistHourlyWages.alexey_kozlov,
   },
   {
     id: "elena_smirnova",
@@ -36,7 +37,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "culture",
     desc: "Культурные новости помогают вернуть аудиторию при низком числе читателей",
     bonus: JOURNALIST_BONUSES.audienceRecovery,
-    cost: 40,
+    cost: GAME_BALANCE.journalistHourlyWages.elena_smirnova,
   },
   {
     id: "dmitry_volkov",
@@ -45,14 +46,14 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "economy",
     desc: "Поддерживает доверие, пока оно не упало слишком низко",
     bonus: JOURNALIST_BONUSES.publicTrust,
-    cost: 30,
+    cost: GAME_BALANCE.journalistHourlyWages.dmitry_volkov,
   },
   {
     id: "anna_kuznetsova",
     name: "Анна Кузнецова",
     role: "Социальный обозреватель",
     spec: "society",
-    cost: 50,
+    cost: GAME_BALANCE.journalistHourlyWages.anna_kuznetsova,
   },
   {
     id: "sergey_morozov",
@@ -61,7 +62,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "incident",
     desc: "Громкие происшествия увеличивают влияние и читательский интерес",
     bonus: JOURNALIST_BONUSES.sensationalIncident,
-    cost: 70,
+    cost: GAME_BALANCE.journalistHourlyWages.sergey_morozov,
   },
   {
     id: "olga_fedorova",
@@ -70,7 +71,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "education",
     desc: "Тщательная проверка научных и образовательных материалов укрепляет доверие",
     bonus: JOURNALIST_BONUSES.carefulSourcing,
-    cost: 20,
+    cost: GAME_BALANCE.journalistHourlyWages.olga_fedorova,
   },
   {
     id: "pavel_ivanov",
@@ -79,7 +80,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "world",
     desc: "Разнообразие тем выпуска усиливает влияние международных новостей",
     bonus: JOURNALIST_BONUSES.diverseNewsroom,
-    cost: 80,
+    cost: GAME_BALANCE.journalistHourlyWages.pavel_ivanov,
   },
   {
     id: "natalia_popova",
@@ -88,14 +89,14 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "health",
     desc: "Тщательная проверка медицинских материалов укрепляет доверие",
     bonus: JOURNALIST_BONUSES.carefulSourcing,
-    cost: 30,
+    cost: GAME_BALANCE.journalistHourlyWages.natalia_popova,
   },
   {
     id: "victor_sokolov",
     name: "Виктор Соколов",
     role: "Спортивный комментатор",
     spec: "sport",
-    cost: 40,
+    cost: GAME_BALANCE.journalistHourlyWages.victor_sokolov,
   },
   {
     id: "ekaterina_nikolaeva",
@@ -104,7 +105,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "technology",
     desc: "Коллеги по выпуску помогают укрепить доверие",
     bonus: JOURNALIST_BONUSES.editorialTeamwork,
-    cost: 50,
+    cost: GAME_BALANCE.journalistHourlyWages.ekaterina_nikolaeva,
   },
   {
     id: "andrey_romanov",
@@ -113,7 +114,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "politics",
     desc: "Утренний выпуск получает дополнительное доверие читателей",
     bonus: JOURNALIST_BONUSES.morningEdition,
-    cost: 60,
+    cost: GAME_BALANCE.journalistHourlyWages.andrey_romanov,
   },
   {
     id: "marina_alexeeva",
@@ -122,7 +123,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "ecology",
     desc: "Поддерживает доверие, пока оно не упало слишком низко",
     bonus: JOURNALIST_BONUSES.publicTrust,
-    cost: 40,
+    cost: GAME_BALANCE.journalistHourlyWages.marina_alexeeva,
   },
   {
     id: "igor_lebedev",
@@ -131,7 +132,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "finance",
     desc: "Сильное влияние редакции укрепляет финансовые материалы",
     bonus: JOURNALIST_BONUSES.marketAuthority,
-    cost: 30,
+    cost: GAME_BALANCE.journalistHourlyWages.igor_lebedev,
   },
   {
     id: "tatyana_vasilieva",
@@ -140,7 +141,7 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "cinema",
     desc: "Кинопремьеры выходного дня привлекают читателей",
     bonus: JOURNALIST_BONUSES.weekendPremiere,
-    cost: 30,
+    cost: GAME_BALANCE.journalistHourlyWages.tatyana_vasilieva,
   },
   {
     id: "maxim_golubev",
@@ -149,28 +150,28 @@ export const AVAILABLE_JOURNALISTS: Journalist[] = [
     spec: "science",
     desc: "Тщательная проверка научных материалов укрепляет доверие",
     bonus: JOURNALIST_BONUSES.carefulSourcing,
-    cost: 20,
+    cost: GAME_BALANCE.journalistHourlyWages.maxim_golubev,
   },
   {
     id: "yulia_semenova",
     name: "Юлия Семёнова",
     role: "Общественный деятель",
     spec: "society",
-    cost: 50,
+    cost: GAME_BALANCE.journalistHourlyWages.yulia_semenova,
   },
   {
     id: "konstantin_borisov",
     name: "Константин Борисов",
     role: "Бизнес-журналист",
     spec: "business",
-    cost: 40,
+    cost: GAME_BALANCE.journalistHourlyWages.konstantin_borisov,
   },
   {
     id: "veronika_mikhailova",
     name: "Вероника Михайлова",
     role: "Лайфстайл редактор",
     spec: "fashion",
-    cost: 30,
+    cost: GAME_BALANCE.journalistHourlyWages.veronika_mikhailova,
   },
 ];
 

@@ -1,13 +1,18 @@
-import { MAX_VALUE_STAT } from "../constants/stats";
+import type { Metrics } from "../types";
+import { METRIC_DEFINITIONS } from "../constants/global";
 
 interface Props {
+  metricKey: keyof Metrics;
   icon: string;
   label: string;
   value: number;
   preview?: number;
 }
 
-export default function Metric({ icon, label, value, preview }: Props) {
+export default function Metric({ metricKey, icon, label, value, preview }: Props) {
+  const { min, max } = METRIC_DEFINITIONS[metricKey];
+  const fill = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+
   return (
     <div className="metric">
       <span className="metric-label">
@@ -26,7 +31,7 @@ export default function Metric({ icon, label, value, preview }: Props) {
         <div className="progress-bar">
           <div
             className="progress-fill"
-            style={{ width: `${(value / MAX_VALUE_STAT) * 100}%` }}
+            style={{ width: `${fill}%` }}
           />
         </div>
       </div>
