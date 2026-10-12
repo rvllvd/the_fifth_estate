@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import "./styles/themes/dark.css"; // import dark theme overrides
-import "./styles/themes/cyberpunk.css";
+import "./styles/themes/dark.scss";
+import "./styles/themes/cyberpunk.scss";
 import "./styles/themes/vanilla.css"; // import vanilla theme (original)
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
