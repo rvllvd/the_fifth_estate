@@ -6,8 +6,8 @@
   min-width: 0;
   padding: 5px 12px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  grid-template-areas: "left preview right";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "left right";
   align-items: center;
   justify-content: stretch;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -194,17 +194,22 @@
 
 /* Индикатор показателей — по центру панели */
 #metrics-preview {
-  grid-area: preview;
-  justify-self: center;
-  position: static;
-  transform: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   flex: 0 0 auto;
   min-width: 0;
   display: flex;
   align-items: center;
-  z-index: 2;
+  padding: 3px 15px;
+  margin: 0 5px 5px;
+  border-radius: 6px;
+  background: #1d284a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  min-height: 45px;
+  z-index: 3;
   pointer-events: none;
-
 }
 
 .top-panel-right,
@@ -306,10 +311,10 @@
 @media (max-width: 760px) {
   #top-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "clock . right"
-      "stats preview .";
+      "clock right"
+      "stats stats";
     gap: 5px 7px;
     padding: 5px 8px;
     min-height: 0;
@@ -326,7 +331,6 @@
 
   .top-panel-left > .game-clock,
   .top-panel-left > .top-panel-stats,
-  #top-panel > #metrics-preview,
   #top-panel > .top-panel-right {
     align-items: center;
     min-height: 34px;
@@ -356,9 +360,12 @@
 
   .top-panel-stats {
     grid-area: stats;
-    display: flex;
-    justify-self: start;
-    width: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 120px);
+    align-items: center;
+    justify-self: stretch;
+    gap: 5px;
+    width: 100%;
   }
 
   .metric {
@@ -382,10 +389,19 @@
   }
 
   #metrics-preview {
-    grid-area: preview;
-    justify-self: center;
-    max-width: 132px;
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    transform: none;
+    max-width: 120px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .preview-line {
@@ -412,14 +428,6 @@
 }
 
 @media (max-width: 540px) {
-  #top-panel {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "clock right"
-      "stats stats"
-      "preview preview";
-  }
-
   .game-clock {
     align-items: flex-start;
     text-align: left;
@@ -435,12 +443,12 @@
   }
 
   .top-panel-stats {
-    justify-self: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(84px, 110px);
     width: 100%;
   }
 
   #metrics-preview {
-    justify-self: center;
+    justify-self: end;
   }
 
   .metric-label {
@@ -456,7 +464,7 @@
   }
 
   #metrics-preview {
-    max-width: 120px;
+    max-width: 110px;
   }
 
   .preview-line {
@@ -471,8 +479,39 @@
 
 @media (max-width: 360px) {
   #top-panel {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "clock"
+      "stats"
+      "right";
     gap: 4px;
+  }
+
+  .top-panel-right {
+    justify-self: stretch;
+    justify-content: space-between;
+  }
+
+  .top-panel-economy {
+    justify-content: flex-start;
+  }
+
+  .top-panel-stats {
+    grid-template-columns: minmax(0, 1fr) 84px;
+    gap: 3px;
+  }
+
+  .metrics {
+    gap: 2px;
+  }
+
+  .metric-label {
+    font-size: 6px;
+  }
+
+  .preview-line {
+    gap: 1px;
+    font-size: 7px;
   }
 }
 

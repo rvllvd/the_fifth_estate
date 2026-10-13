@@ -81,21 +81,20 @@ export default function TopPanel({
               );
             })}
           </div>
-        </div>
-      </div>
-
-      <div id="metrics-preview" aria-label="Прогноз изменения метрик">
-        <div className="preview-line">
-          {keys.map((key) => (
-            <span
-              key={key}
-              className={preview[key] >= 0 ? "positive" : "negative"}
-              title={STAT_LABELS[key]}
-            >
-              {STAT_ICONS[key]} {preview[key] > 0 ? "+" : ""}
-              {preview[key]}
-            </span>
-          ))}
+          <div id="metrics-preview" aria-label="Прогноз изменения метрик">
+            <div className="preview-line">
+              {keys.map((key) => (
+                <span
+                  key={key}
+                  className={preview[key] >= 0 ? "positive" : "negative"}
+                  title={STAT_LABELS[key]}
+                >
+                  {STAT_ICONS[key]} {preview[key] > 0 ? "+" : ""}
+                  {preview[key]}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -106,7 +105,7 @@ export default function TopPanel({
             id="readers-display"
             aria-label="Читатели"
           >
-            <strong>👥 Читателей: {formatMoney(readers)}</strong>
+            <strong>👥 {formatMoney(readers)}</strong>
           </div>
 
           <div
