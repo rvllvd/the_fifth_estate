@@ -114,7 +114,9 @@ export default function TopPanel({
             aria-label="Деньги и цель недели"
           >
             <strong>💵 ${formatMoney(money)}</strong>
-            <span className="resource-goal">/ ${formatMoney(weeklyGoal)}</span>
+            <span className="resource-goal">
+              Цель: ${formatMoney(weeklyGoal)}
+            </span>
           </div>
         </div>
 

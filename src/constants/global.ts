@@ -61,34 +61,38 @@ export function resetGlobalConfig(): void {
   localStorage.removeItem(GLOBAL_CONFIG_STORAGE_KEY);
 }
 
+const DEFAULT_METRIC_VALUE = 15;
+const DEFAULT_MIN_METRIC_VALUE = 0;
+const DEFAULT_MAX_METRIC_VALUE = 30;
+
 export const METRIC_DEFINITIONS = {
   influence: {
     label: "Влияние",
     icon: "📈",
-    initial: 50,
-    min: 0,
-    max: 100,
+    initial: DEFAULT_METRIC_VALUE,
+    min: DEFAULT_MIN_METRIC_VALUE,
+    max: DEFAULT_MAX_METRIC_VALUE,
   },
   credibility: {
     label: "Доверие",
     icon: "🎯",
-    initial: 50,
-    min: 0,
-    max: 100,
+    initial: DEFAULT_METRIC_VALUE,
+    min: DEFAULT_MIN_METRIC_VALUE,
+    max: DEFAULT_MAX_METRIC_VALUE,
   },
   reputation: {
     label: "Репутация",
     icon: "📰",
-    initial: 50,
-    min: 0,
-    max: 100,
+    initial: DEFAULT_METRIC_VALUE,
+    min: DEFAULT_MIN_METRIC_VALUE,
+    max: DEFAULT_MAX_METRIC_VALUE,
   },
   loyalty: {
     label: "Лояльность",
     icon: "👥",
-    initial: 50,
-    min: 0,
-    max: 100,
+    initial: DEFAULT_METRIC_VALUE,
+    min: DEFAULT_MIN_METRIC_VALUE,
+    max: DEFAULT_MAX_METRIC_VALUE,
   },
 } satisfies Record<
   keyof Metrics,
