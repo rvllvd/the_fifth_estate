@@ -114,7 +114,9 @@ export const getColumns = (tier: number) =>
 export const GAME_BALANCE = {
   maxTurns: 42,
   showGameTime: false,
-  weeklyMoneyGoals: [3_500, 6_000, 12_000, 25_000, 50_000, 100_000],
+  weeklyMoneyGoals: [
+    3_050, 16_000, 50_000, 120_000, 250_000, 450_000, 700_000, 1_111_111,
+  ],
   articlesPerPublication: 3,
   newsPerRoll: 30,
   initialJournalists: 3,
