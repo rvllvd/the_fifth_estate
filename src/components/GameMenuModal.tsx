@@ -96,7 +96,8 @@ export default function GameMenuModal({
                 className={preview[key] >= 0 ? "positive" : "negative"}
                 key={key}
               >
-                {STAT_ICONS[key]} {preview[key] > 0 ? "+" : ""}
+                <span title={STAT_LABELS[key]}>{STAT_ICONS[key]}</span>{" "}
+                {preview[key] > 0 ? "+" : ""}
                 {preview[key]} {STAT_LABELS[key]}
               </span>
             ))}

@@ -1,6 +1,4 @@
-import { STAT_ICONS, STAT_LABELS } from "../constants/stats";
 import type { NewsContribution, NewsItem } from "../types";
-import { getTierMultiplier } from "../utils/game";
 import DancingText from "./DancingText";
 import NewsMetricBreakdown from "./NewsMetricBreakdown";
 
@@ -17,17 +15,6 @@ export default function PlacedNewsCard({
   contribution,
   onRemove,
 }: Props) {
-  const m = getTierMultiplier(tier);
-  const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
-  const effects = keys.map((key) => {
-    const icon = STAT_ICONS[key];
-    return {
-      // label: `${icon} ${label}`,
-      label: icon,
-      value: Math.round(news.effects[key] * m),
-    };
-  });
-
   return (
     <div className="placed-news" data-news-id={news.id} data-tier={tier}>
       <div className="placed-news-header">

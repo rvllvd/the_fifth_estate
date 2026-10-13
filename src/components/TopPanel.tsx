@@ -87,9 +87,9 @@ export default function TopPanel({
                 <span
                   key={key}
                   className={preview[key] >= 0 ? "positive" : "negative"}
-                  title={STAT_LABELS[key]}
                 >
-                  {STAT_ICONS[key]} {preview[key] > 0 ? "+" : ""}
+                  <span title={STAT_LABELS[key]}>{STAT_ICONS[key]}</span>{" "}
+                  {preview[key] > 0 ? "+" : ""}
                   {preview[key]}
                 </span>
               ))}

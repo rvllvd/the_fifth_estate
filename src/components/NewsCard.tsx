@@ -39,6 +39,7 @@ export default function NewsCard({
   const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
   const effects = keys.map((key) => ({
     icon: STAT_ICONS[key],
+    label: STAT_LABELS[key],
     value: news.effects[key],
   }));
 
@@ -73,7 +74,7 @@ export default function NewsCard({
       <div className="news-content">{news.content}</div>
       <div className="news-effects">
         {effects.map((e, i) => (
-          <span key={i} className="effect">
+          <span key={i} className="effect" title={e.label}>
             {e.icon} {e.value > 0 ? "+" : ""}
             {e.value}
           </span>

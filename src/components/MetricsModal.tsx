@@ -91,7 +91,9 @@ export default function MetricsModal({
                 className={`metric-change ${cls}${activeContribution >= 0 ? " is-scoring" : ""}`}
                 data-metric={key}
               >
-                <span className="metric-icon">{icon}</span>
+                <span className="metric-icon" title={name}>
+                  {icon}
+                </span>
                 <span className="metric-name">{name}</span>
                 <span className="metric-value">
                   {shown > 0 ? "+" : ""}
