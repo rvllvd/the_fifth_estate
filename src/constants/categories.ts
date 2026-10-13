@@ -1,3 +1,4 @@
+// Русские названия категорий новостей
 export const NEWS_CATEGORY_LABELS = {
   politics: "Политика",
   sport: "Спорт",
@@ -22,6 +23,7 @@ export const NEWS_CATEGORY_LABELS = {
   travel: "Путешествия",
 } as const satisfies Record<string, string>;
 
+// Возвращает русское название категории, или само значение если неизвестно
 export function getNewsCategoryLabel(category: string): string {
   return NEWS_CATEGORY_LABELS[category as keyof typeof NEWS_CATEGORY_LABELS] ?? category;
 }

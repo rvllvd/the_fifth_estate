@@ -3,14 +3,17 @@ import { METRIC_DEFINITIONS, METRIC_KEYS } from "./global";
 
 export { MAX_VALUE_STAT } from "./global";
 
+// Иконки метрик для отображения в UI
 export const STAT_ICONS: Record<keyof Metrics, string> = Object.fromEntries(
   METRIC_KEYS.map((key) => [key, METRIC_DEFINITIONS[key].icon]),
 ) as Record<keyof Metrics, string>;
 
+// Названия метрик для отображения в UI
 export const STAT_LABELS: Record<keyof Metrics, string> = Object.fromEntries(
   METRIC_KEYS.map((key) => [key, METRIC_DEFINITIONS[key].label]),
 ) as Record<keyof Metrics, string>;
 
+// Юмористические описания поражения по каждой метрике
 const DEFEAT_DESCRIPTIONS: Record<keyof Metrics, string> = {
   influence:
     "Влияние упало до нуля: ваши заявления больше никого не впечатляют. Даже пресс-секретарь теперь представляет только погоду.",
@@ -22,12 +25,14 @@ const DEFEAT_DESCRIPTIONS: Record<keyof Metrics, string> = {
     "Читатели разошлись по другим газетам. Похоже, последний экземпляр купили, чтобы подложить под шатающийся стол.",
 };
 
+// Возвращает описания поражения для метрик, упавших до минимума
 export function getDefeatDescriptions(metrics: Metrics): string[] {
   return METRIC_KEYS.filter(
     (key) => metrics[key] <= METRIC_DEFINITIONS[key].min,
   ).map((key) => DEFEAT_DESCRIPTIONS[key]);
 }
 
+// Пары [иконка, название] для каждой метрики
 export const METRIC_LABELS: Record<keyof Metrics, [string, string]> =
   Object.fromEntries(
     (Object.keys(STAT_LABELS) as (keyof Metrics)[]).map((key) => [
@@ -36,6 +41,7 @@ export const METRIC_LABELS: Record<keyof Metrics, [string, string]> =
     ]),
   ) as Record<keyof Metrics, [string, string]>;
 
+// Возвращает список ключей метрик
 export function metricKeys(): (keyof Metrics)[] {
   return METRIC_KEYS;
 }

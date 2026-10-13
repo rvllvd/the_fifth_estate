@@ -8,11 +8,14 @@ import type { GameState, Journalist, Metrics, NewsItem, PlacedNews } from "../ty
 import { calculatePublicationResult, isSlotTaken } from "./game";
 import { getCurrentPayroll, getIncomePerReader, settleEconomy } from "./economy";
 
+// План автоматического хода
 export interface AutoTurnPlan {
   journalistToHire: Journalist | null;
   placements: Array<{ news: NewsItem; slot: string; journalistId?: string }>;
 }
 
+// Оценивает результат публикации с учётом весов метрик, дефицита, экономики
+// Чем выше оценка, тем лучше для ИИ
 function evaluatePublication(
   state: GameState,
   placements: PlacedNews[],
@@ -35,14 +38,17 @@ function evaluatePublication(
       definition.min,
       Math.min(definition.max, current + result[key]),
     );
+    // Дефицит увеличивает ценность улучшения редких метрик
     const scarcity =
       1 +
       (1 - (current - definition.min) / (definition.max - definition.min)) *
         0.8;
     score += result[key] * metricWeights[key] * scarcity;
+    // Штраф за падение до минимума
     if (current + result[key] <= definition.min) {
       score -= 35 + (definition.min - current - result[key]) * 2;
     }
+    // Небольшой бонус за прогресс
     score += ((projected - current) / (definition.max - definition.min)) * 0.4;
   }
 
@@ -54,11 +60,14 @@ function evaluatePublication(
   const economy = settleEconomy(state, result);
   score += audienceChange * 0.75;
   score += Math.log1p(Math.max(0, economy.money)) * 0.12;
+  // Тяжёлые штрафы за поражение по экономике
   if (economy.readers <= GAME_BALANCE.minimumReaders) score -= 100;
   if (economy.money <= GAME_BALANCE.minimumMoney) score -= 100;
   return score;
 }
 
+// Выбирает журналиста для найма
+// Оценивает кандидатов по их потенциальному вкладу и стоимости
 function chooseJournalistToHire(
   state: GameState,
   news: NewsItem[],
@@ -117,6 +126,8 @@ function chooseJournalistToHire(
   return candidates[0]?.journalist ?? null;
 }
 
+// Основная функция автоплея: выбирает журналиста и размещения новостей
+// Перебирает все комбинации новостей, слотов и журналистов, выбирает лучшую по оценке
 export function chooseAutoTurn(
   state: GameState,
   currentNews: NewsItem[],
@@ -137,6 +148,7 @@ export function chooseAutoTurn(
     (item) => !alreadySelected.has(item.id),
   );
 
+  // Жадный алгоритм: последовательно выбирает лучшую новость для каждого слота
   while (placements.length < targetCount) {
     let bestChoice:
       | {

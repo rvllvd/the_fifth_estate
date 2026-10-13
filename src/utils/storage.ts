@@ -1,4 +1,5 @@
 // utils/storage.ts
+// Функции для сохранения и загрузки состояния игры в localStorage
 import type { GameState, Metrics, PublishedNewsLogItem } from "../types";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
 import { getNewsById } from "../data/news";
@@ -21,6 +22,7 @@ export const START_GAME_TIME = Date.UTC(
   GAME_BALANCE.gameStart.firstWorkingHour,
 );
 
+// Базовое начальное состояние игры без учёта игрового времени
 const INITIAL_STATE: GameState = {
   ...INITIAL_METRICS,
   readers: INITIAL_READERS,
@@ -40,6 +42,7 @@ const INITIAL_STATE: GameState = {
   publicationHistory: [],
 };
 
+// Возвращает начальное состояние со свежим игровым временем
 export function getInitialState(): GameState {
   return {
     ...INITIAL_STATE,
@@ -48,6 +51,7 @@ export function getInitialState(): GameState {
   };
 }
 
+// Создаёт начальное состояние: либо загружает сохранение, либо создаёт новое с начальными журналистами
 export function createInitialState(): GameState {
   const saved = loadState();
   if (saved) return saved;
@@ -59,6 +63,7 @@ export function createInitialState(): GameState {
   return init;
 }
 
+// Сохраняет состояние игры в localStorage
 export function saveState(state: GameState): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -67,22 +72,27 @@ export function saveState(state: GameState): void {
   }
 }
 
+// Загружает состояние игры из localStorage
+// Выполняет миграцию данных при изменении версии экономики и восстанавливает структуру истории публикаций
 export function loadState(): GameState | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as GameState;
+      // Миграция при изменении версии экономики
       if (state.economyVersion !== ECONOMY_SAVE_VERSION) {
         state.readers = INITIAL_READERS;
         state.money = INITIAL_MONEY;
         state.economyVersion = ECONOMY_SAVE_VERSION;
       }
+      // Восстановление значений по умолчанию для новых полей
       state.readers ??= INITIAL_READERS;
       state.money ??= INITIAL_MONEY;
       state.maxTurns = GAME_BALANCE.maxTurns;
       state.eventHistory ??= [];
       state.gameTime ??= START_GAME_TIME;
       state.gameTimeUpdatedAt ??= Date.now();
+      // Миграция истории публикаций: восстановление base/bonus/multiplier из старого формата
       state.publicationHistory = (state.publicationHistory ?? []).map(
         (publication) => ({
           ...publication,
@@ -121,6 +131,7 @@ export function loadState(): GameState | null {
           }),
         }),
       );
+      // Обновление данных журналистов из актуального списка (для изменений в бонусах и т.д.)
       state.journalists = state.journalists.map((savedJournalist) => {
         const journalist = AVAILABLE_JOURNALISTS.find(
           (available) => available.id === savedJournalist.id,
@@ -138,6 +149,7 @@ export function loadState(): GameState | null {
   return null;
 }
 
+// Удаляет сохранение из localStorage
 export function clearState(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
@@ -146,6 +158,7 @@ export function clearState(): void {
   }
 }
 
+// Проверяет наличие сохранения
 export function hasSave(): boolean {
   return localStorage.getItem(STORAGE_KEY) !== null;
 }

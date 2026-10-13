@@ -34,6 +34,8 @@ import {
   getRandomPublicationTimeAdvance,
 } from "../constants/global";
 
+// Интерфейс главного хранилища игры, расширяющий GameState
+// Содержит все методы для управления состоянием игры
 interface GameStore extends GameState {
   // новости
   rollCurrentNews: (allowUsedNews?: boolean) => void;
@@ -70,6 +72,9 @@ interface GameStore extends GameState {
 export const useGameStore = create<GameStore>((set, get) => ({
   ...createInitialState(),
 
+  // Обновляет назначения журналистов на новости
+  // Пересчитывает, какой журналист работает над какой новостью на основе категорий
+  // Использует Map для отслеживания уже назначенных журналистов, чтобы избежать дублирования
   updateView: () => {
     const { journalists, placedNews } = get();
     const assignments = new Map<string, string>();
@@ -91,6 +96,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── новости ──
+  // Генерирует новые новости для выбора игроком
+  // allowUsedNews: если true, позволяет использовать уже показанные новости (когда новые закончились)
   rollCurrentNews: (allowUsedNews = false) => {
     const { currentNewsIds, usedNewsIds } = get();
     if (currentNewsIds.length > 0) return;
@@ -108,6 +115,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── размещение ──
+  // Размещает новость в газете
+  // key: ключ слота в формате "tier-slot" (например, "1-2")
+  // journalistId: ID конкретного журналиста (опционально)
+  // allowUnstaffed: если true, позволяет разместить новость без журналиста
+  // Возвращает true если размещение успешно, иначе false
   dropNews: (key, news, journalistId, allowUnstaffed = false) => {
     const { placedNews, journalists } = get();
     const freeJournalist = journalists.find(
@@ -142,6 +154,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     return true;
   },
 
+  // Автоматически размещает новость в первый свободный слот при клике
+  // Если новость уже размещена - ничего не делает
   clickNews: (news) => {
     const { placedNews, dropNews } = get();
     if (placedNews.some((p) => p.newsId === news.id)) return;
@@ -150,6 +164,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (free) dropNews(free, news);
   },
 
+  // Удаляет новость из газеты и переназначает журналистов
+  // Пересчитывает назначения после удаления, чтобы журналисты перераспределились
   removePlaced: (newsId) => {
     const state = get();
     const placedNews = state.placedNews.filter(
@@ -174,6 +190,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+  // Очищает всю газету - удаляет все размещённые новости и снимает назначения журналистов
   clearNewspaper: () => {
     const { journalists } = get();
     set({
@@ -185,6 +202,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+  // Отбрасывает текущие новости в корзину (в список использованных)
   discardCurrentNews: () => {
     const { currentNewsIds, usedNewsIds } = get();
     set({
@@ -195,6 +213,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // ── журналисты ──
+  // Нанимает журналиста в редакцию
+  // Проверяет: хватает ли денег, нет ли уже такого, не переполнен ли офис
   hireJournalist: (j) => {
     const state = get();
     if (
@@ -208,12 +228,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
     return true;
   },
 
+  // Увольняет журналиста по ID
   fireJournalist: (id) =>
     set((prev) => ({
       journalists: prev.journalists.filter((x) => x.id !== id),
     })),
 
   // ── игровой цикл ──
+  // Публикует газету - рассчитывает вклад каждой новости и возвращает результат
+  // Возвращает null если публикация невозможна, иначе возвращает метрики результата
   publish: () => {
     const state = get();
     if (!canPublish(state)) return null;
@@ -252,6 +275,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     return result;
   },
 
+  // Применяет результат публикации к состоянию игры
+  // Обновляет метрики, экономику, проверяет условия победы/поражения, запускает события
   applyResult: (result) => {
     const state = get();
     const now = Date.now();
@@ -312,6 +337,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set(nextState);
   },
 
+  // Обрабатывает выбор игрока в событии (event)
+  // Применяет эффекты выбора к метрикам и деньгам, проверяет минимальные значения
   resolveEvent: (choiceId) => {
     const state = get();
     if (!state.pendingEvent) return;
@@ -373,8 +400,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+  // Скрывает экран результатов недели
   dismissWeekResult: () => set({ weekResult: undefined }),
 
+  // Обновляет игровое время (тимер тикает в реальном времени)
   tickGameTime: () => {
     const now = Date.now();
     set((state) => ({
@@ -383,6 +412,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }));
   },
 
+  // Начинает новую игру с начальными значениями и стартовыми журналистами
   newGame: () => {
     const { clearNewspaper } = get();
     const init = getInitialState();
@@ -404,6 +434,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     clearNewspaper();
   },
 
+  // Полный сброс состояния игры к начальным значениям (без журналистов)
   reset: () =>
     set({
       ...getInitialState(),
@@ -414,15 +445,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
       eventHistory: [],
     }),
 
+  // Проверяет, окончена ли игра
   isGameOver: () => {
     return isGameOver(get());
   },
 }));
 
 // ─── автосохранение ──────────────────────────────────────────────
+// Подписывается на изменения состояния и сохраняет их в localStorage
 useGameStore.subscribe((state) => saveState(state));
 
 // ─── селекторы ───────────────────────────────────────────────────
+// Оптимизированные селекторы для компонентов
 export const selectPlacedNews = (s: GameStore) => s.placedNews;
 export const selectIsVictory = (s: GameStore) => isVictory(s);
 export const selectIsGameOver = (s: GameStore) => isGameOver(s);

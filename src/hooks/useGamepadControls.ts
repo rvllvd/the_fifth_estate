@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 type Direction = "up" | "down" | "left" | "right";
 
+// CSS-селектор для всех интерактивных элементов, на которые можно фокусироваться
 const FOCUSABLE_SELECTOR = [
   "button:not(:disabled)",
   "a[href]",
@@ -11,6 +12,8 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex="0"]',
 ].join(",");
 
+// Возвращает самый верхний открытый модальный диалог
+// Нужен для ограничения навигации внутри модального окна
 function getTopmostModal(): HTMLElement | null {
   const modals = document.querySelectorAll<HTMLElement>(
     ".modal.show, .metrics-modal.show",
@@ -18,6 +21,8 @@ function getTopmostModal(): HTMLElement | null {
   return modals.item(modals.length - 1) ?? null;
 }
 
+// Возвращает все видимые и интерактивные элементы в заданной области (scope)
+// Фильтрует скрытые элементы (display: none, visibility: hidden)
 function getFocusableElements(scope: ParentNode): HTMLElement[] {
   return Array.from(scope.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
     .filter((element) => {
@@ -30,6 +35,8 @@ function getFocusableElements(scope: ParentNode): HTMLElement[] {
     });
 }
 
+// Фокусируется на элементе и добавляет визуальный индикатор (gamepad-focus)
+// Удаляет индикатор с предыдущего элемента
 function focusElement(element: HTMLElement): void {
   document
     .querySelectorAll(".gamepad-focus")
@@ -38,6 +45,10 @@ function focusElement(element: HTMLElement): void {
   element.classList.add("gamepad-focus");
 }
 
+// Перемещает фокус в заданном направлении (up/down/left/right)
+// Использует геометрический алгоритм: находит ближайший элемент в направлении движения
+// primary: расстояние по основной оси направления
+// secondary: расстояние по перпендикулярной оси (для отбора кандидатов)
 function moveFocus(direction: Direction): void {
   const scope: ParentNode = getTopmostModal() ?? document;
   const elements = getFocusableElements(scope);
@@ -91,6 +102,8 @@ function moveFocus(direction: Direction): void {
   focusElement(next);
 }
 
+// Изменяет значение слайдера (input type="range") при навигации влево/вправо
+// Возвращает true если это был слайдер и значение изменилось, иначе false
 function adjustFocusedRange(direction: Direction): boolean {
   const active = document.activeElement;
   if (
@@ -119,6 +132,9 @@ function adjustFocusedRange(direction: Direction): boolean {
   return true;
 }
 
+// Активирует (кликает) текущий сфокусированный элемент
+// Если это новость (news-item), после клика сохраняет фокус на том же индексе в списке
+// Это нужно, потому что после клика новость может исчезнуть из списка
 function activateFocusedElement(): void {
   const active =
     document.activeElement instanceof HTMLElement
@@ -148,6 +164,7 @@ function activateFocusedElement(): void {
   }
 }
 
+// Закрывает текущий модальный диалог (кнопка "назад" или "продолжить")
 function goBack(): void {
   const modal = getTopmostModal();
   if (!modal) return;
@@ -159,6 +176,11 @@ function goBack(): void {
   (closeButton ?? continueButton)?.click();
 }
 
+// Хук для управления игрой с геймпада
+// Опрашивает состояние геймпада каждые 50мс и обрабатывает нажатия кнопок
+// Возвращает true если геймпад подключён
+// Схема кнопок: 0 - A (активация), 1 - B (назад), 2 - X (очистить), 3 - Y (опубликовать)
+// Схема стиков/DPAD: навигация вверх/вниз/влево/вправо
 export function useGamepadControls(): boolean {
   const [connected, setConnected] = useState(false);
 
@@ -174,6 +196,7 @@ export function useGamepadControls(): boolean {
     let nextNavigationAt = 0;
     let lastGamepadConnected = false;
 
+    // Основной цикл опроса геймпада
     const poll = (time: number) => {
       const gamepad = Array.from(navigator.getGamepads()).find(
         (item): item is Gamepad => Boolean(item?.connected),
@@ -185,6 +208,7 @@ export function useGamepadControls(): boolean {
         setConnected(isConnected);
       }
 
+      // Автоматически фокусируется на первом элементе при открытии модального окна
       const modal = getTopmostModal();
       if (modal !== previousModal) {
         if (modal) {
@@ -233,6 +257,7 @@ export function useGamepadControls(): boolean {
                 : "down"
               : null);
 
+        // Навигация с задержкой для удержания кнопки (240мс между шагами)
         if (
           direction &&
           (direction !== activeDirection || time >= nextNavigationAt)
@@ -244,6 +269,7 @@ export function useGamepadControls(): boolean {
           activeDirection = null;
         }
 
+        // Обработка кнопок геймпада
         if (justPressed(0)) activateFocusedElement();
         if (justPressed(1)) goBack();
         if (!modal && justPressed(2)) {

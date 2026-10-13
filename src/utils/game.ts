@@ -18,6 +18,8 @@ import {
 
 export { getTierMultiplier };
 
+// Проверяет, занят ли слот конкретной новостью
+// excludeNewsId: если указан, эта новость не считается занимающей слот (для перемещения)
 export function isSlotTaken(
   placedNews: PlacedNews[],
   slotKey: string,
@@ -43,6 +45,7 @@ export function isSlotTaken(
 //   );
 // }
 
+// Рассчитывает общий результат публикации (сумма всех вкладов новостей)
 export function calculatePublicationResult(
   placedNews: PlacedNews[],
   journalists: Journalist[],
@@ -59,6 +62,9 @@ export function calculatePublicationResult(
   );
 }
 
+// Рассчитывает вклад каждой новости в publication
+// Учитывает базовые эффекты, бонусы журналистов и множители полос (tier)
+// Поддерживает как статические бонусы, так и динамические (функции)
 export function calculateNewsContributions(
   placedNews: PlacedNews[],
   journalists: Journalist[],
@@ -84,8 +90,10 @@ export function calculateNewsContributions(
     };
     let bonusDescription: string | undefined;
 
+    // Расчёт бонуса журналиста
     if (journalist?.bonus) {
       if (typeof journalist.bonus === "function") {
+        // Динамический бонус с контекстом
         const relatedNews = placedNews.flatMap((other, otherIndex) => {
           if (other.newsId === placed.newsId) return [];
           const related = newsItems[otherIndex];
@@ -105,6 +113,7 @@ export function calculateNewsContributions(
         bonus = result.metrics;
         bonusDescription = result.explanation;
       } else {
+        // Статический бонус
         bonus = journalist.bonus;
         bonusDescription = journalist.desc;
       }
@@ -136,6 +145,8 @@ export function calculateNewsContributions(
   });
 }
 
+// Рассчитывает вклад новости без её фактического размещения (для предпросмотра)
+// Создаёт гипотетическое состояние с новостью и журналистом
 export function calculateProspectiveNewsContribution(
   news: NewsItem,
   placement: PlacedNews,
@@ -166,10 +177,13 @@ export function calculateProspectiveNewsContribution(
   return contribution ?? null;
 }
 
+// Ограничивает значение метрики в допустимом диапазоне
 export function clampMetric(value: number, key?: keyof Metrics): number {
   return clampGlobalMetric(value, key);
 }
 
+// Применяет результат публикации к состоянию игры
+// Обновляет метрики, увеличивает ход, очищает размещённые новости
 export function applyPublication(state: GameState, result: Metrics): GameState {
   const usedNewsIds = [...state.usedNewsIds];
   for (const placed of state.placedNews) {
@@ -199,10 +213,12 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
   };
 }
 
+// Проверяет условие победы
 export function isVictory(state: GameState): boolean {
   return state.victory === true;
 }
 
+// Проверяет условие окончания игры (поражение или победа)
 export function isGameOver(state: GameState): boolean {
   return (
     state.gameOver === true ||
@@ -214,6 +230,7 @@ export function isGameOver(state: GameState): boolean {
   );
 }
 
+// Проверяет, можно ли опубликовать газету (достаточно новостей)
 export function canPublish(state: GameState): boolean {
   return state.placedNews.length >= GAME_BALANCE.articlesPerPublication;
 }

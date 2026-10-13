@@ -1,5 +1,9 @@
 import { useEffect, useRef } from 'react';
 
+// Хук для воспроизведения фоновой музыки
+// src: путь к аудиофайлу
+// volume: громкость (0-1), по умолчанию 0.15
+// enabled: включена ли музыка, по умолчанию true
 export function useBackgroundMusic(
   src: string,
   volume = 0.15,
@@ -7,6 +11,7 @@ export function useBackgroundMusic(
 ) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Создаёт аудио-элемент при изменении src
   useEffect(() => {
     const audio = new Audio(src);
     audio.loop = true;
@@ -20,6 +25,8 @@ export function useBackgroundMusic(
     };
   }, [src]);
 
+  // Управляет воспроизведением и громкостью
+  // Автоматически запускает музыку при первом взаимодействии пользователя (click/keydown)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;

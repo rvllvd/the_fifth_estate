@@ -1,5 +1,6 @@
 import { GAME_BALANCE } from "./global";
 
+// Возвращает описания причин поражения по экономике (читатели и деньги)
 export function getEconomyDefeatDescriptions(
   readers: number,
   money: number,

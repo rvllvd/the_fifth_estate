@@ -4,12 +4,14 @@ import {
 } from "../constants/global";
 import type { GameState, Journalist, Metrics } from "../types";
 
+// Форматирует число в денежный формат (русская локаль)
 export function formatMoney(value: number): string {
   return new Intl.NumberFormat("ru-RU", {
     maximumFractionDigits: 0,
   }).format(Math.round(value));
 }
 
+// Результат расчёта экономики после публикации
 export interface EconomySettlement {
   readers: number;
   money: number;
@@ -21,6 +23,7 @@ export interface EconomySettlement {
   dismissedJournalists: Journalist[];
 }
 
+// Рассчитывает изменение количества читателей на основе метрик
 export function calculateReaderChange(
   currentMetrics: Metrics,
   result: Metrics,
@@ -29,6 +32,8 @@ export function calculateReaderChange(
   return calculateGlobalAudienceChange(currentMetrics, result, currentReaders);
 }
 
+// Рассчитывает доход с одного читателя в час
+// Увеличивается с достижением вех по количеству читателей
 export function getIncomePerReader(readers: number): number {
   const growth = GAME_BALANCE.readerIncomeGrowth;
   const milestones = Math.floor(readers / growth.readersPerMilestone);
@@ -38,6 +43,8 @@ export function getIncomePerReader(readers: number): number {
   );
 }
 
+// Основная функция расчёта экономики после публикации
+// Рассчитывает доход, зарплаты, увольняет дорогих журналистов если не хватает денег
 export function settleEconomy(
   state: GameState,
   result: Metrics,
@@ -61,6 +68,7 @@ export function settleEconomy(
   const availableMoney = state.money + income;
   const dismissedJournalists: Journalist[] = [];
 
+  // Увольняет самых дорогих журналистов пока зарплата превышает доступные деньги
   while (payroll > availableMoney && workingJournalists.length > 0) {
     const mostExpensiveIndex = workingJournalists.reduce(
       (highestIndex, journalist, index, staff) =>
@@ -86,6 +94,7 @@ export function settleEconomy(
   };
 }
 
+// Рассчитывает общую зарплату журналистов
 export function getCurrentPayroll(journalists: Journalist[]): number {
   return journalists.reduce((total, journalist) => total + journalist.cost, 0);
 }

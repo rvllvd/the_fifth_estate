@@ -9,8 +9,10 @@ const noBonus: Metrics = {
 };
 const BONUS = GAME_BALANCE.journalistBonuses;
 
+// Реализации бонусов журналистов
+// Каждый бонус принимает контекст (news, game, journalists и т.д.) и возвращает метрики и описание
 export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
-  // Adds the products of the article's metrics and every same-category article's metrics.
+  // Синергия с новостями той же категории: умножает эффекты каждой связанной новости
   sameCategorySynergy: ({ news, relatedNews }) => ({
     metrics: relatedNews.reduce(
       (bonus, related) => ({
@@ -42,7 +44,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
       : "",
   }),
 
-  // Morning editions get a credibility boost when published between 09:00 and 11:59.
+  // Утренний выпуск: бонус к доверию между 9:00 и 12:00
   morningEdition: ({ game }) => {
     const hour = new Date(game.gameTime).getUTCHours();
     const { startHour, endHour, credibility } = BONUS.morningEdition;
@@ -55,7 +57,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Late-day sports reporting attracts more readers but slightly risks credibility.
+  // Вечерний спорт: бонус к лояльности с небольшим штрафом доверию между 16:00 и 18:00
   eveningSports: ({ game }) => {
     const hour = new Date(game.gameTime).getUTCHours();
     const {
@@ -75,7 +77,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Weekend cinema coverage draws a larger audience on Saturday and Sunday.
+  // Кинопремьеры выходного дня: бонус к лояльности и репутации в субботу и воскресенье
   weekendPremiere: ({ game, news }) => {
     const day = new Date(game.gameTime).getUTCDay();
     const { days, category, loyalty, reputation } = BONUS.weekendPremiere;
@@ -90,7 +92,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Investigative stories gain influence and loyalty, at the cost of reputation.
+  // Громкое происшествие: бонус к влиянию и лояльности, штраф репутации
   sensationalIncident: ({ news }) => {
     const { category, influence, reputation, loyalty } =
       BONUS.sensationalIncident;
@@ -105,7 +107,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Reports are more credible when the issue is not already damaging public trust.
+  // Общественное доверие: бонус к доверию если доверие уже высокое
   publicTrust: ({ game }) => {
     const { minimumCredibility, credibility } = BONUS.publicTrust;
     const active = game.credibility >= minimumCredibility;
@@ -117,7 +119,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // A diverse issue boosts the influence of international coverage.
+  // Разнообразный выпуск: бонус к влиянию если 3+ категорий в выпуске
   diverseNewsroom: ({ placedNewsItems }) => {
     const categories = new Set(placedNewsItems.map((item) => item.category));
     const { minimumCategories, influence } = BONUS.diverseNewsroom;
@@ -130,7 +132,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Each other journalist actively assigned to this issue improves the story's credibility.
+  // Редакционная командная работа: бонус к доверию за каждого работающего коллеги
   editorialTeamwork: ({ journalist, journalists }) => {
     const { credibilityPerColleague } = BONUS.editorialTeamwork;
     const colleagues = journalists.filter(
@@ -147,7 +149,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Science, education and health stories earn extra credibility from careful sourcing.
+  // Тщательная проверка источников: бонус к доверию и лояльности для науки/образования/здоровья
   carefulSourcing: ({ news }) => {
     const { categories, credibility, loyalty } = BONUS.carefulSourcing;
     const active = categories.includes(news.category);
@@ -161,7 +163,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // When loyalty is low, culture coverage helps rebuild the audience and reputation.
+  // Восстановление аудитории: бонус к лояльности и репутации для культуры при низкой лояльности
   audienceRecovery: ({ game, news }) => {
     const { maximumloyalty, loyalty, reputation } = BONUS.audienceRecovery;
     const { category } = BONUS.audienceRecovery;
@@ -176,7 +178,7 @@ export const JOURNALIST_BONUSES: Record<string, JournalistBonus> = {
     };
   },
 
-  // Finance stories get a small reputation bonus when the paper's influence is strong.
+  // Рыночный авторитет: бонус к репутации и доверию для финансов при высоком влиянии
   marketAuthority: ({ game, news }) => {
     const { minimumInfluence, category, reputation, credibility } =
       BONUS.marketAuthority;
