@@ -2,14 +2,16 @@
 #top-panel {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: white;
-  padding: 8px 20px;
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 5px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  min-height: 50px;
+  min-height: 56px;
   position: relative;
-  gap: 15px;
+  gap: clamp(6px, 1vw, 12px);
 }
 
 .newspaper-logo {
@@ -22,10 +24,10 @@
 
 .game-clock {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   flex: 0 0 auto;
   gap: 2px;
-  min-width: 60px;
+  min-width: 0;
   color: #f5e6b8;
   font-family: 'Cormorant Garamond', serif;
   font-variant-numeric: tabular-nums;
@@ -48,11 +50,21 @@
   white-space: nowrap;
 }
 
-/* Показатели */
+/* Показатели и прогноз держатся одной компактной группой. */
+.top-panel-stats {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(6px, 1vw, 14px);
+}
+
 .metrics {
   display: flex;
-  gap: 15px;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  gap: clamp(4px, 0.5vw, 8px);
+  min-width: 0;
 }
 
 .resource-display {
@@ -60,9 +72,9 @@
   flex: 0 1 auto;
   flex-direction: column;
   gap: 2px;
-  min-width: 92px;
+  min-width: 0;
   color: #f5e6b8;
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.15;
   text-align: center;
   white-space: nowrap;
@@ -76,13 +88,17 @@
 }
 
 .resource-display strong {
-  font-size: 15px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
-.resource-flow {
-  color: #bdc3c7;
+.resource-goal {
+  color: #c8d0d8;
   font-size: 9px;
+}
+
+.resource-flow {
+  display: none;
 }
 
 .resource-display .positive {
@@ -97,18 +113,18 @@
 
 .top-panel-economy {
   display: flex;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 0 auto;
+  margin: 0;
   z-index: 2;
 }
 
 .metric {
   display: flex;
   flex-direction: column;
-  min-width: 70px;
+  min-width: 0;
 }
 
 .metric-label {
@@ -126,7 +142,7 @@
 }
 
 .progress-bar {
-  width: 50px;
+  width: clamp(20px, 3.2vw, 42px);
   height: 6px;
   background-color: #34495e;
   border-radius: 3px;
@@ -142,7 +158,8 @@
 /* Обёртка кнопок справа */
 .top-panel-actions {
   display: flex;
-  gap: 10px;
+  flex: 0 0 auto;
+  gap: 6px;
   z-index: 3;
 }
 
@@ -168,59 +185,240 @@
 #metrics-preview {
   position: static;
   transform: none;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 4px 10px;
-  min-width: 90px;
+  flex: 0 0 auto;
+  min-width: 0;
   display: flex;
-  flex-direction: column;
-  font-size: 14px;
+  align-items: center;
   z-index: 2;
   pointer-events: none;
+
+}
+
+#top-panel>* {
+  align-items: center;
+  padding: 3px 15px;
+  margin: 0 5px 5px 5px;
+  background: #1d284a;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  min-height: 45px;
+}
+
+.preview-line {
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, 0.5vw, 7px);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.preview-line .positive {
+  color: #65d39a;
+}
+
+.preview-line .negative {
+  color: #ff8585;
 }
 
 @media (max-width: 1350px) {
   #top-panel {
-    gap: 8px;
-    padding-inline: 12px;
+    gap: 7px;
+    padding-inline: 9px;
   }
 
   .metrics {
-    gap: 8px;
-  }
-
-  .metric {
-    min-width: 56px;
+    gap: 5px;
   }
 
   .progress-bar {
-    width: 35px;
+    width: clamp(18px, 2.8vw, 32px);
   }
 
   .top-panel-economy {
-    gap: 5px;
-  }
-
-  .resource-display {
-    min-width: 76px;
-  }
-
-  .resource-flow {
-    display: block;
-    font-size: 8px;
-  }
-
-  .resource-payroll {
-    display: none;
-  }
-
-  .top-panel-actions {
-    gap: 5px;
+    gap: 6px;
   }
 
   .top-panel-actions .right-btn {
-    padding-inline: 7px;
+    padding: 5px 9px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1350px) {
+  #top-panel {
+    min-height: 54px;
+  }
+
+  .game-clock {
+    font-size: 12px;
+  }
+
+  .metrics {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    gap: clamp(8px, 1vw, 14px);
+  }
+
+  .metric-label {
+    font-size: 8px;
+    margin-bottom: 1px;
+  }
+
+  .metric-value-container {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 760px) {
+  #top-panel {
+    display: grid;
+    grid-template-columns: minmax(72px, auto) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "clock economy actions"
+      "metrics metrics metrics";
+    gap: 5px 7px;
+    padding: 5px 8px;
+    min-height: 0;
+  }
+
+  .game-clock {
+    grid-area: clock;
+    justify-self: start;
+    min-width: 0;
+  }
+
+  .game-clock > span:last-child,
+  .game-clock time {
+    font-size: 12px;
+  }
+
+  .metrics {
+    justify-content: flex-start;
+    gap: 6px;
+    width: auto;
+  }
+
+  .top-panel-stats {
+    grid-area: metrics;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 5px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .metric {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .metric-label {
+    font-size: 8px;
+    margin-bottom: 1px;
+  }
+
+  .progress-bar {
+    width: 24px;
+    height: 4px;
+  }
+
+  .top-panel-economy {
+    grid-area: economy;
+    justify-self: end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  #metrics-preview {
+    max-width: 132px;
+    overflow: hidden;
+  }
+
+  .preview-line {
+    gap: 3px;
+    font-size: 9px;
+  }
+
+  .resource-display {
+    min-width: 0;
+    white-space: normal;
+    font-size: 9px;
+  }
+
+  .resource-display strong {
+    font-size: 12px;
+  }
+
+  .top-panel-actions {
+    grid-area: actions;
+    justify-self: end;
+    gap: 0;
+  }
+
+  .top-panel-actions .right-btn {
+    min-height: 30px;
+    padding: 4px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 540px) {
+  .game-clock {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .game-clock > span:last-child {
+    white-space: nowrap;
+  }
+
+  .metrics {
+    gap: 4px;
+  }
+
+  .metric-label {
+    font-size: 7px;
+  }
+
+  .metric-value {
+    font-size: 11px;
+  }
+
+  .progress-bar {
+    width: 18px;
+  }
+
+  #metrics-preview {
+    max-width: 120px;
+  }
+
+  .preview-line {
+    gap: 2px;
+    font-size: 8px;
+  }
+
+  .resource-goal {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  #top-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "clock actions"
+      "metrics metrics"
+      "economy economy";
+  }
+
+  .top-panel-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .top-panel-economy {
+    justify-self: stretch;
+    justify-content: space-around;
   }
 }
 

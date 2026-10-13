@@ -25,6 +25,7 @@ import SettingsModal from "./components/SettingsModal";
 import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
 import GameConfigModal from "./components/GameConfigModal";
+import GameMenuModal from "./components/GameMenuModal";
 import { setSoundEffectsSettings } from "./utils/sounds";
 import { getEconomyDefeatDescriptions } from "./constants/economy";
 import { getCurrentPayroll, settleEconomy } from "./utils/economy";
@@ -44,6 +45,7 @@ export default function App() {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
+  const [showGameMenuModal, setShowGameMenuModal] = useState(false);
   const [showGameConfigModal, setShowGameConfigModal] = useState(false);
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
   const [autoPlayStep, setAutoPlayStep] = useState(0);
@@ -120,6 +122,13 @@ export default function App() {
   const gameWon = useGameStore(selectIsVictory);
   const gameState = useGameStore((state) => state);
   const weekResult = gameState.weekResult;
+  const weeklyGoal =
+    GAME_BALANCE.weeklyMoneyGoals[
+      Math.min(
+        Math.floor((gameState.turn - 1) / 7),
+        GAME_BALANCE.weeklyMoneyGoals.length - 1,
+      )
+    ];
 
   // экшены
   const rollCurrentNews = useGameStore((s) => s.rollCurrentNews);
@@ -374,6 +383,7 @@ export default function App() {
     if (publicationPreview) return;
     if (
       showJournalistsModal ||
+      showGameMenuModal ||
       showSettingsModal ||
       showStatisticsModal ||
       showGameConfigModal ||
@@ -400,6 +410,7 @@ export default function App() {
     runAutoTurn,
     showAlertModal,
     weekResult,
+    showGameMenuModal,
     showGameConfigModal,
     showJournalistsModal,
     showSettingsModal,
@@ -430,19 +441,12 @@ export default function App() {
       <div id="app">
         <TopPanel
           metrics={{ influence, credibility, reputation, loyalty: loyalty }}
+          preview={preview}
           gameTime={gameTime}
           turn={gameState.turn}
-          onNewGame={handleNewGame}
-          preview={preview}
           readers={gameState.readers}
           money={gameState.money}
-          readerChangePreview={economyPreview?.readerChange ?? null}
-          moneyChangePreview={economyPreview?.moneyChange ?? null}
-          payroll={getCurrentPayroll(journalists)}
-          showDeveloperTools={import.meta.env.DEV}
-          onOpenGameConfig={() => setShowGameConfigModal(true)}
-          onOpenStatistics={() => setShowStatisticsModal(true)}
-          onOpenSettings={openSettings}
+          onOpenMenu={() => setShowGameMenuModal(true)}
         />
         <div id="main-content">
           <LeftPanel
@@ -495,6 +499,24 @@ export default function App() {
         />
       )}
 
+      {showGameMenuModal && (
+        <GameMenuModal
+          readers={gameState.readers}
+          money={gameState.money}
+          weeklyGoal={weeklyGoal}
+          payroll={getCurrentPayroll(journalists)}
+          preview={preview}
+          readerChangePreview={economyPreview?.readerChange ?? null}
+          moneyChangePreview={economyPreview?.moneyChange ?? null}
+          showDeveloperTools={import.meta.env.DEV}
+          onClose={() => setShowGameMenuModal(false)}
+          onNewGame={handleNewGame}
+          onOpenSettings={openSettings}
+          onOpenStatistics={() => setShowStatisticsModal(true)}
+          onOpenGameConfig={() => setShowGameConfigModal(true)}
+        />
+      )}
+
       {showSettingsModal && (
         <SettingsModal
           visible={showSettingsModal}
@@ -539,18 +561,20 @@ export default function App() {
                   credibility,
                   reputation,
                   loyalty,
-                }).concat(
-                  weekResult && !weekResult.passed
-                    ? [
-                        `Денежная цель недели ${weekResult.week} не выполнена: $${new Intl.NumberFormat("ru-RU").format(weekResult.balance)} из требуемых $${new Intl.NumberFormat("ru-RU").format(weekResult.target)}.`,
-                      ]
-                    : [],
-                ).concat(
-                  getEconomyDefeatDescriptions(
-                    gameState.readers,
-                    gameState.money,
-                  ),
-                )
+                })
+                  .concat(
+                    weekResult && !weekResult.passed
+                      ? [
+                          `Денежная цель недели ${weekResult.week} не выполнена: $${new Intl.NumberFormat("ru-RU").format(weekResult.balance)} из требуемых $${new Intl.NumberFormat("ru-RU").format(weekResult.target)}.`,
+                        ]
+                      : [],
+                  )
+                  .concat(
+                    getEconomyDefeatDescriptions(
+                      gameState.readers,
+                      gameState.money,
+                    ),
+                  )
           }
           onClose={() => setShowAlertModal(false)}
           onNewGame={handleNewGame}

@@ -1,7 +1,7 @@
 import Metric from "./Metric";
 import type { Metrics } from "../types";
 import { STAT_LABELS, STAT_ICONS } from "../constants/stats";
-import { formatMoney, getIncomePerReader } from "../utils/economy";
+import { formatMoney } from "../utils/economy";
 import { GAME_BALANCE } from "../constants/global";
 
 const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
@@ -14,38 +14,23 @@ const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
 
 interface Props {
   metrics: Metrics;
+  preview: Metrics;
   gameTime: number;
   turn: number;
-  onNewGame: () => void;
-  preview: Metrics;
   readers: number;
   money: number;
-  readerChangePreview: number | null;
-  moneyChangePreview: number | null;
-  payroll: number;
-  showDeveloperTools: boolean;
-  onOpenGameConfig: () => void;
-  onOpenStatistics: () => void;
-  onOpenSettings: () => void;
+  onOpenMenu: () => void;
 }
 
 export default function TopPanel({
   metrics,
+  preview,
   gameTime,
   turn,
-  onNewGame,
-  preview,
   readers,
   money,
-  readerChangePreview,
-  moneyChangePreview,
-  payroll,
-  showDeveloperTools,
-  onOpenGameConfig,
-  onOpenStatistics,
-  onOpenSettings,
+  onOpenMenu,
 }: Props) {
-  const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
   const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
   const formattedGameTime = GAME_TIME_FORMATTER.format(gameTime);
   const completedTurns = turn - 1;
@@ -79,106 +64,61 @@ export default function TopPanel({
           </span>
         )}
       </div>
-      <div className="metrics">
-        {keys.map((key) => {
-          const icon = STAT_ICONS[key];
-          const label = STAT_LABELS[key];
-          return (
-            <Metric
+      <div className="top-panel-stats">
+        <div className="metrics">
+          {keys.map((key) => {
+            const icon = STAT_ICONS[key];
+            const label = STAT_LABELS[key];
+            return (
+              <Metric
+                key={key}
+                metricKey={key}
+                icon={icon}
+                label={label}
+                value={metrics[key]}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div id="metrics-preview" aria-label="Прогноз изменения метрик">
+        <div className="preview-line">
+          {keys.map((key) => (
+            <span
               key={key}
-              metricKey={key}
-              icon={icon}
-              label={label}
-              value={metrics[key]}
-              preview={preview[key]}
-            />
-          );
-        })}
+              className={preview[key] >= 0 ? "positive" : "negative"}
+              title={STAT_LABELS[key]}
+            >
+              {STAT_ICONS[key]} {preview[key] > 0 ? "+" : ""}
+              {preview[key]}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className="top-panel-economy">
-        <div className="resource-display" id="readers-display">
-          {/*           <span className="resource-label">👥 Читатели</span> */}
-          <strong>{formatMoney(readers)} читателей</strong>
-          {readerChangePreview !== null && readerChangePreview !== 0 && (
-            <span className={readerChangePreview > 0 ? "positive" : "negative"}>
-              {readerChangePreview > 0 ? "+" : ""}
-              {formatMoney(readerChangePreview)} после выпуска
-            </span>
-          )}
+        <div
+          className="resource-display"
+          id="readers-display"
+          aria-label="Читатели"
+        >
+          <strong>👥 {formatMoney(readers)}</strong>
         </div>
 
-        <div id="metrics-preview">
-          {hasPreview && (
-            <div className="preview-line">
-              <span></span>
-              {keys.map((key) => {
-                const value = preview[key];
-                // if (value === 0) return null;
-                const icon = STAT_ICONS[key];
-                return (
-                  <span
-                    key={key}
-                    className={value > 0 ? "positive" : "negative"}
-                  >
-                    {icon} {value > 0 ? "+" : ""}
-                    {value}
-                  </span>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <div className="resource-display" id="money-display">
-          {/* <span className="resource-label">💵 Деньги</span> */}
+        <div
+          className="resource-display"
+          id="money-display"
+          aria-label="Деньги и цель недели"
+        >
           <strong>💵 ${formatMoney(money)}</strong>
-          <span className="resource-goal">
-            Цель недели: ${formatMoney(weeklyGoal)}
-          </span>
-          <span className="resource-flow">
-            <span className="resource-income">
-              +${formatMoney(readers * getIncomePerReader(readers))} доход/час
-            </span>
-            <span className="resource-payroll">
-              {" "}
-              · −${formatMoney(payroll)} зарплата
-            </span>
-          </span>
-          {moneyChangePreview !== null && moneyChangePreview !== 0 && (
-            <span className={moneyChangePreview > 0 ? "positive" : "negative"}>
-              {moneyChangePreview > 0 ? "+" : ""}$
-              {formatMoney(moneyChangePreview)} после выпуска
-            </span>
-          )}
+          <span className="resource-goal">/ ${formatMoney(weeklyGoal)}</span>
         </div>
       </div>
 
       <div className="top-panel-actions">
-        {/* <button className="right-btn" id="upgrade-btn">
-          Улучшения
-        </button> */}
-        {showDeveloperTools && (
-          <button
-            className="right-btn"
-            id="game-config-btn"
-            onClick={onOpenGameConfig}
-          >
-            Настройка игры
-          </button>
-        )}
-        <button className="right-btn" id="stat-btn" onClick={onOpenStatistics}>
-          Статистика
-        </button>
-        <button
-          className="right-btn"
-          id="settings-btn"
-          onClick={onOpenSettings}
-        >
-          Настройки
-        </button>
-        <button className="right-btn" id="new-game-btn" onClick={onNewGame}>
-          Новая игра
+        <button className="right-btn" id="game-menu-btn" onClick={onOpenMenu}>
+          Меню
         </button>
       </div>
     </div>

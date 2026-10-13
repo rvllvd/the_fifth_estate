@@ -210,9 +210,7 @@ function ConfigFields({ value, path, onChange }: ConfigFieldsProps) {
               <input
                 type="checkbox"
                 checked={fieldValue}
-                onChange={(event) =>
-                  onChange(fieldPath, event.target.checked)
-                }
+                onChange={(event) => onChange(fieldPath, event.target.checked)}
               />
             ) : typeof fieldValue === "number" ? (
               <input
@@ -221,7 +219,8 @@ function ConfigFields({ value, path, onChange }: ConfigFieldsProps) {
                 value={fieldValue}
                 onChange={(event) => {
                   const nextValue = Number(event.target.value);
-                  if (Number.isFinite(nextValue)) onChange(fieldPath, nextValue);
+                  if (Number.isFinite(nextValue))
+                    onChange(fieldPath, nextValue);
                 }}
               />
             ) : (
@@ -270,9 +269,7 @@ function validateConfig(draft: ConfigDraft): string | null {
         typeof goal !== "number" ||
         !Number.isFinite(goal) ||
         goal <= 0 ||
-        (index > 0 &&
-          typeof previousGoal === "number" &&
-          goal <= previousGoal)
+        (index > 0 && typeof previousGoal === "number" && goal <= previousGoal)
       );
     })
   ) {
@@ -300,8 +297,8 @@ function validateConfig(draft: ConfigDraft): string | null {
 }
 
 export default function GameConfigModal({ onClose }: { onClose: () => void }) {
-  const [draft, setDraft] = useState<ConfigDraft>(() =>
-    JSON.parse(JSON.stringify(getGlobalConfigSnapshot())) as ConfigDraft,
+  const [draft, setDraft] = useState<ConfigDraft>(
+    () => JSON.parse(JSON.stringify(getGlobalConfigSnapshot())) as ConfigDraft,
   );
   const [error, setError] = useState("");
 
@@ -329,7 +326,9 @@ export default function GameConfigModal({ onClose }: { onClose: () => void }) {
       window.location.reload();
     } catch (saveError) {
       console.error("Не удалось сохранить настройки баланса игры:", saveError);
-      setError("Не удалось сохранить настройки. Проверьте доступность хранилища браузера.");
+      setError(
+        "Не удалось сохранить настройки. Проверьте доступность хранилища браузера.",
+      );
     }
   };
 
@@ -339,7 +338,9 @@ export default function GameConfigModal({ onClose }: { onClose: () => void }) {
       window.location.reload();
     } catch (resetError) {
       console.error("Не удалось сбросить настройки баланса игры:", resetError);
-      setError("Не удалось сбросить настройки. Проверьте доступность хранилища браузера.");
+      setError(
+        "Не удалось сбросить настройки. Проверьте доступность хранилища браузера.",
+      );
     }
   };
 
