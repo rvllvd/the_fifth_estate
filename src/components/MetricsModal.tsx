@@ -16,7 +16,6 @@ export default function MetricsModal({
   contributions,
   onClose,
 }: Props) {
-  const [visible, setVisible] = useState(false);
   const [activeContribution, setActiveContribution] = useState(-1);
   const [displayed, setDisplayed] = useState<Metrics>(() =>
     metricKeys().reduce((acc, key) => {
@@ -24,14 +23,6 @@ export default function MetricsModal({
       return acc;
     }, {} as Metrics),
   );
-
-  // Плавное появление модалки (opacity 0 → 1 через .show)
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setVisible(true));
-    });
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   // Суммирует вклад каждой новости по очереди, как отдельные шаги подсчёта.
   useEffect(() => {
@@ -85,7 +76,7 @@ export default function MetricsModal({
   }, [result, contributions]);
 
   return (
-    <div className={`metrics-modal ${visible ? "show" : ""}`}>
+    <div className="metrics-modal show">
       <div className="metrics-modal-content">
         <div className="metrics-modal-title">📰 Публикация газеты</div>
 

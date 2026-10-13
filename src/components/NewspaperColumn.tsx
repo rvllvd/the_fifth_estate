@@ -4,7 +4,6 @@ import type { GameState, NewsItem, PlacedNews } from "../types";
 import PlacedNewsCard from "./PlacedNewsCard";
 import { calculateNewsContributions } from "../utils/game";
 import {
-  GAME_BALANCE,
   getColumns,
   getTierMultiplier,
 } from "../constants/global";

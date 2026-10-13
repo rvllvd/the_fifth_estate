@@ -114,6 +114,12 @@ export interface GameState extends Stats {
   // Статус игры
   gameOver?: boolean;
   victory?: boolean;
+  weekResult?: {
+    week: number;
+    target: number;
+    balance: number;
+    passed: boolean;
+  };
 }
 
 export type SlotAssignment = Record<string, NewsItem | null>;

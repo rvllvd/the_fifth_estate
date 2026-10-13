@@ -28,6 +28,8 @@ import { playSound } from "../utils/sounds";
 import { settleEconomy } from "../utils/economy";
 import {
   GAME_BALANCE,
+  METRIC_DEFINITIONS,
+  METRIC_KEYS,
   getRandomPublicationTimeAdvance,
 } from "../constants/global";
 
@@ -55,6 +57,7 @@ interface GameStore extends GameState {
   // игровой цикл
   publish: () => Metrics | null; // возвращает результат для модалки
   applyResult: (result: Metrics) => void;
+  dismissWeekResult: () => void;
   tickGameTime: () => void;
   newGame: () => void;
   reset: () => void;
@@ -255,15 +258,48 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const publicationDuration = getRandomPublicationTimeAdvance();
     const updatedState = applyPublication(state, result);
     const economy = settleEconomy(state, result);
-    set({
+    const nextState: GameState = {
       ...updatedState,
       readers: economy.readers,
       money: economy.money,
       journalists: economy.journalists,
       gameTime: currentGameTime + publicationDuration,
       gameTimeUpdatedAt: now,
-    });
+    };
+    const completedTurns = nextState.turn - 1;
+    const isWeekEnd = completedTurns > 0 && completedTurns % 7 === 0;
+    const week = completedTurns / 7;
+    const target = GAME_BALANCE.weeklyMoneyGoals[week - 1];
+
+    if (isWeekEnd) {
+      const otherDefeat =
+        nextState.readers <= GAME_BALANCE.minimumReaders ||
+        nextState.money <= GAME_BALANCE.minimumMoney ||
+        METRIC_KEYS.some(
+          (key) => nextState[key] <= METRIC_DEFINITIONS[key].min,
+        );
+
+      if (otherDefeat) {
+        nextState.gameOver = true;
+        nextState.victory = false;
+      } else if (target !== undefined) {
+        const passed = nextState.money >= target;
+        const finalWeek = week >= GAME_BALANCE.weeklyMoneyGoals.length;
+        nextState.weekResult = {
+          week,
+          target,
+          balance: nextState.money,
+          passed,
+        };
+        nextState.gameOver = !passed || finalWeek;
+        nextState.victory = passed && finalWeek;
+      }
+    }
+
+    set(nextState);
   },
+
+  dismissWeekResult: () => set({ weekResult: undefined }),
 
   tickGameTime: () => {
     const now = Date.now();
@@ -283,11 +319,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
         GAME_BALANCE.maximumJournalists,
       ),
     );
-    set(init);
+    set({
+      ...init,
+      gameOver: undefined,
+      victory: undefined,
+      weekResult: undefined,
+    });
     clearNewspaper();
   },
 
-  reset: () => set(getInitialState),
+  reset: () =>
+    set({
+      ...getInitialState(),
+      gameOver: undefined,
+      victory: undefined,
+      weekResult: undefined,
+    }),
 
   isGameOver: () => {
     return isGameOver(get());

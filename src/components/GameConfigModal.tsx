@@ -32,6 +32,8 @@ const CONFIG_LABELS: Record<string, string> = {
   min: "Минимальное значение",
   max: "Максимальное значение",
   maxTurns: "Максимум ходов",
+  showGameTime: "Показывать игровое время",
+  weeklyMoneyGoals: "Денежные цели по неделям",
   articlesPerPublication: "Новостей на выпуск",
   newsPerRoll: "Новостей при обновлении",
   initialJournalists: "Журналистов в начале",
@@ -204,7 +206,15 @@ function ConfigFields({ value, path, onChange }: ConfigFieldsProps) {
         return (
           <label className="game-config-field" key={fieldPath.join(".")}>
             <span>{label}</span>
-            {typeof fieldValue === "number" ? (
+            {typeof fieldValue === "boolean" ? (
+              <input
+                type="checkbox"
+                checked={fieldValue}
+                onChange={(event) =>
+                  onChange(fieldPath, event.target.checked)
+                }
+              />
+            ) : typeof fieldValue === "number" ? (
               <input
                 type="number"
                 step="any"
@@ -250,6 +260,31 @@ function validateConfig(draft: ConfigDraft): string | null {
   }
 
   const game = draft.game;
+  const weeklyGoals = game.weeklyMoneyGoals;
+  if (
+    !Array.isArray(weeklyGoals) ||
+    weeklyGoals.length === 0 ||
+    weeklyGoals.some((goal, index) => {
+      const previousGoal = weeklyGoals[index - 1];
+      return (
+        typeof goal !== "number" ||
+        !Number.isFinite(goal) ||
+        goal <= 0 ||
+        (index > 0 &&
+          typeof previousGoal === "number" &&
+          goal <= previousGoal)
+      );
+    })
+  ) {
+    return "Недельные денежные цели должны положительно и строго возрастать.";
+  }
+  if (
+    typeof game.maxTurns !== "number" ||
+    game.maxTurns !== weeklyGoals.length * 7
+  ) {
+    return "Максимум ходов должен совпадать с числом недельных целей × 7.";
+  }
+
   const timeAdvance = game.publicationTimeAdvanceMinutes;
   if (
     !isRecord(timeAdvance) ||

@@ -1,6 +1,6 @@
-import NewspaperColumn from './NewspaperColumn';
-import type { GameState, NewsItem, PlacedNews } from '../types';
-import { GAME_BALANCE, getTierMultiplier } from '../constants/global';
+import NewspaperColumn from "./NewspaperColumn";
+import type { GameState, NewsItem, PlacedNews } from "../types";
+import { GAME_BALANCE, getTierMultiplier } from "../constants/global";
 
 interface Props {
   placedNews: PlacedNews[];
@@ -16,9 +16,7 @@ const COLUMNS = Object.entries(GAME_BALANCE.columns).map(
     const { slots } = column;
     const multiplier = getTierMultiplier(tier);
     const title =
-      multiplier === 1
-        ? column.title
-        : `${column.title} (x${multiplier})`;
+      multiplier === 1 ? column.title : `${column.title} (x${multiplier})`;
 
     return { tier, title, slots, multiplier };
   },

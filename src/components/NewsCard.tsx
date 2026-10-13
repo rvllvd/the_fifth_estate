@@ -51,6 +51,16 @@ export default function NewsCard({
       draggable={!placed}
       onDragStart={handleDragStart}
       onClick={() => clickNews(news)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          clickNews(news);
+        }
+      }}
+      role="button"
+      tabIndex={!placed && active ? 0 : -1}
+      aria-pressed={placed}
+      aria-label={`${news.title}. ${placed ? "Уже размещена" : "Разместить в выпуске"}`}
       style={style}
       //   style={placed ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
     >

@@ -21,7 +21,6 @@ export default function PlacedNewsCard({
   const keys = Object.keys(STAT_LABELS) as (keyof typeof STAT_ICONS)[];
   const effects = keys.map((key) => {
     const icon = STAT_ICONS[key];
-    const label = STAT_LABELS[key];
     return {
       // label: `${icon} ${label}`,
       label: icon,

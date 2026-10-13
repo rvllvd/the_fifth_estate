@@ -15,6 +15,7 @@ const GAME_TIME_FORMATTER = new Intl.DateTimeFormat("ru-RU", {
 interface Props {
   metrics: Metrics;
   gameTime: number;
+  turn: number;
   onNewGame: () => void;
   preview: Metrics;
   readers: number;
@@ -31,6 +32,7 @@ interface Props {
 export default function TopPanel({
   metrics,
   gameTime,
+  turn,
   onNewGame,
   preview,
   readers,
@@ -46,14 +48,36 @@ export default function TopPanel({
   const hasPreview = true; // Object.values(preview).some((v) => v !== 0);
   const keys = Object.keys(STAT_LABELS) as (keyof Metrics)[];
   const formattedGameTime = GAME_TIME_FORMATTER.format(gameTime);
+  const completedTurns = turn - 1;
+  const weekDay = (completedTurns % 7) + 1;
+  const week = Math.floor(completedTurns / 7) + 1;
+  const weekLabel =
+    week % 10 === 1 && week % 100 !== 11
+      ? "неделя"
+      : week % 10 >= 2 && week % 10 <= 4 && (week % 100 < 12 || week % 100 > 14)
+        ? "недели"
+        : "недель";
+  const goalIndex = Math.min(
+    Math.floor(completedTurns / 7),
+    GAME_BALANCE.weeklyMoneyGoals.length - 1,
+  );
+  const weeklyGoal = GAME_BALANCE.weeklyMoneyGoals[goalIndex];
 
   return (
     <div id="top-panel">
-      <div className="game-clock" aria-label="Игровое время">
-        <span className="game-clock-label">Время</span>
-        <time dateTime={new Date(gameTime).toISOString()}>
-          {formattedGameTime}
-        </time>
+      <div className="game-clock" aria-label="Игровой день">
+        <span className="game-clock-label">
+          {GAME_BALANCE.showGameTime ? "Время" : "Ходы"}
+        </span>
+        {GAME_BALANCE.showGameTime ? (
+          <time dateTime={new Date(gameTime).toISOString()}>
+            {formattedGameTime}
+          </time>
+        ) : (
+          <span>
+            {weekDay}/7 дней ({week} {weekLabel})
+          </span>
+        )}
       </div>
       <div className="metrics">
         {keys.map((key) => {
@@ -110,7 +134,7 @@ export default function TopPanel({
           {/* <span className="resource-label">💵 Деньги</span> */}
           <strong>💵 ${formatMoney(money)}</strong>
           <span className="resource-goal">
-            Цель: ${formatMoney(GAME_BALANCE.victoryThresholds.money)}
+            Цель недели: ${formatMoney(weeklyGoal)}
           </span>
           <span className="resource-flow">
             <span className="resource-income">

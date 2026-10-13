@@ -108,7 +108,9 @@ export const getColumns = (tier: number) =>
   GAME_BALANCE.columns[tier as keyof typeof GAME_BALANCE.columns];
 
 export const GAME_BALANCE = {
-  maxTurns: 40,
+  maxTurns: 42,
+  showGameTime: false,
+  weeklyMoneyGoals: [3_500, 6_000, 12_000, 25_000, 50_000, 100_000],
   articlesPerPublication: 3,
   newsPerRoll: 30,
   initialJournalists: 3,
@@ -220,9 +222,6 @@ export const GAME_BALANCE = {
     credibilityQuality: 0.45,
     reputationQuality: 0.35,
     readershipGrowthEffect: 0.23,
-  },
-  victoryThresholds: {
-    money: 100_000,
   },
   gameStart: {
     year: 1600,

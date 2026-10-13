@@ -199,13 +199,13 @@ export function applyPublication(state: GameState, result: Metrics): GameState {
   };
 }
 
-// TODO: ПОМЕНЯТЬ УСЛОВИЯ ПОБЕДЫ И ПОРАЖЕНИЯ
 export function isVictory(state: GameState): boolean {
-  return state.money >= GAME_BALANCE.victoryThresholds.money;
+  return state.victory === true;
 }
 
 export function isGameOver(state: GameState): boolean {
   return (
+    state.gameOver === true ||
     isVictory(state) ||
     state.turn > state.maxTurns ||
     state.readers <= GAME_BALANCE.minimumReaders ||

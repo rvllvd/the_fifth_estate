@@ -3,6 +3,7 @@ interface Props {
   descriptions: string[];
   onClose: () => void;
   onNewGame: () => void;
+  continueLabel?: string;
 }
 
 export default function AlertModal({
@@ -10,6 +11,7 @@ export default function AlertModal({
   descriptions,
   onClose,
   onNewGame,
+  continueLabel,
 }: Props) {
   return (
     <div className="alert modal show">
@@ -28,11 +30,15 @@ export default function AlertModal({
           <button
             className="right-btn"
             onClick={() => {
-              onClose();
-              onNewGame();
+              if (continueLabel) {
+                onClose();
+              } else {
+                onClose();
+                onNewGame();
+              }
             }}
           >
-            Попробовать ещё раз
+            {continueLabel ?? "Попробовать ещё раз"}
           </button>
         </div>
       </div>

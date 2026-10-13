@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import "./styles/themes/dark.scss";
 import "./styles/themes/cyberpunk.scss";
 import "./styles/themes/vanilla.scss"; // import vanilla theme (original)
+import "./styles/gamepad.scss";
 import TopPanel from "./components/TopPanel";
 import LeftPanel from "./components/LeftPanel";
 import Newspaper from "./components/Newspaper";
@@ -28,8 +29,10 @@ import { setSoundEffectsSettings } from "./utils/sounds";
 import { getEconomyDefeatDescriptions } from "./constants/economy";
 import { getCurrentPayroll, settleEconomy } from "./utils/economy";
 import { GAME_BALANCE } from "./constants/global";
+import { useGamepadControls } from "./hooks/useGamepadControls";
 
 export default function App() {
+  const gamepadConnected = useGamepadControls();
   const [modalResult, setModalResult] = useState<Metrics | null>(null);
   const [publicationPreview, setPublicationPreview] = useState<{
     result: Metrics;
@@ -116,6 +119,7 @@ export default function App() {
   const canPublishNow = useGameStore(selectCanPublish);
   const gameWon = useGameStore(selectIsVictory);
   const gameState = useGameStore((state) => state);
+  const weekResult = gameState.weekResult;
 
   // экшены
   const rollCurrentNews = useGameStore((s) => s.rollCurrentNews);
@@ -126,6 +130,7 @@ export default function App() {
   const hireJournalist = useGameStore((s) => s.hireJournalist);
   const fireJournalist = useGameStore((s) => s.fireJournalist);
   const applyResult = useGameStore((s) => s.applyResult);
+  const dismissWeekResult = useGameStore((s) => s.dismissWeekResult);
   const newGame = useGameStore((s) => s.newGame);
   const tickGameTime = useGameStore((s) => s.tickGameTime);
 
@@ -295,11 +300,7 @@ export default function App() {
       plan.journalistToHire &&
       !initialState.hireJournalist(plan.journalistToHire)
     ) {
-      plan = chooseAutoTurn(
-        useGameStore.getState(),
-        availableNews,
-        [],
-      );
+      plan = chooseAutoTurn(useGameStore.getState(), availableNews, []);
     }
 
     const originalNewsIds = new Set(
@@ -331,8 +332,7 @@ export default function App() {
 
     const completedState = useGameStore.getState();
     if (
-      completedState.placedNews.length >=
-      GAME_BALANCE.articlesPerPublication
+      completedState.placedNews.length >= GAME_BALANCE.articlesPerPublication
     ) {
       handlePublish();
       return;
@@ -361,10 +361,13 @@ export default function App() {
     if (!import.meta.env.DEV || !autoPlayEnabled) return;
 
     if (modalResult) {
-      const timeoutId = window.setTimeout(() => {
-        applyResult(modalResult);
-        setModalResult(null);
-      }, Math.max(400, GAME_BALANCE.autoPlay.resultDisplayMs));
+      const timeoutId = window.setTimeout(
+        () => {
+          applyResult(modalResult);
+          setModalResult(null);
+        },
+        Math.max(400, GAME_BALANCE.autoPlay.resultDisplayMs),
+      );
       return () => window.clearTimeout(timeoutId);
     }
 
@@ -373,7 +376,8 @@ export default function App() {
       showJournalistsModal ||
       showSettingsModal ||
       showStatisticsModal ||
-      showGameConfigModal
+      showGameConfigModal ||
+      weekResult
     ) {
       return;
     }
@@ -395,6 +399,7 @@ export default function App() {
     publicationPreview,
     runAutoTurn,
     showAlertModal,
+    weekResult,
     showGameConfigModal,
     showJournalistsModal,
     showSettingsModal,
@@ -426,6 +431,7 @@ export default function App() {
         <TopPanel
           metrics={{ influence, credibility, reputation, loyalty: loyalty }}
           gameTime={gameTime}
+          turn={gameState.turn}
           onNewGame={handleNewGame}
           preview={preview}
           readers={gameState.readers}
@@ -457,7 +463,11 @@ export default function App() {
           <Newspaper
             placedNews={publicationPreview?.placedNews ?? placedNews}
             gameState={publicationPreview?.gameState ?? gameState}
-            isPublishing={Boolean(publicationPreview && animationEnabled)}
+            isPublishing={Boolean(
+              publicationPreview &&
+              publicationPreview.animationDuration > 0 &&
+              animationEnabled,
+            )}
             onDropNews={dropNews}
             onRemove={handleRemovePlaced}
           />
@@ -530,6 +540,12 @@ export default function App() {
                   reputation,
                   loyalty,
                 }).concat(
+                  weekResult && !weekResult.passed
+                    ? [
+                        `Денежная цель недели ${weekResult.week} не выполнена: $${new Intl.NumberFormat("ru-RU").format(weekResult.balance)} из требуемых $${new Intl.NumberFormat("ru-RU").format(weekResult.target)}.`,
+                      ]
+                    : [],
+                ).concat(
                   getEconomyDefeatDescriptions(
                     gameState.readers,
                     gameState.money,
@@ -539,6 +555,23 @@ export default function App() {
           onClose={() => setShowAlertModal(false)}
           onNewGame={handleNewGame}
         />
+      )}
+      {weekResult?.passed && !showAlertModal && (
+        <AlertModal
+          text={`Неделя ${weekResult.week} пройдена`}
+          descriptions={[
+            `В редакционной кассе $${new Intl.NumberFormat("ru-RU").format(weekResult.balance)} при цели $${new Intl.NumberFormat("ru-RU").format(weekResult.target)}.`,
+          ]}
+          onClose={dismissWeekResult}
+          onNewGame={handleNewGame}
+          continueLabel="Продолжить"
+        />
+      )}
+      {gamepadConnected && (
+        <div className="gamepad-hint" role="status" aria-live="polite">
+          🎮 Крестовина — навигация · A — выбрать · B — назад · X — очистить · Y
+          — опубликовать
+        </div>
       )}
     </>
   );
