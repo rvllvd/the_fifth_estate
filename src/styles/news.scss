@@ -83,10 +83,29 @@
 }
 
 .news-title {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 28.8px;
+  overflow: hidden;
+  line-height: 14.4px;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: bold;
   color: #fff;
+}
+
+.news-title-line {
+  display: block;
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.news-title-line .dancing-text {
+  white-space: nowrap;
 }
 
 .news-tag {
