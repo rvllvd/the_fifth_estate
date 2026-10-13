@@ -5,9 +5,11 @@
   flex: 0 0 auto;
   min-width: 0;
   padding: 5px 12px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: "left preview right";
   align-items: center;
-  justify-content: space-between;
+  justify-content: stretch;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   min-height: 56px;
   position: relative;
@@ -34,6 +36,15 @@
   text-align: center;
 }
 
+.top-panel-left {
+  grid-area: left;
+  display: flex;
+  justify-self: start;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(6px, 0.8vw, 12px);
+}
+
 .game-clock-label {
   display: none;
   color: #bdc3c7;
@@ -56,7 +67,7 @@
   flex: 0 1 auto;
   align-items: center;
   min-width: 0;
-  gap: clamp(6px, 1vw, 14px);
+  gap: 0;
 }
 
 .metrics {
@@ -183,6 +194,8 @@
 
 /* Индикатор показателей — по центру панели */
 #metrics-preview {
+  grid-area: preview;
+  justify-self: center;
   position: static;
   transform: none;
   flex: 0 0 auto;
@@ -194,7 +207,20 @@
 
 }
 
-#top-panel>* {
+.top-panel-right,
+.top-panel-left {
+  min-width: 0;
+}
+
+.top-panel-right {
+  grid-area: right;
+  display: flex;
+  justify-self: end;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 12px);
+}
+
+#top-panel > * {
   align-items: center;
   padding: 3px 15px;
   margin: 0 5px 5px 5px;
@@ -231,6 +257,14 @@
     gap: 5px;
   }
 
+  .top-panel-left {
+    gap: 7px;
+  }
+
+  .top-panel-right {
+    gap: 7px;
+  }
+
   .progress-bar {
     width: clamp(18px, 2.8vw, 32px);
   }
@@ -254,9 +288,9 @@
   }
 
   .metrics {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     justify-content: flex-start;
-    gap: clamp(8px, 1vw, 14px);
+    gap: 5px;
   }
 
   .metric-label {
@@ -272,13 +306,32 @@
 @media (max-width: 760px) {
   #top-panel {
     display: grid;
-    grid-template-columns: minmax(72px, auto) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     grid-template-areas:
       "clock economy actions"
-      "metrics metrics metrics";
+      "stats preview preview";
     gap: 5px 7px;
     padding: 5px 8px;
     min-height: 0;
+  }
+
+  .top-panel-left,
+  .top-panel-right {
+    display: contents;
+  }
+
+  .top-panel-left > .game-clock,
+  .top-panel-left > .top-panel-stats,
+  #top-panel > #metrics-preview,
+  .top-panel-right > .top-panel-economy,
+  .top-panel-right > .top-panel-actions {
+    align-items: center;
+    min-height: 34px;
+    margin: 0;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #1d284a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
 
   .game-clock {
@@ -299,12 +352,10 @@
   }
 
   .top-panel-stats {
-    grid-area: metrics;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 5px;
-    align-items: center;
-    width: 100%;
+    grid-area: stats;
+    display: flex;
+    justify-self: start;
+    width: auto;
   }
 
   .metric {
@@ -330,6 +381,8 @@
   }
 
   #metrics-preview {
+    grid-area: preview;
+    justify-self: center;
     max-width: 132px;
     overflow: hidden;
   }
@@ -405,20 +458,11 @@
 
 @media (max-width: 360px) {
   #top-panel {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     grid-template-areas:
-      "clock actions"
-      "metrics metrics"
-      "economy economy";
-  }
-
-  .top-panel-stats {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .top-panel-economy {
-    justify-self: stretch;
-    justify-content: space-around;
+      "clock economy actions"
+      "stats preview preview";
+    gap: 4px;
   }
 }
 

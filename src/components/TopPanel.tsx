@@ -50,35 +50,37 @@ export default function TopPanel({
 
   return (
     <div id="top-panel">
-      <div className="game-clock" aria-label="Игровой день">
-        <span className="game-clock-label">
-          {GAME_BALANCE.showGameTime ? "Время" : "Ходы"}
-        </span>
-        {GAME_BALANCE.showGameTime ? (
-          <time dateTime={new Date(gameTime).toISOString()}>
-            {formattedGameTime}
-          </time>
-        ) : (
-          <span>
-            {weekDay}/7 дней ({week} {weekLabel})
+      <div className="top-panel-left">
+        <div className="game-clock" aria-label="Игровой день">
+          <span className="game-clock-label">
+            {GAME_BALANCE.showGameTime ? "Время" : "Ходы"}
           </span>
-        )}
-      </div>
-      <div className="top-panel-stats">
-        <div className="metrics">
-          {keys.map((key) => {
-            const icon = STAT_ICONS[key];
-            const label = STAT_LABELS[key];
-            return (
-              <Metric
-                key={key}
-                metricKey={key}
-                icon={icon}
-                label={label}
-                value={metrics[key]}
-              />
-            );
-          })}
+          {GAME_BALANCE.showGameTime ? (
+            <time dateTime={new Date(gameTime).toISOString()}>
+              {formattedGameTime}
+            </time>
+          ) : (
+            <span>
+              {weekDay}/7 дней ({week} {weekLabel})
+            </span>
+          )}
+        </div>
+        <div className="top-panel-stats">
+          <div className="metrics">
+            {keys.map((key) => {
+              const icon = STAT_ICONS[key];
+              const label = STAT_LABELS[key];
+              return (
+                <Metric
+                  key={key}
+                  metricKey={key}
+                  icon={icon}
+                  label={label}
+                  value={metrics[key]}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -97,29 +99,31 @@ export default function TopPanel({
         </div>
       </div>
 
-      <div className="top-panel-economy">
-        <div
-          className="resource-display"
-          id="readers-display"
-          aria-label="Читатели"
-        >
-          <strong>👥 {formatMoney(readers)}</strong>
+      <div className="top-panel-right">
+        <div className="top-panel-economy">
+          <div
+            className="resource-display"
+            id="readers-display"
+            aria-label="Читатели"
+          >
+            <strong>👥 Читателей: {formatMoney(readers)}</strong>
+          </div>
+
+          <div
+            className="resource-display"
+            id="money-display"
+            aria-label="Деньги и цель недели"
+          >
+            <strong>💵 ${formatMoney(money)}</strong>
+            <span className="resource-goal">/ ${formatMoney(weeklyGoal)}</span>
+          </div>
         </div>
 
-        <div
-          className="resource-display"
-          id="money-display"
-          aria-label="Деньги и цель недели"
-        >
-          <strong>💵 ${formatMoney(money)}</strong>
-          <span className="resource-goal">/ ${formatMoney(weeklyGoal)}</span>
+        <div className="top-panel-actions">
+          <button className="right-btn" id="game-menu-btn" onClick={onOpenMenu}>
+            Меню
+          </button>
         </div>
-      </div>
-
-      <div className="top-panel-actions">
-        <button className="right-btn" id="game-menu-btn" onClick={onOpenMenu}>
-          Меню
-        </button>
       </div>
     </div>
   );
