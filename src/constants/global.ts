@@ -63,7 +63,7 @@ export function resetGlobalConfig(): void {
 
 const DEFAULT_METRIC_VALUE = 15;
 const DEFAULT_MIN_METRIC_VALUE = 0;
-const DEFAULT_MAX_METRIC_VALUE = 30;
+const DEFAULT_MAX_METRIC_VALUE = 100;
 
 export const METRIC_DEFINITIONS = {
   influence: {
@@ -115,7 +115,7 @@ export const GAME_BALANCE = {
   maxTurns: 42,
   showGameTime: false,
   weeklyMoneyGoals: [
-    3_050, 16_000, 50_000, 120_000, 250_000, 450_000, 700_000, 1_111_111,
+    2_300, 3_050, 16_000, 50_000, 120_000, 250_000, 450_000, 700_000, 1_111_111,
   ],
   articlesPerPublication: 3,
   newsPerRoll: 30,

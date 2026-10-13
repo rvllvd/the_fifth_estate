@@ -16,6 +16,7 @@ import type {
 import { ALL_SLOTS } from "../constants/game";
 import { getRandomNews, NEWS_DATA } from "../data/news";
 import { AVAILABLE_JOURNALISTS } from "../data/journalists";
+import { chooseDirectorEvent, GAME_EVENTS } from "../data/events";
 import {
   applyPublication,
   calculateNewsContributions,
@@ -57,6 +58,7 @@ interface GameStore extends GameState {
   // игровой цикл
   publish: () => Metrics | null; // возвращает результат для модалки
   applyResult: (result: Metrics) => void;
+  resolveEvent: (choiceId: string) => void;
   dismissWeekResult: () => void;
   tickGameTime: () => void;
   newGame: () => void;
@@ -296,7 +298,79 @@ export const useGameStore = create<GameStore>((set, get) => ({
       }
     }
 
+    if (!isGameOver(nextState) && !state.pendingEvent) {
+      const event = chooseDirectorEvent(nextState);
+      if (event) {
+        nextState.pendingEvent = { id: event.id, turn: completedTurns };
+        nextState.eventHistory = [
+          ...(state.eventHistory ?? []),
+          event.id,
+        ].slice(-3);
+      }
+    }
+
     set(nextState);
+  },
+
+  resolveEvent: (choiceId) => {
+    const state = get();
+    if (!state.pendingEvent) return;
+
+    const event = GAME_EVENTS.find(
+      (candidate) => candidate.id === state.pendingEvent?.id,
+    );
+    const choice = event?.choices.find(
+      (candidate) => candidate.id === choiceId,
+    );
+    if (!event || !choice) {
+      set({ pendingEvent: undefined });
+      return;
+    }
+
+    const minimumMoneyAfterEvent = GAME_BALANCE.minimumMoney + 1;
+    if (
+      choice.cost !== undefined &&
+      state.money - choice.cost < minimumMoneyAfterEvent
+    ) {
+      return;
+    }
+
+    const updatedMetrics = { ...state };
+    for (const key of METRIC_KEYS) {
+      const effect = choice.effect?.metrics?.[key];
+      if (!effect) continue;
+
+      const change =
+        effect.mode === "percent"
+          ? Math.round((state[key] * effect.amount) / 100)
+          : effect.amount;
+      const minimum = METRIC_DEFINITIONS[key].min;
+      const maximum = METRIC_DEFINITIONS[key].max;
+      const normalized = Math.min(
+        maximum,
+        Math.max(minimum, state[key] + change),
+      );
+      updatedMetrics[key] =
+        event.polarity === "setback" && change < 0
+          ? Math.max(minimum + 1, normalized)
+          : normalized;
+    }
+
+    const moneyEffect = choice.effect?.money;
+    const moneyChange = moneyEffect
+      ? moneyEffect.mode === "percent"
+        ? Math.round((state.money * moneyEffect.amount) / 100)
+        : moneyEffect.amount
+      : 0;
+    const totalMoneyChange = moneyChange - (choice.cost ?? 0);
+    const minimumMoney =
+      totalMoneyChange < 0 ? minimumMoneyAfterEvent : GAME_BALANCE.minimumMoney;
+
+    set({
+      ...updatedMetrics,
+      money: Math.max(minimumMoney, state.money + totalMoneyChange),
+      pendingEvent: undefined,
+    });
   },
 
   dismissWeekResult: () => set({ weekResult: undefined }),
@@ -324,6 +398,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameOver: undefined,
       victory: undefined,
       weekResult: undefined,
+      pendingEvent: undefined,
+      eventHistory: [],
     });
     clearNewspaper();
   },
@@ -334,6 +410,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameOver: undefined,
       victory: undefined,
       weekResult: undefined,
+      pendingEvent: undefined,
+      eventHistory: [],
     }),
 
   isGameOver: () => {

@@ -32,6 +32,8 @@ const INITIAL_STATE: GameState = {
   gameTimeUpdatedAt: Date.now(),
   placedNews: [],
   journalists: [],
+  eventHistory: [],
+  pendingEvent: undefined,
   usedNewsIds: [],
   currentNewsIds: [],
   currentCategories: [],
@@ -52,10 +54,7 @@ export function createInitialState(): GameState {
   const init = getInitialState();
   init.journalists = AVAILABLE_JOURNALISTS.slice(
     0,
-    Math.min(
-      GAME_BALANCE.initialJournalists,
-      GAME_BALANCE.maximumJournalists,
-    ),
+    Math.min(GAME_BALANCE.initialJournalists, GAME_BALANCE.maximumJournalists),
   );
   return init;
 }
@@ -81,14 +80,17 @@ export function loadState(): GameState | null {
       state.readers ??= INITIAL_READERS;
       state.money ??= INITIAL_MONEY;
       state.maxTurns = GAME_BALANCE.maxTurns;
+      state.eventHistory ??= [];
       state.gameTime ??= START_GAME_TIME;
       state.gameTimeUpdatedAt ??= Date.now();
       state.publicationHistory = (state.publicationHistory ?? []).map(
         (publication) => ({
           ...publication,
-          news: (publication.news as Array<
-            PublishedNewsLogItem & { metrics?: Metrics }
-          >).map((savedNews) => {
+          news: (
+            publication.news as Array<
+              PublishedNewsLogItem & { metrics?: Metrics }
+            >
+          ).map((savedNews) => {
             if (
               savedNews.base &&
               savedNews.bonus &&

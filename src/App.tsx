@@ -26,11 +26,13 @@ import { getDefeatDescriptions } from "./constants/stats";
 import StatisticsModal from "./components/StatisticsModal";
 import GameConfigModal from "./components/GameConfigModal";
 import GameMenuModal from "./components/GameMenuModal";
+import GameEventModal from "./components/GameEventModal";
 import { setSoundEffectsSettings } from "./utils/sounds";
 import { getEconomyDefeatDescriptions } from "./constants/economy";
 import { getCurrentPayroll, settleEconomy } from "./utils/economy";
 import { GAME_BALANCE } from "./constants/global";
 import { useGamepadControls } from "./hooks/useGamepadControls";
+import { GAME_EVENTS } from "./data/events";
 
 export default function App() {
   const gamepadConnected = useGamepadControls();
@@ -122,6 +124,10 @@ export default function App() {
   const gameWon = useGameStore(selectIsVictory);
   const gameState = useGameStore((state) => state);
   const weekResult = gameState.weekResult;
+  const pendingEvent = gameState.pendingEvent;
+  const currentEvent = pendingEvent
+    ? GAME_EVENTS.find((event) => event.id === pendingEvent.id)
+    : undefined;
   const weeklyGoal =
     GAME_BALANCE.weeklyMoneyGoals[
       Math.min(
@@ -139,6 +145,7 @@ export default function App() {
   const hireJournalist = useGameStore((s) => s.hireJournalist);
   const fireJournalist = useGameStore((s) => s.fireJournalist);
   const applyResult = useGameStore((s) => s.applyResult);
+  const resolveEvent = useGameStore((s) => s.resolveEvent);
   const dismissWeekResult = useGameStore((s) => s.dismissWeekResult);
   const newGame = useGameStore((s) => s.newGame);
   const tickGameTime = useGameStore((s) => s.tickGameTime);
@@ -387,7 +394,8 @@ export default function App() {
       showSettingsModal ||
       showStatisticsModal ||
       showGameConfigModal ||
-      weekResult
+      weekResult ||
+      pendingEvent
     ) {
       return;
     }
@@ -410,6 +418,7 @@ export default function App() {
     runAutoTurn,
     showAlertModal,
     weekResult,
+    pendingEvent,
     showGameMenuModal,
     showGameConfigModal,
     showJournalistsModal,
@@ -516,6 +525,21 @@ export default function App() {
           onOpenGameConfig={() => setShowGameConfigModal(true)}
         />
       )}
+
+      {pendingEvent &&
+        currentEvent &&
+        !modalResult &&
+        !publicationPreview &&
+        !showAlertModal &&
+        !weekResult && (
+          <GameEventModal
+            event={currentEvent}
+            turn={pendingEvent.turn}
+            money={gameState.money}
+            minimumMoney={GAME_BALANCE.minimumMoney}
+            onChoose={resolveEvent}
+          />
+        )}
 
       {showSettingsModal && (
         <SettingsModal

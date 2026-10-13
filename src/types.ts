@@ -120,6 +120,11 @@ export interface GameState extends Stats {
     balance: number;
     passed: boolean;
   };
+  pendingEvent?: {
+    id: string;
+    turn: number;
+  };
+  eventHistory?: string[];
 }
 
 export type SlotAssignment = Record<string, NewsItem | null>;
