@@ -347,6 +347,182 @@ export const GAME_EVENTS: GameEvent[] = [
       },
     ],
   },
+  {
+    id: "community_factcheck",
+    title: "Читатели помогают редакции",
+    description:
+      "Постоянные читатели прислали документы и готовы помочь редакции проверить спорный материал.",
+    polarity: "supportive",
+    weight: 0.9,
+    condition: (state) => state.credibility <= 17 && state.loyalty >= 8,
+    choices: [
+      {
+        id: "accept_help",
+        label: "Принять помощь",
+        description: "Доверие +5, репутация +2",
+        effect: {
+          metrics: {
+            credibility: { amount: 5 },
+            reputation: { amount: 2 },
+          },
+        },
+      },
+      { id: "decline", label: "Проверить материал самостоятельно" },
+    ],
+  },
+  {
+    id: "local_press_grant",
+    title: "Городской грант для прессы",
+    description:
+      "Библиотека выделила небольшую поддержку независимому изданию, которое рассказывает о жизни города.",
+    polarity: "supportive",
+    weight: 0.8,
+    condition: (state) => state.influence <= 17 && state.reputation <= 18,
+    choices: [
+      {
+        id: "take_grant",
+        label: "Принять поддержку",
+        description: "Влияние +5, лояльность +2",
+        effect: {
+          metrics: {
+            influence: { amount: 5 },
+            loyalty: { amount: 2 },
+          },
+        },
+      },
+      { id: "decline", label: "Отказаться от гранта" },
+    ],
+  },
+  {
+    id: "clickbait_fatigue",
+    title: "Сенсации приелись",
+    description:
+      "Читатели привыкли к громким заголовкам и всё чаще пролистывают материалы, не веря обещаниям первой строки.",
+    polarity: "setback",
+    weight: 1,
+    condition: (state) => state.influence >= 15 && state.loyalty >= 14,
+    choices: [
+      {
+        id: "change_tone",
+        label: "Сменить тон подачи",
+        description: "Влияние −10%",
+        effect: { metrics: { influence: { amount: -10, mode: "percent" } } },
+      },
+    ],
+  },
+  {
+    id: "correction_demand",
+    title: "Требование опровержения",
+    description:
+      "Герой недавней публикации прислал документы и требует исправить неточность на видном месте.",
+    polarity: "setback",
+    weight: 1,
+    condition: (state) => state.credibility >= 15 && state.reputation >= 15,
+    choices: [
+      {
+        id: "publish_correction",
+        label: "Опубликовать исправление",
+        description: "Репутация −10%",
+        effect: { metrics: { reputation: { amount: -10, mode: "percent" } } },
+      },
+    ],
+  },
+  {
+    id: "subscription_slowdown",
+    title: "Подписчики берут паузу",
+    description:
+      "После нескольких громких выпусков часть аудитории решила пропустить следующий номер.",
+    polarity: "setback",
+    weight: 1,
+    condition: (state) => state.readers >= 35 && state.loyalty >= 13,
+    choices: [
+      {
+        id: "retain_subscribers",
+        label: "Удерживать аудиторию",
+        description: "Лояльность −12%",
+        effect: { metrics: { loyalty: { amount: -12, mode: "percent" } } },
+      },
+    ],
+  },
+  {
+    id: "print_shop_invoice",
+    title: "Неожиданный счёт типографии",
+    description:
+      "Типография выставила доплату за срочный тираж и переработку ночной смены.",
+    polarity: "setback",
+    weight: 0.9,
+    condition: (state) => state.money >= GAME_BALANCE.initialMoney * 1.5,
+    choices: [
+      {
+        id: "pay_invoice",
+        label: "Оплатить счёт",
+        description: "Деньги −8%",
+        effect: { money: { amount: -8, mode: "percent" } },
+      },
+    ],
+  },
+  {
+    id: "source_leak",
+    title: "Источник передумал",
+    description:
+      "Собеседник публично отказался от своих слов. Редакции приходится объяснять, почему материал вышел без дополнительной проверки.",
+    polarity: "setback",
+    weight: 1,
+    condition: (state) => state.reputation >= 14 && state.credibility >= 14,
+    choices: [
+      {
+        id: "defend_source",
+        label: "Ответить за публикацию",
+        description: "Доверие −12%",
+        effect: { metrics: { credibility: { amount: -12, mode: "percent" } } },
+      },
+    ],
+  },
+  {
+    id: "exclusive_ad_contract",
+    title: "Эксклюзивный рекламный контракт",
+    description:
+      "Крупный рекламодатель предлагает щедрый контракт, но просит не освещать деятельность его конкурентов.",
+    polarity: "setback",
+    weight: 0.9,
+    condition: (state) => state.money >= GAME_BALANCE.weeklyMoneyGoals[0],
+    choices: [
+      {
+        id: "keep_independence",
+        label: "Сохранить независимость",
+        description: "Деньги −7%",
+        effect: { money: { amount: -7, mode: "percent" } },
+      },
+    ],
+  },
+  {
+    id: "public_confidence_crisis",
+    title: "Кризис общественного доверия",
+    description:
+      "Газета слишком долго шла от успеха к успеху. Читатели, коллеги и герои публикаций одновременно требуют от редакции доказать, что она ещё слышит критику.",
+    polarity: "setback",
+    weight: 1.4,
+    condition: (state) =>
+      METRIC_KEYS.every((key) => {
+        const { min, max } = METRIC_DEFINITIONS[key];
+        return (state[key] - min) / (max - min) >= 0.68;
+      }),
+    choices: [
+      {
+        id: "face_criticism",
+        label: "Принять волну критики",
+        description: "Все метрики −15%",
+        effect: {
+          metrics: {
+            influence: { amount: -15, mode: "percent" },
+            credibility: { amount: -15, mode: "percent" },
+            reputation: { amount: -15, mode: "percent" },
+            loyalty: { amount: -15, mode: "percent" },
+          },
+        },
+      },
+    ],
+  },
 ];
 
 function getDirectorMode(state: GameState): DirectorMode {
@@ -359,7 +535,7 @@ function getDirectorMode(state: GameState): DirectorMode {
   const weakMetrics = ratios.filter((value) => value < 0.3).length;
 
   if (average < 0.4 || weakMetrics >= 1) return "supportive";
-  if (average >= 0.76 && ratios.every((value) => value >= 0.55)) {
+  if (average >= 0.62 && ratios.every((value) => value >= 0.5)) {
     return "pressure";
   }
   return "balanced";
@@ -370,27 +546,32 @@ export function chooseDirectorEvent(
   random: () => number = Math.random,
 ): GameEvent | null {
   const mode = getDirectorMode(state);
-  const chance = mode === "pressure" ? 0.75 : 1 / 3;
+  const chance = mode === "pressure" ? 1 : mode === "supportive" ? 0.4 : 0.55;
   if (random() >= chance) return null;
 
   const recentEvents = state.eventHistory ?? [];
   const eligibleEvents = GAME_EVENTS.filter(
     (event) =>
-      !recentEvents.slice(-3).includes(event.id) &&
       event.condition(state) &&
       (mode === "balanced" || event.polarity === mode),
   );
   if (eligibleEvents.length === 0) return null;
 
-  const totalWeight = eligibleEvents.reduce(
+  const repeatCooldown = mode === "pressure" ? 1 : 3;
+  const freshEvents = eligibleEvents.filter(
+    (event) => !recentEvents.slice(-repeatCooldown).includes(event.id),
+  );
+  const candidateEvents = freshEvents.length > 0 ? freshEvents : eligibleEvents;
+
+  const totalWeight = candidateEvents.reduce(
     (total, event) => total + event.weight,
     0,
   );
   let draw = random() * totalWeight;
-  for (const event of eligibleEvents) {
+  for (const event of candidateEvents) {
     draw -= event.weight;
     if (draw < 0) return event;
   }
 
-  return eligibleEvents[eligibleEvents.length - 1];
+  return candidateEvents[candidateEvents.length - 1];
 }
