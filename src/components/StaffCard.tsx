@@ -15,25 +15,15 @@ export default function StaffCard({ journalist, style }: Props) {
       className={`staff-card ${journalist.newsId ? "active" : ""}`}
       style={style}
     >
-      <div className="staff-info">
+      <div className="staff-info" title={bonus && desc ? desc : "Нет бонуса"}>
         <span className="staff-name">
           <DancingText text={journalist.name} />
         </span>
         <span className="staff-role">{journalist.role}</span>
       </div>
-      <div className="staff-stats">
-        {/* {metricKeys().map((key) => {
-          const value = bonus[key];
-          const [icon] = METRIC_LABELS[key];
-          return (
-            <span key={key} className="staff-stat">
-              {icon} {value > 0 ? "+" : ""}
-              {value}
-            </span>
-          );
-        })} */}
+      {/* <div className="staff-stats">
         {bonus && desc && <span className="staff-stat">{desc}</span>}
-      </div>
+      </div> */}
     </div>
   );
 }

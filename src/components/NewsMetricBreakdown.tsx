@@ -18,7 +18,9 @@ export default function NewsMetricBreakdown({
   compact = false,
   alwaysShow = false,
 }: Props) {
-  const hasBonus = Object.values(contribution.bonus).some((value) => value !== 0);
+  const hasBonus = Object.values(contribution.bonus).some(
+    (value) => value !== 0,
+  );
   if (
     !alwaysShow &&
     (!contribution.journalistName ||
@@ -29,18 +31,37 @@ export default function NewsMetricBreakdown({
 
   return (
     <div className={`news-metric-breakdown${compact ? " compact" : ""}`}>
-      {contribution.journalistName && (hasBonus || contribution.bonusDescription) && (
-        <div className="news-breakdown-heading">
-          Бонус журналиста: {contribution.journalistName} · полоса{" "}
-          {contribution.tier}
-        </div>
-      )}
-      {contribution.bonusDescription && (
+      {contribution.journalistName &&
+        (hasBonus || contribution.bonusDescription) && (
+          <div className="news-breakdown-heading">
+            {contribution.journalistName} · {contribution.bonusDescription}
+          </div>
+        )}
+
+      <div className="news-breakdown-lines">
+        {entries(METRIC_LABELS).map(([key, [icon, label]]) => (
+          <span key={key}>
+            {icon} ({format(contribution.base[key])?.replace("+", "")}
+            {contribution.bonus[key] < 0 ? "−" : "+"}
+            {Math.abs(contribution.bonus[key])}) × {contribution.multiplier} ={" "}
+            <strong>{format(contribution.final[key])}</strong>
+          </span>
+        ))}
+      </div>
+
+      {/* {contribution.journalistName &&
+        (hasBonus || contribution.bonusDescription) && (
+          <div className="news-breakdown-heading">
+            Бонус журналиста: {contribution.journalistName} · полоса{" "}
+            {contribution.tier}
+          </div>
+        )} */}
+      {/* {contribution.bonusDescription && (
         <p className="news-breakdown-explanation">
           {contribution.bonusDescription}
         </p>
-      )}
-      <div className="news-breakdown-lines">
+      )} */}
+      {/* <div className="news-breakdown-lines">
         {entries(METRIC_LABELS).map(([key, [icon, label]]) => (
           <span key={key}>
             {icon} {label}: {format(contribution.base[key])}{" "}
@@ -49,7 +70,7 @@ export default function NewsMetricBreakdown({
             <strong>{format(contribution.final[key])}</strong>
           </span>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

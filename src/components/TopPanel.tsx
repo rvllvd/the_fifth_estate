@@ -61,7 +61,7 @@ export default function TopPanel({
             </time>
           ) : (
             <span>
-              {weekDay}/7 дней ({week} {weekLabel})
+              {weekDay}/7 ({week} {weekLabel})
             </span>
           )}
         </div>
