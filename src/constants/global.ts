@@ -116,9 +116,9 @@ export const GAME_BALANCE = {
   initialJournalists: 3,
   maximumJournalists: 6,
   columns: {
-    1: { title: "Главная полоса", slots: 2, multiplier: 2 },
+    1: { title: "Главная полоса", slots: 1, multiplier: 2 },
     2: { title: "Вторая полоса", slots: 2, multiplier: 1 },
-    3: { title: "Третья полоса", slots: 2, multiplier: 0.5 },
+    3: { title: "Третья полоса", slots: 3, multiplier: 0.5 },
   },
   initialReaders: 13,
   initialMoney: 3000,

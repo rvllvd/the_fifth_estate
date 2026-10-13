@@ -108,12 +108,19 @@
 
 .news-effects {
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
 }
 
+.news-effects .news-tag {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
 .effect {
-  font-size: 21px;
+  font-size: 20x;
   color: #27ae60;
 }
 

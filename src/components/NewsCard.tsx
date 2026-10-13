@@ -69,7 +69,6 @@ export default function NewsCard({
         <span className="news-title">
           <DancingText text={news.title} />
         </span>
-        <span className="news-tag">{getNewsCategoryLabel(news.category)}</span>
       </div>
       <div className="news-content">{news.content}</div>
       <div className="news-effects">
@@ -79,6 +78,7 @@ export default function NewsCard({
             {e.value}
           </span>
         ))}
+        <span className="news-tag">{getNewsCategoryLabel(news.category)}</span>
       </div>
       {bonusPreview && (
         <NewsMetricBreakdown contribution={bonusPreview} compact />
