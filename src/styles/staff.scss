@@ -42,6 +42,33 @@
   cursor: pointer;
   transition: all 0.3s;
   min-width: 150px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Переливающийся градиент фона для карточек с бонусами */
+.staff-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 200, 100, 0.05),
+    rgba(255, 150, 50, 0.1),
+    rgba(255, 200, 100, 0.05)
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.staff-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .staff-card.active {

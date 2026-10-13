@@ -152,6 +152,10 @@
   gap: 8px;
 }
 
+.metric-value {
+  animation: metricShake 3s ease-in-out infinite;
+}
+
 .progress-bar {
   width: clamp(20px, 3.2vw, 42px);
   height: 6px;
