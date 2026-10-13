@@ -39,7 +39,7 @@ export default function NewsMetricBreakdown({
         )}
 
       <div className="news-breakdown-lines">
-        {entries(METRIC_LABELS).map(([key, [icon, label]]) => (
+        {entries(METRIC_LABELS).map(([key, [icon]]) => (
           <span key={key}>
             {icon} ({format(contribution.base[key])?.replace("+", "")}
             {contribution.bonus[key] < 0 ? "−" : "+"}

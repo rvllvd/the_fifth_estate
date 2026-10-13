@@ -38,22 +38,23 @@ export default function PlacedNewsCard({
           ×
         </button>
       </div>
-      <div className="placed-news-effects">
+      {/* <div className="placed-news-effects">
         {effects.map((e, i) => (
           <span key={i} className="effect">
             {e.label} {e.value > 0 ? "+" : ""}
             {e.value}
           </span>
         ))}
-        <span className="placed-news-author">
-          {contribution?.journalistName &&
-            `👤 Автор: ${contribution.journalistName}`}
-        </span>
-      </div>
+        
+      </div> */}
       {contribution && (
-        <NewsMetricBreakdown contribution={contribution} compact />
+        <NewsMetricBreakdown contribution={contribution} compact alwaysShow />
       )}
       <div className="placed-news-content">{news.content}</div>
+      <span className="placed-news-author">
+        {contribution?.journalistName &&
+          `👤 Автор: ${contribution.journalistName}`}
+      </span>
     </div>
   );
 }
