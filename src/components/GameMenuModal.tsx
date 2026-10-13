@@ -117,7 +117,7 @@ export default function GameMenuModal({
             type="button"
             onClick={() => runAction(onOpenSettings)}
           >
-            Настройки
+            Параметры
           </button>
           {showDeveloperTools && (
             <button

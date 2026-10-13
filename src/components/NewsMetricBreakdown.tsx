@@ -32,11 +32,15 @@ export default function NewsMetricBreakdown({
   return (
     <div className={`news-metric-breakdown${compact ? " compact" : ""}`}>
       {contribution.journalistName &&
-        (hasBonus || contribution.bonusDescription) && (
-          <div className="news-breakdown-heading">
-            {contribution.journalistName} · {contribution.bonusDescription}
-          </div>
-        )}
+      (hasBonus || contribution.bonusDescription) ? (
+        <div className="news-breakdown-heading">
+          {contribution.journalistName} · {contribution.bonusDescription}
+        </div>
+      ) : (
+        <div className="news-breakdown-heading">
+          К это новости бонус не предусмотрен.
+        </div>
+      )}
 
       <div className="news-breakdown-lines">
         {entries(METRIC_LABELS).map(([key, [icon, label]]) => (

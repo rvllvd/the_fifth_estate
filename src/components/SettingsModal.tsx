@@ -46,12 +46,12 @@ export default function SettingsModal({
         aria-labelledby="settings-modal-title"
       >
         <div className="settings-modal-header modal-header">
-          <h2 id="settings-modal-title">Настройки</h2>
+          <h2 id="settings-modal-title">Параметры</h2>
           <button
             className="close-modal-btn"
             type="button"
             onClick={onClose}
-            aria-label="Закрыть настройки"
+            aria-label="Закрыть параметры"
           >
             ×
           </button>
@@ -148,7 +148,7 @@ export default function SettingsModal({
               type="button"
               onClick={onResetSettings}
             >
-              Сбросить настройки
+              Сбросить параметры
             </button>
           </div>
         </section>

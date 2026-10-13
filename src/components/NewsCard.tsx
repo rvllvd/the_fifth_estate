@@ -153,7 +153,7 @@ export default function NewsCard({
         <span className="news-title" ref={titleRef}>
           {titleLines.map((line, index) => (
             <span className="news-title-line" key={index}>
-              <DancingText text={line} allowWrapping />
+              <DancingText text={line} />
             </span>
           ))}
         </span>
