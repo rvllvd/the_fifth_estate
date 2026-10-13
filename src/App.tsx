@@ -78,7 +78,9 @@ export default function App() {
 
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem("theme");
-    return saved === "dark" || saved === "cyberpunk" ? saved : "light";
+    return saved === "light" || saved === "dark" || saved === "cyberpunk"
+      ? saved
+      : "cyberpunk";
   });
 
   useBackgroundMusic(
@@ -247,18 +249,15 @@ export default function App() {
     setSoundEffectsEnabled(true);
     setSoundEffectsVolume(1);
     setAnimationEnabled(true);
-    setTheme("light");
+    setTheme("cyberpunk");
     localStorage.setItem("backgroundMusicEnabled", "true");
     localStorage.setItem("backgroundMusicVolume", "0.75");
     localStorage.setItem("soundEffectsEnabled", "true");
     localStorage.setItem("soundEffectsVolume", "1");
     localStorage.setItem("animationEnabled", "true");
-    localStorage.setItem("theme", "light");
-    document.body.classList.remove(
-      "animations-disabled",
-      "dark-theme",
-      "cyberpunk-theme",
-    );
+    localStorage.setItem("theme", "cyberpunk");
+    document.body.classList.remove("animations-disabled", "dark-theme");
+    document.body.classList.add("cyberpunk-theme");
   };
 
   const handleRemovePlaced = (newsId: string) => {
